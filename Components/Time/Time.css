@@ -1,0 +1,72 @@
+.time-wrapper {
+  width: 80%;
+  height: 80vh;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 32px;
+  background-color: #f5f2ff;
+  border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+h1 {
+  font-size: 30px;
+  text-align: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--purple-vivo);
+  color: white;
+  border-radius: 20px;
+  padding: 20px;
+  height: 50%;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 20%;
+  background-color: #fff;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  margin: auto 0;
+  padding: 0 30px;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  font-size: 40px;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+}

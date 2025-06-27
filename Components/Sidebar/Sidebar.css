@@ -16,7 +16,7 @@
   margin-top: 20%;
   display: flex;
   flex-direction: column;
-  gap: 32px; /* espaço entre logo e navegação */
+  gap: 32px; 
 }
 
 .logo {
@@ -73,6 +73,10 @@
   height: 8px;
   background-color: var(--purple-vivo);
   border-radius: 50%;
+}
+
+.side-icon {
+  font-size: 20px;
 }
 
 /* Responsividade */

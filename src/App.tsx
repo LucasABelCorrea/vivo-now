@@ -5,6 +5,7 @@ import Login from "../Components/Login/Login";
 import Home from "../Components/TelaInicial/TelaInicial";
 import MainLayout from "./layouts/MainLayout";
 import Feedback from "../Components/Feedback/Feedback";
+import Time from "../Components/Time/Time";
 
 function App(): JSX.Element {
   return (
@@ -18,6 +19,7 @@ function App(): JSX.Element {
           {/* Rotas com layout compartilhado */}
           <Route element={<MainLayout children={undefined} />}>
             <Route path="/feedback" element={<Feedback />} />
+            <Route path="/time" element={<Time />}/>
             {/* outras rotas aqui */}
           </Route>
         </Routes>

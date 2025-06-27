@@ -1,12 +1,13 @@
 .layout {
   display: flex;
   min-height: 100vh;
+  width: 100%;
 }
 
 .main-content {
   flex: 1;
-  padding: 24px;
-  margin-right: 240px;
+  padding: 32px;
+  margin-left: 260px;
   display: flex;
   flex-direction: column;
   justify-content: center;

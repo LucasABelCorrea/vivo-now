@@ -1,5 +1,9 @@
 import React from "react";
-import { FaHome, FaBook, FaUsers, FaSmile, FaClock } from "react-icons/fa";
+import { GrHomeRounded } from "react-icons/gr";
+import { TbFolder } from "react-icons/tb";
+import { CiGrid41 } from "react-icons/ci";
+import { IoPeopleOutline } from "react-icons/io5";
+import { VscFeedback } from "react-icons/vsc";
 import { BiBot } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
@@ -13,27 +17,27 @@ const Sidebar: React.FC = () => {
           <ul>
             <li>
               <NavLink to="/home">
-                <FaHome /> Home
+                <GrHomeRounded className="side-icon"/> Home
               </NavLink>
             </li>
             <li>
               <NavLink to="/cursos">
-                <FaBook /> Cursos
+                <TbFolder className="side-icon"/> Cursos
               </NavLink>
             </li>
             <li>
               <NavLink to="/plataformas">
-                <FaUsers /> Plataformas
+                <CiGrid41 className="side-icon"/> Plataformas
               </NavLink>
             </li>
             <li>
               <NavLink to="/time">
-                <FaClock /> Time
+                <IoPeopleOutline className="side-icon"/> Time
               </NavLink>
             </li>
             <li>
               <NavLink to="/feedback">
-                <FaSmile /> Feedback
+                <VscFeedback className="side-icon"/> Feedback
               </NavLink>
             </li>
           </ul>
