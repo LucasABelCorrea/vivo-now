@@ -1,0 +1,89 @@
+.feedback-container {
+  width: 200%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px;
+  background-color: #f0edff;
+  border-radius: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.feedback-container h2 {
+  color: var(--purple-vivo);
+  font-size: 24px;
+  text-align: center;
+  width: 100%;
+  align-self: flex-start;
+}
+
+.feedback-container form {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+  gap: 20px;
+}
+
+.feedback-container label {
+  font-weight: 500;
+}
+
+.feedback-container textarea {
+  resize: none;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 12px;
+  min-height: 80px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+
+.rating {
+  display: flex;
+  gap: 12px;
+}
+
+.rating button {
+  background: #a56dff;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rating button:hover {
+  background-color: #9257e6; 
+  color: white;
+}
+
+
+.rating button.selected {
+  background-color: var(--purple-vivo);
+  color: white;
+}
+
+.submit-button {
+  background: var(--purple-vivo);
+  color: white;
+  border: none;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+  background: #5c00c7;
+}

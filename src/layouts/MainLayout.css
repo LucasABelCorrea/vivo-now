@@ -1,0 +1,24 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+  margin-right: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Responsivo: empilha sidebar e conteúdo verticalmente */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+}
