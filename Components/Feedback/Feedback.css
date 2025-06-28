@@ -1,6 +1,6 @@
 .feedback-container {
   width: 100%;
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 48px;
   background-color: #f0edff;
@@ -71,5 +71,4 @@
   background-color: var(--purple-vivo);
   color: white;
 }
-
 

@@ -1,0 +1,156 @@
+.cursos-wrapper {
+  padding: 48px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.titulo {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.margin {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.card-curso {
+  display: flex;
+  background: #8250f8;
+  border-left: 8px solid var(--purple-vivo);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: 0.3s;
+}
+
+.card-curso:hover {
+  transform: translateY(-4px);
+}
+
+.capa-curso {
+  background-color: rgba(255, 255, 255, 0.05);
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 28px;
+  color: #fff;
+}
+
+.link-curso {
+  background-color: #f06497;
+  color: white;
+  text-align: center;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 0 0 16px 16px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.link-curso:hover {
+  background-color: #d95386;
+}
+
+.capa {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info h2 {
+  font-size: 24px;
+  color: #fff;
+}
+
+.info p {
+  font-size: 16px;
+  color: #fff;
+  flex-grow: 1;
+}
+
+.curso {
+  font-size: 13px;
+  color: var(--purple-vivo);
+  font-weight: 500;
+  align-self: flex-end;
+}
+
+.campo-busca {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.campo-busca input {
+  width: 100%;
+  padding: 12px 48px 12px 16px;
+  border: 1px solid #ccc;
+  outline: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.campo-busca .lupa {
+  position: absolute;
+  top: 60%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #000;
+  cursor: pointer;
+}
+
+.link-curso {
+  display: inline-block;
+  background-color: #f06497;
+  width: 40%;
+  color: white;
+  text-decoration: none;
+  padding: 12px;
+  margin-left: 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.25s ease-in-out;
+  margin-bottom: 10px;
+}
+
+.link-curso:hover {
+  background-color: #d95386;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(240, 100, 151, 0.5);
+}

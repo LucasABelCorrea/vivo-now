@@ -6,6 +6,8 @@ import Home from "../Components/TelaInicial/TelaInicial";
 import MainLayout from "./layouts/MainLayout";
 import Feedback from "../Components/Feedback/Feedback";
 import Time from "../Components/Time/Time";
+import Plataformas from "../Components/Plataformas/Plataformas";
+import Cursos from "../Components/Cursos/Cursos";
 
 function App(): JSX.Element {
   return (
@@ -20,6 +22,8 @@ function App(): JSX.Element {
           <Route element={<MainLayout children={undefined} />}>
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/time" element={<Time />}/>
+            <Route path="/plataformas" element={<Plataformas />}/>
+            <Route path="/cursos" element={<Cursos />}/>
             {/* outras rotas aqui */}
           </Route>
         </Routes>

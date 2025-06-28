@@ -62,21 +62,6 @@ h4 {
   box-shadow: 0 0 0 1px #ccc;
 }
 
-button {
-  background: linear-gradient(90deg, #b12eff 0%, #7c00f5 100%);
-  color: white;
-  font-weight: bold;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-button:hover {
-  background: linear-gradient(90deg, #a01eea 0%, #6a00d3 100%);
-}
-
 .logo {
   height: 100%;
   display: flex;
