@@ -37,14 +37,6 @@ const Cursos: React.FC = () => {
     ];
 
     setCursos(mockCursos);
-
-    // API real:
-    /*
-    fetch("https://sua-api.com/cursos")
-      .then((res) => res.json())
-      .then((data) => setCursos(data))
-      .catch((err) => console.error("Erro ao carregar cursos:", err));
-    */
   }, []);
 
   const cursosFiltrados = cursos.filter((curso) =>

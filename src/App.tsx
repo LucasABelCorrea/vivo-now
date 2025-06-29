@@ -8,6 +8,7 @@ import Feedback from "../Components/Feedback/Feedback";
 import Time from "../Components/Time/Time";
 import Plataformas from "../Components/Plataformas/Plataformas";
 import Cursos from "../Components/Cursos/Cursos";
+import Chat from "../Components/Chat/Chat";
 
 function App(): JSX.Element {
   return (
@@ -24,6 +25,7 @@ function App(): JSX.Element {
             <Route path="/time" element={<Time />}/>
             <Route path="/plataformas" element={<Plataformas />}/>
             <Route path="/cursos" element={<Cursos />}/>
+            <Route path="/chat" element={<Chat />}/>
             {/* outras rotas aqui */}
           </Route>
         </Routes>

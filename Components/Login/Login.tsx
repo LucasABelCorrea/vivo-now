@@ -1,13 +1,12 @@
-import { useState, ChangeEvent, FormEvent, JSX } from "react";
+import { useState, FormEvent, JSX } from "react";
 import "./Login.css";
 import { Logo } from "@telefonica/mistica";
 import Button from "../Button/Button";
-import { login } from "../../src/services/auth";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = (): JSX.Element => {
-  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,17 +15,31 @@ const Login = (): JSX.Element => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(null); // limpa o erro anterior
+    setError(null);
 
     try {
-      const resultado = await login(username, password);
-      console.log("Login realizado com sucesso:", resultado);
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      // Redireciona após login
-      navigate("/home");
+      if (!response.ok) {
+        const errorBody = await response.json();
+        throw new Error(errorBody.message || "Credenciais inválidas");
+      }
 
-      // Limpa os campos
-      setUsername("");
+      const resultado = await response.json();
+      console.log("Login bem-sucedido:", resultado);
+
+      if (resultado.token) {
+        localStorage.setItem("token", resultado.token);
+      }
+
+      navigate("/time");
+      setEmail("");
       setPassword("");
     } catch (erro: any) {
       console.error("Erro ao fazer login:", erro);
@@ -38,8 +51,10 @@ const Login = (): JSX.Element => {
     <div className="container">
       <div className="form">
         <form onSubmit={handleSubmit}>
-          <h1>BEM VINDO(A)</h1>
-          <h4>Preencha seus dados</h4>
+          <div className="titulo">
+            <h1>BEM VINDO(A)</h1>
+            <h4>Preencha seus dados</h4>
+          </div>
 
           <div className="input-field">
             <h3>Email</h3>
@@ -47,8 +62,8 @@ const Login = (): JSX.Element => {
               type="email"
               placeholder="Seu email"
               required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -72,10 +87,8 @@ const Login = (): JSX.Element => {
             </div>
           </div>
 
-          {/* Mensagem de erro visível */}
           {error && <p className="error-message">{error}</p>}
-
-          <div className="recall-forget"></div>
+          <div className="recall-forget" />
 
           <Button type="submit">Entrar</Button>
         </form>

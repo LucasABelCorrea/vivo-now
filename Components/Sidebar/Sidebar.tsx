@@ -4,8 +4,10 @@ import { TbFolder } from "react-icons/tb";
 import { CiGrid41 } from "react-icons/ci";
 import { IoPeopleOutline } from "react-icons/io5";
 import { VscFeedback } from "react-icons/vsc";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { BiBot } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
+
 import "./Sidebar.css";
 
 const Sidebar: React.FC = () => {
@@ -17,27 +19,33 @@ const Sidebar: React.FC = () => {
           <ul>
             <li>
               <NavLink to="/home">
-                <GrHomeRounded className="side-icon"/> Home
+                <GrHomeRounded className="side-icon" /> Home
               </NavLink>
             </li>
             <li>
               <NavLink to="/cursos">
-                <TbFolder className="side-icon"/> Cursos
+                <TbFolder className="side-icon" /> Cursos
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/chat">
+                <IoChatbubbleEllipsesOutline className="side-icon"/>
+                Chat
               </NavLink>
             </li>
             <li>
               <NavLink to="/plataformas">
-                <CiGrid41 className="side-icon"/> Plataformas
+                <CiGrid41 className="side-icon" /> Plataformas
               </NavLink>
             </li>
             <li>
               <NavLink to="/time">
-                <IoPeopleOutline className="side-icon"/> Time
+                <IoPeopleOutline className="side-icon" /> Time
               </NavLink>
             </li>
             <li>
               <NavLink to="/feedback">
-                <VscFeedback className="side-icon"/> Feedback
+                <VscFeedback className="side-icon" /> Feedback
               </NavLink>
             </li>
           </ul>
