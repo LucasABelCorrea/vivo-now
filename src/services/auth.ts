@@ -1,9 +1,7 @@
 import axios from "axios";
 
-// Use variável de ambiente (adicione REACT_APP_API_URL no .env)
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-// Tipagem opcional do que a API retorna ao fazer login
 interface LoginResponse {
   token: string;
   user: {

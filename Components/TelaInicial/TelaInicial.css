@@ -1,4 +1,4 @@
-.home-container {
+.tela-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,49 +7,49 @@
   text-align: center;
 }
 
-.home-container h1 {
+.tela-container h1 {
   font-size: 64px;
   color: var(--purple-vivo);
 }
 
-.home-container h2 {
+.tela-container h2 {
   font-size: 32px;
   margin-bottom: 15%;
 }
 
-.home-container .gradient-button {
+.tela-container .gradient-button {
   width: 80%;
 }
 
 @media (max-width: 768px) {
-  .home-container h1 {
+  .tela-container h1 {
     font-size: 48px;
   }
 
-  .home-container h2 {
+  .tela-container h2 {
     font-size: 24px;
   }
 
-  .home-container .gradient-button {
+  .tela-container .gradient-button {
     width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .home-container {
+  .tela-container {
     gap: 24px;
     padding: 24px;
   }
 
-  .home-container h1 {
+  .tela-container h1 {
     font-size: 36px;
   }
 
-  .home-container h2 {
+  .tela-container h2 {
     font-size: 20px;
   }
 
-  .home-container .gradient-button {
+  .tela-container .gradient-button {
     width: 100%;
   }
 }

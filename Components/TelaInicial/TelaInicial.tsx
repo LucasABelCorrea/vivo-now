@@ -4,15 +4,15 @@ import "./TelaInicial.css"
 import { useNavigate } from "react-router-dom";
 import { Logo } from "@telefonica/mistica";
 
-const Home = () => {
+const TelaInicial = () => {
     const navigate = useNavigate();
 
     const handleNavigateToLogin = () => {
-        navigate("/Login");
+        navigate("/login");
     }
 
   return (
-    <div className="home-container">
+    <div className="tela-container">
         <h1>VIVO NOW!</h1>
         <h2>Você Agora na Vivo</h2>
         <Button onClick={handleNavigateToLogin}>Entrar na Jornada</Button>
@@ -20,4 +20,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default TelaInicial

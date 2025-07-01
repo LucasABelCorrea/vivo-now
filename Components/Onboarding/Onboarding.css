@@ -1,0 +1,193 @@
+/*------------------------- Etapas da Jornada -------------------------*/
+.stage-card {
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-left: 6px solid transparent;
+  transition: border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.stage-card.completed {
+  border-color: #4caf50;
+}
+.stage-card.active {
+  border-color: var(--purple-vivo);
+}
+.stage-card.locked {
+  border-color: #ccc;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.etapa-numero {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+
+.etapa-titulo,
+.stage-card h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 1rem;
+  color: #333;
+}
+
+.etapa-progresso {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+
+.progress-circle {
+  width: 80px;
+  height: 80px;
+  transform: rotate(-90deg);
+}
+
+.progress-circle .bg {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 3.5;
+}
+
+.progress-circle .progress {
+  fill: none;
+  stroke: var(--purple-vivo);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.4s ease;
+}
+
+.progress-circle .percentage {
+  fill: #333;
+  font-size: 0.4rem;
+  text-anchor: middle;
+  dominant-baseline: central;
+  transform: rotate(90deg);
+}
+
+/*------------------------- Checklist -------------------------*/
+.checklist,
+.checklist-geral {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.checklist li {
+  display: flex;
+  align-items: center;
+}
+
+.checklist input[type="checkbox"] {
+  margin-right: 0.6rem;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--purple-vivo);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.checklist input[type="checkbox"]:hover {
+  transform: scale(1.1);
+}
+
+.checklist-geral {
+  background-color: #f9f9f9;
+  padding: 1rem 1.2rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fora-do-card {
+  margin-top: 0.8rem;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/*------------------------- Layout dos cards -------------------------*/
+.cards-duplos {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  align-items: stretch;
+}
+
+.cards-duplos .stage-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/*------------------------- Report da Semana -------------------------*/
+.weekly-report {
+  background: #f8f8f8;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.weekly-report h2 {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: var(--purple-vivo);
+}
+
+.weekly-report form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.weekly-report textarea {
+  resize: vertical;
+  min-height: 80px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.weekly-report button {
+  background-color: var(--purple-vivo);
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.weekly-report button:hover {
+  background-color: #6c20c2;
+}
+
+.mensagem {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #4caf50;
+}
+
+/*------------------------- Utilidades -------------------------*/
+.stage-wrapper {
+  margin-bottom: 2rem;
+}
+
+.botao-etapa {
+    margin-top: 30px;
+    width: 20%;
+}

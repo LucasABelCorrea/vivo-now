@@ -38,7 +38,7 @@ const Login = (): JSX.Element => {
         localStorage.setItem("token", resultado.token);
       }
 
-      navigate("/time");
+      navigate("/home");
       setEmail("");
       setPassword("");
     } catch (erro: any) {

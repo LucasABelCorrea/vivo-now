@@ -6,16 +6,18 @@ type Props = {
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
+  className?: string; // <- permite personalizar estilo externo
 };
 
-const Button = ({
+const Button: React.FC<Props> = ({
   children,
   onClick,
   type = "button",
   disabled = false,
-}: Props) => (
+  className = "",
+}) => (
   <button
-    className="gradient-button"
+    className={`gradient-button ${className}`} // permite sobrescrever/estender o estilo
     onClick={onClick}
     type={type}
     disabled={disabled}
