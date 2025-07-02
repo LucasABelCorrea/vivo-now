@@ -1,6 +1,6 @@
 import { useState, FormEvent, JSX } from "react";
 import "./Login.css";
-import { Logo } from "@telefonica/mistica";
+import { Logo, ButtonPrimary } from "@telefonica/mistica";
 import Button from "../Button/Button";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -90,7 +90,19 @@ const Login = (): JSX.Element => {
           {error && <p className="error-message">{error}</p>}
           <div className="recall-forget" />
 
-          <Button type="submit">Entrar</Button>
+         
+       <ButtonPrimary
+  onPress={() => {
+    document
+      .querySelector("form")
+      ?.dispatchEvent(
+        new Event("submit", { cancelable: true, bubbles: true })
+      );
+  }}
+  style={{ width: "100%", marginTop: 16, backgroundColor: "#FF0000" }}
+>
+  Entrar
+</ButtonPrimary>
         </form>
       </div>
 
