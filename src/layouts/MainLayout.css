@@ -7,13 +7,12 @@
 .main-content {
   flex: 1;
   padding: 32px;
-  margin-left: 260px;
+  margin-left: 260px; /* Isso só é necessário no desktop */
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-/* Responsivo: empilha sidebar e conteúdo verticalmente */
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
@@ -21,5 +20,6 @@
 
   .main-content {
     padding: 16px;
+    margin-left: 0; /* <<< ADICIONE ISSO */
   }
 }

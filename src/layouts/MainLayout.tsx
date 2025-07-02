@@ -3,17 +3,13 @@ import Sidebar from "../../Components/Sidebar/Sidebar";
 import "./MainLayout.css";
 import { Outlet } from "react-router-dom";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-const MainLayout: React.FC<Props> = ({ children }) => {
+const MainLayout: React.FC = () => {
   return (
     <div className="layout">
-      <aside className="sidebar">
-        <Sidebar />
-      </aside>
-      <main className="main-content"><Outlet /></main>
+      <Sidebar />
+      <main className="main-content">
+        <Outlet />
+      </main>
     </div>
   );
 };

@@ -8,7 +8,7 @@
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  gap: 32px; 
+  gap: 32px;
   z-index: 100;
 }
 
@@ -16,7 +16,7 @@
   margin-top: 20%;
   display: flex;
   flex-direction: column;
-  gap: 32px; 
+  gap: 32px;
 }
 
 .logo {
@@ -58,6 +58,7 @@
 .sidebar nav ul li a.active {
   background-color: #ece2ff;
   font-weight: bold;
+  
 }
 
 .chatbot-link {
@@ -78,41 +79,84 @@
   font-size: 20px;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
-  .sidebar {
-    position: relative;
-    width: 100%;
-    height: auto;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 16px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  }
-
   .logo {
     display: none;
+  }
+
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    height: 64px;
+    width: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+  }
+
+  .sidebar-content {
+    margin-top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .sidebar-content nav {
+    width: 100%;
+    height: 100%;
   }
 
   .sidebar nav ul {
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
 
   .sidebar nav ul li {
-    margin: 0;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
-
+  
   .sidebar nav ul li a {
-    font-size: 14px;
-    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 4px;
+    font-size: 12px;
+    text-decoration: none;
+    color: #333;
+    background: none;
+    border-radius: 0;
+  }
+  
+  .sidebar nav ul li a.active {
+    color: var(--purple-vivo);
+    background-color: #f2ebff;
+    font-weight: bold;
+    overflow: hidden;
   }
 
-  .new-dot {
-    top: 4px;
-    right: 4px;
-    width: 6px;
-    height: 6px;
+  .logo {
+    display: none;
   }
 }

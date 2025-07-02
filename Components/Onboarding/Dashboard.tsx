@@ -1,16 +1,40 @@
 import React, { useEffect, useState } from "react";
-import WeeklyReport from "./WeeklyReport";
-import JourneyDays from "./JourneyDays";
-import { getDashboard } from "../../src/services/onboardingService";
 import { OnboardingDashboard } from "../../src/types/onboardingTypes";
 import "./Onboarding.css";
 import StageCard from "./StageCard";
 import Button from "../Button/Button";
+import emailjs from "emailjs-com";
+
+type ChecklistItem = {
+  id: number;
+  label: string;
+  completed: boolean;
+};
 
 const Dashboard: React.FC = () => {
   const [data, setData] = useState<OnboardingDashboard | null>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+
+  const [checklist, setChecklist] = useState<ChecklistItem[]>(() => {
+    const stored = localStorage.getItem("checklist");
+    try {
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [newItem, setNewItem] = useState("");
+  const [selectedHumor, setSelectedHumor] = useState("");
+  const [duvida, setDuvida] = useState("");
+  const [evento, setEvento] = useState("");
+  const [comentario, setComentario] = useState("");
+  const [enviado, setEnviado] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("checklist", JSON.stringify(checklist));
+  }, [checklist]);
 
   useEffect(() => {
     const mockData: OnboardingDashboard = {
@@ -46,35 +70,195 @@ const Dashboard: React.FC = () => {
     }, 1000);
   }, []);
 
-  if (loading) return <p className="loading">Carregando onboarding...</p>;
+  const handleToggleItem = (id: number) => {
+    setChecklist((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, completed: !item.completed } : item
+      )
+    );
+  };
+
+  const handleAddItem = () => {
+    if (newItem.trim()) {
+      setChecklist((prev) => [
+        ...prev,
+        { id: Date.now(), label: newItem.trim(), completed: false },
+      ]);
+      setNewItem("");
+    }
+  };
+
+  const handleConcluirEtapa = () => {
+    setChecklist((prev) => prev.filter((item) => !item.completed));
+  };
+
+  const handleEnviarRelatorio = () => {
+    const templateParams = {
+      usuario: data?.user.name ?? "Anônimo",
+      humor: selectedHumor,
+      duvida,
+      evento,
+      comentario,
+    };
+
+    emailjs
+      .send(
+        "service_035axxj",
+        "template_fdrw5m4",
+        templateParams,
+        "PoOZlvrt-Xo83H8DM"
+      )
+      .then(() => {
+        alert("Feedback enviado com sucesso!");
+        setEnviado(true);
+        setSelectedHumor("");
+        setDuvida("");
+        setEvento("");
+        setComentario("");
+        setTimeout(() => setEnviado(false), 5000);
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar relatório:", error);
+      });
+  };
+
+  if (loading) return <p className="loading">Carregando onboarding</p>;
   if (erro) return <p className="erro">{erro}</p>;
   if (!data) return <p className="empty">Dados não encontrados.</p>;
 
   return (
     <div className="onboarding-container">
-      <div className="coluna-central">
-        <h1 className="onboarding-title">Olá, {data.user.name}!</h1>
+      <div className="layout-onboarding">
+        <div className="coluna-central">
+          <h1 className="onboarding-title">Olá, {data.user.name}!</h1>
+          <h2 className="onboarding-subtitle">Roadmap Onboarding</h2>
 
-        <div className="cards-duplos">
-          <StageCard stage={data.stages[0]} showChecklist />
-          <StageCard stage={data.stages[1]} showChecklist={false} />
+          <div className="cards-duplos">
+            <StageCard stage={data.stages[0]} showChecklist />
+            <StageCard stage={data.stages[1]} showChecklist={false} />
+          </div>
+
+          <div className="checklist-wrapper">
+            {checklist.length > 0 ? (
+              <ul className="checklist checklist-independente">
+                {checklist.map((item) => (
+                  <li key={item.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={item.completed}
+                        onChange={() => handleToggleItem(item.id)}
+                      />
+                      <span>{item.label}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="checklist-vazia">Nenhum item adicionado ainda.</p>
+            )}
+
+            <div className="checklist-add">
+              <input
+                type="text"
+                value={newItem}
+                onChange={(e) => setNewItem(e.target.value)}
+                placeholder="Adicionar novo item"
+                onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
+              />
+              <Button className="botao-etapa" onClick={handleAddItem}>
+                Adicionar
+              </Button>
+            </div>
+
+            {checklist.length > 0 && (
+              <Button
+                type="button"
+                onClick={handleConcluirEtapa}
+                className="botao-etapa"
+              >
+                Concluir etapa
+              </Button>
+            )}
+          </div>
+
+          <div className="categorias-grid">
+            <a href="/chat">
+              <div className="categoria-card">Chat</div>
+            </a>
+            <a href="/cursos">
+              <div className="categoria-card">Cursos</div>
+            </a>
+            <a href="/plataformas">
+              <div className="categoria-card">Plataformas</div>
+            </a>
+            <a href="">
+              <div className="categoria-card">Vivo Vibe</div>
+            </a>
+          </div>
         </div>
 
-        <ul className="checklist checklist-independente">
-          <li>
-            <label>
-              <input type="checkbox" />
-              <span>Fez login no sistema</span>
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" />
-              <span>Leu o manual de boas-vindas</span>
-            </label>
-          </li>
-        </ul>
-        <Button type="submit" className="botao-etapa">Concluir etapa</Button>
+        <div className="coluna-lateral">
+          <div className="jornada">
+            <div className="widget dias-jornada">
+              <h3>Dias da jornada</h3>
+              <p>{data?.user.journeyDays ?? "--"}/90</p>
+            </div>
+
+            <div className="widget">
+              <h3>Seu nível atual</h3>
+              <div className="badge-nivel">Nível {data?.user.currentLevel}</div>
+            </div>
+          </div>
+
+          <div className="widget">
+            <h3>Resumo semanal</h3>
+
+            <div className="humor-options">
+              {["Confuso(a)", "Motivado(a)"].map((option) => (
+                <label
+                  key={option}
+                  className={selectedHumor === option ? "selected" : ""}
+                  onClick={() => setSelectedHumor(option)}
+                >
+                  <input
+                    type="radio"
+                    name="humor"
+                    value={option}
+                    checked={selectedHumor === option}
+                    onChange={() => setSelectedHumor(option)}
+                    style={{ display: "none" }}
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+
+            <textarea
+              placeholder="Teve alguma dúvida essa semana?"
+              value={duvida}
+              onChange={(e) => setDuvida(e.target.value)}
+            />
+            <textarea
+              placeholder="Participou de algum evento de integração?"
+              value={evento}
+              onChange={(e) => setEvento(e.target.value)}
+            />
+            <textarea
+              placeholder="Algum comentário extra?"
+              value={comentario}
+              onChange={(e) => setComentario(e.target.value)}
+            />
+
+            <Button
+              type="button"
+              className="botao-etapa"
+              onClick={handleEnviarRelatorio}
+            >
+              Enviar relatório semanal
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
