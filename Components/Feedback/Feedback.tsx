@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Button from "../../Components/Button/Button"; // ajuste o caminho conforme sua estrutura
+import React, { useState, useRef } from "react";
+import { ButtonPrimary } from "@telefonica/mistica";
 import "./Feedback.css";
 import emailjs from "emailjs-com";
 
@@ -7,6 +7,8 @@ const Feedback: React.FC = () => {
   const [rating, setRating] = useState<number | null>(null);
   const [dificuldade, setDificuldade] = useState("");
   const [comentario, setComentario] = useState("");
+
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,13 +36,12 @@ const Feedback: React.FC = () => {
         alert("Ocorreu um erro. Tente novamente.");
       });
   };
-    
 
   return (
     <div className="feedback-container">
       <h2>Feedback sobre a plataforma</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form ref={formRef} onSubmit={handleSubmit}>
         <label>Como você avalia essa plataforma?</label>
         <div className="rating">
           {[1, 2, 3, 4, 5].map((n) => (
@@ -69,7 +70,16 @@ const Feedback: React.FC = () => {
           placeholder="Escreva aqui..."
         />
 
-        <Button type="submit">Enviar feedback</Button>
+        <ButtonPrimary
+          onPress={() => {
+            formRef.current?.dispatchEvent(
+              new Event("submit", { cancelable: true, bubbles: true })
+            );
+          }}
+          style={{ width: "100%", marginTop: 16 }}
+        >
+          Enviar feedback
+        </ButtonPrimary>
       </form>
     </div>
   );

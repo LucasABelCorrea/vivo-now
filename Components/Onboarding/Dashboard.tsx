@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { OnboardingDashboard } from "../../src/types/onboardingTypes";
 import "./Onboarding.css";
 import StageCard from "./StageCard";
-import Button from "../Button/Button";
+import { ButtonPrimary } from "@telefonica/mistica";
 import emailjs from "emailjs-com";
 
 type ChecklistItem = {
@@ -166,19 +166,23 @@ const Dashboard: React.FC = () => {
                 placeholder="Adicionar novo item"
                 onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
               />
-              <Button className="botao-etapa" onClick={handleAddItem}>
+              <ButtonPrimary
+                onPress={handleAddItem}
+                className="botao-etapa"
+                style={{ marginTop: 8 }}
+              >
                 Adicionar
-              </Button>
+              </ButtonPrimary>
             </div>
 
             {checklist.length > 0 && (
-              <Button
-                type="button"
-                onClick={handleConcluirEtapa}
+              <ButtonPrimary
+                onPress={handleConcluirEtapa}
                 className="botao-etapa"
+                style={{ marginTop: 12 }}
               >
                 Concluir etapa
-              </Button>
+              </ButtonPrimary>
             )}
           </div>
 
@@ -250,13 +254,13 @@ const Dashboard: React.FC = () => {
               onChange={(e) => setComentario(e.target.value)}
             />
 
-            <Button
-              type="button"
+            <ButtonPrimary
+              onPress={handleEnviarRelatorio}
               className="botao-etapa"
-              onClick={handleEnviarRelatorio}
+              style={{ marginTop: 12 }}
             >
               Enviar relatório semanal
-            </Button>
+            </ButtonPrimary>
           </div>
         </div>
       </div>

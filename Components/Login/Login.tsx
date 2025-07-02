@@ -1,9 +1,9 @@
 import { useState, FormEvent, JSX } from "react";
 import "./Login.css";
 import { Logo, ButtonPrimary } from "@telefonica/mistica";
-import Button from "../Button/Button";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 const Login = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
@@ -99,7 +99,7 @@ const Login = (): JSX.Element => {
         new Event("submit", { cancelable: true, bubbles: true })
       );
   }}
-  style={{ width: "100%", marginTop: 16, backgroundColor: "#FF0000" }}
+  style={{ width: "100%", marginTop: 16 }}
 >
   Entrar
 </ButtonPrimary>
