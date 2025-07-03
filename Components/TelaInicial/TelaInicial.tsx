@@ -1,5 +1,4 @@
 import React from 'react'
-import Button from '../Button/Button'
 import "./TelaInicial.css"
 import { useNavigate } from "react-router-dom";
 import { Logo, ButtonPrimary } from "@telefonica/mistica";

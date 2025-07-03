@@ -4,7 +4,6 @@ import { Logo, ButtonPrimary } from "@telefonica/mistica";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-
 const Login = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -90,19 +89,18 @@ const Login = (): JSX.Element => {
           {error && <p className="error-message">{error}</p>}
           <div className="recall-forget" />
 
-         
-       <ButtonPrimary
-  onPress={() => {
-    document
-      .querySelector("form")
-      ?.dispatchEvent(
-        new Event("submit", { cancelable: true, bubbles: true })
-      );
-  }}
-  style={{ width: "100%", marginTop: 16 }}
->
-  Entrar
-</ButtonPrimary>
+          <ButtonPrimary
+            onPress={() => {
+              document
+                .querySelector("form")
+                ?.dispatchEvent(
+                  new Event("submit", { cancelable: true, bubbles: true })
+                );
+            }}
+            style={{ width: "100%", marginTop: 16 }}
+          >
+            Entrar
+          </ButtonPrimary>
         </form>
       </div>
 

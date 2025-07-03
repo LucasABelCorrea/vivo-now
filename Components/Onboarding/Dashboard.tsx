@@ -48,7 +48,7 @@ const Dashboard: React.FC = () => {
           id: 1,
           title: "Bem-vindo à empresa",
           progress: 1,
-          status: "completed",
+          status: "active",
           checklist: [
             { id: 1, label: "Recebeu equipamento", completed: false },
             { id: 2, label: "Criou conta nos sistemas", completed: false },
@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
           id: 2,
           title: "Conhecendo o time",
           progress: 0.6,
-          status: "active",
+          status: "locked",
           checklist: [],
         },
       ],
@@ -134,8 +134,8 @@ const Dashboard: React.FC = () => {
           <h2 className="onboarding-subtitle">Roadmap Onboarding</h2>
 
           <div className="cards-duplos">
-            <StageCard stage={data.stages[0]} showChecklist />
-            <StageCard stage={data.stages[1]} showChecklist={false} />
+            <StageCard stage={data.stages[0]}/>
+            <StageCard stage={data.stages[1]} />
           </div>
 
           <div className="checklist-wrapper">
@@ -206,7 +206,7 @@ const Dashboard: React.FC = () => {
           <div className="jornada">
             <div className="widget dias-jornada">
               <h3>Dias da jornada</h3>
-              <p>{data?.user.journeyDays ?? "--"}/90</p>
+              <p className="dias-jornada">{data?.user.journeyDays ?? "--"}/90</p>
             </div>
 
             <div className="widget">

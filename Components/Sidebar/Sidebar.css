@@ -51,14 +51,11 @@
   transition: background 0.2s;
 }
 
-.sidebar nav ul li a:hover {
-  background-color: #f4edff;
-}
 
 .sidebar nav ul li a.active {
-  background-color: #ece2ff;
+  color: var(--purple-vivo);
   font-weight: bold;
-  
+  overflow: hidden;
 }
 
 .chatbot-link {
@@ -107,6 +104,7 @@
     height: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 
   .sidebar-content nav {
@@ -128,12 +126,14 @@
 
   .sidebar nav ul li {
     flex: 1;
+    height: 100%;
+    max-height: 64px;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
   }
-  
+
   .sidebar nav ul li a {
     display: flex;
     flex-direction: column;
@@ -142,18 +142,22 @@
     width: 100%;
     height: 100%;
     gap: 4px;
+    padding: 0;
     font-size: 12px;
     text-decoration: none;
     color: #333;
     background: none;
-    border-radius: 0;
   }
-  
+
   .sidebar nav ul li a.active {
     color: var(--purple-vivo);
-    background-color: #f2ebff;
     font-weight: bold;
-    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    border-radius: 0;
   }
 
   .logo {
