@@ -19,7 +19,7 @@ const Plataformas: React.FC = () => {
 
     if (!token) {
       console.warn(
-        "⚠️ Nenhum token encontrado. Usuário pode não estar autenticado."
+        "Nenhum token encontrado. Usuário pode não estar autenticado."
       );
       return;
     }

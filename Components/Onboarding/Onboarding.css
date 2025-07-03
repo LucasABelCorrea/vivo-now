@@ -252,7 +252,7 @@
 
 .categoria-card {
   background: linear-gradient(135deg, var(--purple-vivo), var(--second-purple));
-  color: white;
+  color: #fff;
   padding: 2rem 1rem;
   display: flex;
   justify-content: center;
