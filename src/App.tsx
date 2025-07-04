@@ -10,6 +10,7 @@ import Plataformas from "../Components/Plataformas/Plataformas";
 import Cursos from "../Components/Cursos/Cursos";
 
 import MainLayout from "../src/layouts/MainLayout";
+import Chatbot from "../Components/Chatbot/Chatbot";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/time" element={<Time />} />
             <Route path="/plataformas" element={<Plataformas />} />
             <Route path="/cursos" element={<Cursos />} />
+            <Route path="/chatbot" element={<Chatbot />} />
           </Route>
         </Routes>
       </BrowserRouter>

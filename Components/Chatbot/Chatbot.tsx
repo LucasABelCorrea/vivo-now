@@ -39,7 +39,7 @@ const Chatbot: React.FC = () => {
 
     try {
       const response = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=SUA_API_KEY",
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${import.meta.env.VITE_API_GEMINI_KEY}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -50,21 +50,42 @@ const Chatbot: React.FC = () => {
       );
 
       const data = await response.json();
-      const botReply =
-        data.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "Desculpe, não entendi.";
 
+      if (data.candidates && data.candidates.length > 0) {
+        const botReply = data.candidates[0].content.parts[0].text;
+
+        const botMessage: Message = {
+          role: "bot",
+          content: botReply,
+          timestamp: getCurrentTime(),
+        };
+
+        setMessages((prev) => [...prev, botMessage]);
+      } else if (data.error) {
+        const botMessage: Message = {
+          role: "bot",
+          content: `Erro da API: ${data.error.message}`,
+          timestamp: getCurrentTime(),
+        };
+        setMessages((prev) => [...prev, botMessage]);
+      } else {
+        const botMessage: Message = {
+          role: "bot",
+          content: "Ops, a resposta veio vazia da API.",
+          timestamp: getCurrentTime(),
+        };
+        setMessages((prev) => [...prev, botMessage]);
+      }
+    } catch (error) {
       const botMessage: Message = {
         role: "bot",
-        content: botReply,
+        content: "Erro ao conectar com a API.",
         timestamp: getCurrentTime(),
       };
-
       setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
-      console.error("Erro ao chamar Gemini API", error);
+      console.error("Erro ao chamar Gemini API:", error);
     }
-  };
+  }; // <-- AQUI estava faltando o fechamento
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") sendMessage();
