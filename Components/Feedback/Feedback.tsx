@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { ButtonPrimary } from "@telefonica/mistica";
+import { ButtonPrimary, ButtonSecondary } from "@telefonica/mistica";
 import "./Feedback.css";
 import emailjs from "emailjs-com";
 
@@ -43,18 +43,18 @@ const Feedback: React.FC = () => {
 
       <form ref={formRef} onSubmit={handleSubmit}>
         <label>Como você avalia essa plataforma?</label>
-        <div className="rating">
-          {[1, 2, 3, 4, 5].map((n) => (
-            <button
-              key={n}
-              type="button"
-              className={rating === n ? "selected" : ""}
-              onClick={() => setRating(n)}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
+       <div className="rating">
+  {[1, 2, 3, 4, 5].map((n) => (
+    <ButtonSecondary
+      key={n}
+      onPress={() => setRating(n)}
+      className={`rating-button ${rating === n ? "selected" : ""}`}
+      small
+    >
+      {n}
+    </ButtonSecondary>
+  ))}
+</div>
 
         <label>Teve alguma dificuldade? Se sim, escreva qual(is):</label>
         <textarea
