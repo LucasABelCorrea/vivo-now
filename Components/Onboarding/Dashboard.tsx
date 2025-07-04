@@ -18,25 +18,29 @@ type Step = {
   checklist: ChecklistItem[];
 };
 
-type OnboardingAPIResponse = {
-  id: number;
-  dt_begin: string;
-  dt_end: string;
-  active: boolean;
-  manager: any;
-  buddy: any;
-  collaborator: any;
-  steps: Step[];
-  reports: any[];
-  currentStep: Step | null;
+type OnboardingDashboard = {
+  user: {
+    name: string;
+    currentLevel: number;
+    journeyDays: number;
+  };
+  stages: Step[];
 };
 
 const Dashboard: React.FC = () => {
-  const [data, setData] = useState<OnboardingAPIResponse | null>(null);
+  const [data, setData] = useState<OnboardingDashboard | null>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 
-  const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
+  const [checklist, setChecklist] = useState<ChecklistItem[]>(() => {
+    const stored = localStorage.getItem("checklist");
+    try {
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [newItem, setNewItem] = useState("");
   const [selectedHumor, setSelectedHumor] = useState("");
   const [duvida, setDuvida] = useState("");
@@ -45,46 +49,42 @@ const Dashboard: React.FC = () => {
   const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const onboardingId = 1; // 🔧 você pode tornar isso dinâmico depois
+    localStorage.setItem("checklist", JSON.stringify(checklist));
+  }, [checklist]);
 
-    if (!token) {
-      setErro("Token não encontrado. Faça login novamente.");
-      setLoading(false);
-      return;
-    }
-
-    fetch(`http://localhost:8080/onboardings/${onboardingId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+  useEffect(() => {
+    const mockData: OnboardingDashboard = {
+      user: {
+        name: "Lucas Correa",
+        currentLevel: 3,
+        journeyDays: 42,
       },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Erro ${res.status}: ${res.statusText}`);
-        }
-        return res.json();
-      })
-      .then((data: OnboardingAPIResponse) => {
-        setData(data);
-        setChecklist(data.currentStep?.checklist || []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Erro ao buscar dados do onboarding:", err);
-        setErro("Erro ao carregar dados do onboarding.");
-        setLoading(false);
-      });
-  }, []);
+      stages: [
+        {
+          id: 1,
+          title: "Bem-vindo à empresa",
+          progress: 1,
+          status: "active",
+          checklist: [
+            { id: 1, label: "Recebeu equipamento", completed: false },
+            { id: 2, label: "Criou conta nos sistemas", completed: false },
+          ],
+        },
+        {
+          id: 2,
+          title: "Conhecendo o time",
+          progress: 0.6,
+          status: "locked",
+          checklist: [],
+        },
+      ],
+    };
 
-  const calcularDiasDeJornada = (dt_begin: string): number => {
-    const inicio = new Date(dt_begin);
-    const hoje = new Date();
-    const diff = Math.floor((hoje.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24));
-    return diff;
-  };
+    setTimeout(() => {
+      setData(mockData);
+      setLoading(false);
+    }, 1000);
+  }, []);
 
   const handleToggleItem = (id: number) => {
     setChecklist((prev) =>
@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
 
   const handleEnviarRelatorio = () => {
     const templateParams = {
-      usuario: "Colaborador",
+      usuario: data?.user.name ?? "Anônimo",
       humor: selectedHumor,
       duvida,
       evento,
@@ -142,17 +142,15 @@ const Dashboard: React.FC = () => {
   if (erro) return <p className="erro">{erro}</p>;
   if (!data) return <p className="empty">Dados não encontrados.</p>;
 
-  const diasDeJornada = calcularDiasDeJornada(data.dt_begin);
-
   return (
     <div className="onboarding-container">
       <div className="layout-onboarding">
         <div className="coluna-central">
-          <h1 className="onboarding-title">Olá!</h1>
+          <h1 className="onboarding-title">Olá, {data.user.name}!</h1>
           <h2 className="onboarding-subtitle">Roadmap Onboarding</h2>
 
           <div className="cards-duplos">
-            {data.steps.map((stage) => (
+            {data.stages.map((stage) => (
               <StageCard key={stage.id} stage={stage} />
             ))}
           </div>
@@ -225,14 +223,12 @@ const Dashboard: React.FC = () => {
           <div className="jornada">
             <div className="widget dias-jornada">
               <h3>Dias da jornada</h3>
-              <p className="dias-jornada">{diasDeJornada}/90</p>
+              <p className="dias-jornada">{data.user.journeyDays}/90</p>
             </div>
 
             <div className="widget">
               <h3>Seu nível atual</h3>
-              <div className="badge-nivel">
-                Nível {data.currentStep?.id ?? "--"}
-              </div>
+              <div className="badge-nivel">Nível {data.user.currentLevel}</div>
             </div>
           </div>
 
@@ -275,7 +271,7 @@ const Dashboard: React.FC = () => {
               onChange={(e) => setComentario(e.target.value)}
             />
 
-<ButtonPrimary
+            <ButtonPrimary
               onPress={handleEnviarRelatorio}
               className="botao-etapa"
               style={{ marginTop: 12 }}
