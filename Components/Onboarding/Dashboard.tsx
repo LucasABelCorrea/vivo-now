@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Onboarding.css";
 import StageCard from "./StageCard";
-import { ButtonPrimary } from "@telefonica/mistica";
+import { ButtonPrimary, Text } from "@telefonica/mistica";
 import emailjs from "emailjs-com";
 
 type ChecklistItem = {
@@ -204,19 +204,30 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="categorias-grid">
-            <a href="/chat">
-              <div className="categoria-card">Chat</div>
-            </a>
-            <a href="/cursos">
-              <div className="categoria-card">Cursos</div>
-            </a>
-            <a href="/plataformas">
-              <div className="categoria-card">Plataformas</div>
-            </a>
-            <a href="">
-              <div className="categoria-card">Vivo Vibe</div>
-            </a>
+            {[
+              { title: 'Chat', link: '/chat' },
+              { title: 'Cursos', link: '/cursos' },
+              { title: 'Plataformas', link: '/plataformas' },
+              { title: 'Vivo Vibe', link: '' },
+            ].map(({ title, link }) => (
+              <a href={link} key={title} style={{ textDecoration: 'none' }}>
+                <div
+                  className="categoria-card"
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.0)';
+                  }}
+                >
+                  <Text color="textInverse" size={18} weight="bold">
+                    {title}
+                  </Text>
+                </div>
+              </a>
+            ))}
           </div>
+
         </div>
 
         <div className="coluna-lateral">
