@@ -1,4 +1,4 @@
-import { useState, FormEvent, JSX } from "react";
+import { useState, useEffect, FormEvent, JSX } from "react";
 import "./Login.css";
 import { ButtonPrimary, VivoLogo } from "@telefonica/mistica";
 import { useNavigate } from "react-router-dom";
@@ -9,8 +9,30 @@ const Login = (): JSX.Element => {
   const [password, setPassword] = useState<string>("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [logoSize, setLogoSize] = useState<number>(500); 
 
   const navigate = useNavigate();
+
+ 
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+
+      if (width < 480) {
+        setLogoSize(160);
+      } else if (width < 768) {
+        setLogoSize(200);
+      } else if (width < 1224) {
+        setLogoSize(300);
+      } else {
+        setLogoSize(500);
+      }
+    };
+
+    handleResize(); // define o tamanho ao carregar
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -104,7 +126,7 @@ const Login = (): JSX.Element => {
       </div>
 
       <div className="logo-container">
-        <VivoLogo size={500}/>
+        <VivoLogo size={logoSize} />
       </div>
     </div>
   );

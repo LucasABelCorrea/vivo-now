@@ -1,3 +1,4 @@
+/* Container principal */
 .container {
   width: 80%;
   min-height: 80vh;
@@ -11,8 +12,10 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   gap: 32px;
   flex-wrap: wrap;
+  position: relative;
 }
 
+/* Formulário */
 .form {
   flex: 1;
   display: flex;
@@ -29,6 +32,7 @@
   gap: 20px;
 }
 
+/* Títulos */
 h1 {
   font-size: 24px;
   font-weight: bold;
@@ -41,6 +45,7 @@ h4 {
   font-weight: 500;
 }
 
+/* Campos de entrada */
 .input-field {
   margin-bottom: 15px;
 }
@@ -62,6 +67,7 @@ h4 {
   box-shadow: 0 0 0 1px #ccc;
 }
 
+/* Input com ícone (senha) */
 .input-with-icon {
   position: relative;
 }
@@ -87,21 +93,21 @@ h4 {
   background: transparent;
 }
 
-/* LOGO */
-.logo {
-  height: 100%;
-  display: flex;
+/* Logo */
+.logo-container {
   flex: 1;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.logo img,
-.vivo-logo {
+.logo-container .vivo-logo,
+.logo-container img {
   width: 50%;
   object-fit: contain;
 }
 
+/* Responsividade */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -111,7 +117,16 @@ h4 {
   }
 
   .logo-container {
-    display: none;
+    order: -1;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .logo-container .vivo-logo,
+  .logo-container img {
+    width: 120px;
+    height: auto;
   }
 
   h1 {
