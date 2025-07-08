@@ -15,35 +15,37 @@ const Plataformas: React.FC = () => {
   const [filtro, setFiltro] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.warn(
-        "Nenhum token encontrado. Usuário pode não estar autenticado."
-      );
-      return;
-    }
-
-    fetch("http://localhost:8080/platforms", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    // Simula carregamento de dados mockados
+    const mockData: Plataforma[] = [
+      {
+        id: "1",
+        name: "Plataforma de Cursos",
+        type_access: "Acesso via SSO",
+        url: "https://cursos.exemplo.com",
       },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Erro ${res.status}: ${res.statusText}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Plataformas carregadas:", data);
-        setPlataformas(data);
-      })
-      .catch((err) => {
-        console.error("Erro ao buscar plataformas:", err);
-      });
+      {
+        id: "2",
+        name: "Portal RH",
+        type_access: "Login com email",
+        url: "https://rh.exemplo.com",
+      },
+      {
+        id: "3",
+        name: "Ferramenta de Projetos",
+        type_access: "Acesso direto",
+        url: "https://projetos.exemplo.com",
+      },
+      {
+        id: "4",
+        name: "Intranet",
+        type_access: "Acesso via VPN",
+        url: "https://intranet.exemplo.com",
+      },
+    ];
+
+    setTimeout(() => {
+      setPlataformas(mockData);
+    }, 500);
   }, []);
 
   const plataformasFiltradas = plataformas.filter((item) =>

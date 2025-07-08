@@ -62,19 +62,6 @@ h4 {
   box-shadow: 0 0 0 1px #ccc;
 }
 
-.logo {
-  height: 100%;
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-}
-
-.logo img {
-  width: 50%;
-  object-fit: contain;
-}
-
 .input-with-icon {
   position: relative;
 }
@@ -100,6 +87,20 @@ h4 {
   background: transparent;
 }
 
+/* LOGO */
+.logo {
+  height: 100%;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo img,
+.vivo-logo {
+  width: 50%;
+  object-fit: contain;
+}
 
 @media (max-width: 768px) {
   .container {
@@ -109,20 +110,9 @@ h4 {
     margin: 40px auto;
   }
 
-  .logo {
-    width: 100%;
-    order: -1;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 24px;
-    display: flex;
+  .logo-container {
+    display: none;
   }
-
-  .logo img {
-    width: 100%;
-    max-width: 160px;
-  }
-
 
   h1 {
     font-size: 32px;
@@ -140,26 +130,5 @@ h4 {
 
   button {
     font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 16px;
-    margin: 24px auto;
-  }
-
-  .logo img {
-    width: 100%;
-  }
-
-  h1 {
-    h1 {
-      font-size: 32px;
-    }
-  }
-
-  h4 {
-    font-size: 13px;
   }
 }

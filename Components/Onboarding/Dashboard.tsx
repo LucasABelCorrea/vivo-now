@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./Onboarding.css";
 import StageCard from "./StageCard";
 import { ButtonPrimary, Text } from "@telefonica/mistica";
+import {
+  IconFaceSadRegular,
+  IconFaceNeutralRegular,
+  IconFaceHappyRegular,
+  IconFaceSuperHappyRegular,
+} from "@telefonica/mistica";
 import emailjs from "emailjs-com";
 
 type ChecklistItem = {
@@ -205,19 +211,21 @@ const Dashboard: React.FC = () => {
 
           <div className="categorias-grid">
             {[
-              { title: 'Chat', link: '/chat' },
-              { title: 'Cursos', link: '/cursos' },
-              { title: 'Plataformas', link: '/plataformas' },
-              { title: 'Vivo Vibe', link: '' },
+              { title: "Chat", link: "/chat" },
+              { title: "Cursos", link: "/cursos" },
+              { title: "Plataformas", link: "/plataformas" },
+              { title: "Vivo Vibe", link: "" },
             ].map(({ title, link }) => (
-              <a href={link} key={title} style={{ textDecoration: 'none' }}>
+              <a href={link} key={title} style={{ textDecoration: "none" }}>
                 <div
                   className="categoria-card"
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.05)';
+                    (e.currentTarget as HTMLDivElement).style.transform =
+                      "scale(1.05)";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.0)';
+                    (e.currentTarget as HTMLDivElement).style.transform =
+                      "scale(1.0)";
                   }}
                 >
                   <Text color="textInverse" size={18} weight="bold">
@@ -227,7 +235,6 @@ const Dashboard: React.FC = () => {
               </a>
             ))}
           </div>
-
         </div>
 
         <div className="coluna-lateral">
@@ -244,26 +251,39 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="widget">
-            <h3>Resumo semanal</h3>
+            <h3>Como você se sentiu essa semana?</h3>
 
             <div className="humor-options">
-              {["Confuso(a)", "Motivado(a)"].map((option) => (
-                <label
-                  key={option}
-                  className={selectedHumor === option ? "selected" : ""}
-                  onClick={() => setSelectedHumor(option)}
-                >
-                  <input
-                    type="radio"
-                    name="humor"
-                    value={option}
-                    checked={selectedHumor === option}
-                    onChange={() => setSelectedHumor(option)}
-                    style={{ display: "none" }}
-                  />
-                  {option}
-                </label>
-              ))}
+              {[1, 2, 3, 4].map((level) => {
+                const Icon =
+                  level === 1
+                    ? IconFaceSadRegular
+                    : level === 2
+                    ? IconFaceNeutralRegular
+                    : level === 3
+                    ? IconFaceHappyRegular
+                    : IconFaceSuperHappyRegular;
+
+                return (
+                  <label
+                    key={level}
+                    className={`humor-icon ${
+                      selectedHumor === String(level) ? "selected" : ""
+                    }`}
+                    onClick={() => setSelectedHumor(String(level))}
+                  >
+                    <input
+                      type="radio"
+                      name="humor"
+                      value={level}
+                      checked={selectedHumor === String(level)}
+                      onChange={() => setSelectedHumor(String(level))}
+                      style={{ display: "none" }}
+                    />
+                    <Icon size={32} color="currentColor" />
+                  </label>
+                );
+              })}
             </div>
 
             <textarea

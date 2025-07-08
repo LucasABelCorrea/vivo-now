@@ -1,6 +1,6 @@
 import { useState, FormEvent, JSX } from "react";
 import "./Login.css";
-import { Logo, ButtonPrimary } from "@telefonica/mistica";
+import { ButtonPrimary, VivoLogo } from "@telefonica/mistica";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
@@ -87,7 +87,6 @@ const Login = (): JSX.Element => {
           </div>
 
           {error && <p className="error-message">{error}</p>}
-          <div className="recall-forget" />
 
           <ButtonPrimary
             onPress={() => {
@@ -104,8 +103,8 @@ const Login = (): JSX.Element => {
         </form>
       </div>
 
-      <div className="logo">
-        <img src="/images/logo-vivo.png" alt="Logo Vivo" />
+      <div className="logo-container">
+        <VivoLogo size={500}/>
       </div>
     </div>
   );

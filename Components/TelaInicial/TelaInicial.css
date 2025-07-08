@@ -7,6 +7,27 @@
   text-align: center;
 }
 
+/* Animação de pulsar */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Aplica a animação à logo */
+.vivo-logo {
+  animation: pulse 2s infinite ease-in-out;
+}
+
 .tela-container h1 {
   font-size: 64px;
   color: var(--purple-vivo);

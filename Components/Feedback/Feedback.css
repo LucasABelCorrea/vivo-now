@@ -1,7 +1,7 @@
 .feedback-container {
   width: 100%;
   max-width: 800px;
-  margin: 0 auto;
+  margin: auto;
   padding: 48px;
   background-color: #f0edff;
   border-radius: 24px;
@@ -51,30 +51,70 @@
   margin: 16px 0;
 }
 
+
 .rating .rating-button {
   background: #a56dff !important;
   border: none !important;
   padding: 12px !important;
   font-weight: bold;
-  border-radius: 50% !important;
-  width: 40px;
-  height: 40px;
+  border-radius: 10px !important;
+  width: 60px;
+  height: 60px;
   cursor: pointer;
   transition: all 0.2s;
   min-width: unset !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white !important;
+  color: #fff;
 }
 
 .rating .rating-button:hover {
   background-color: #9257e6 !important;
-  color: white !important;
+  color: #fff;
 }
 
 .rating .rating-button.selected {
   background-color: var(--purple-vivo) !important;
-  color: white !important;
+  color: #fff;
 }
 
+@media (max-width: 768px) {
+  .feedback-container {
+    padding: 24px;
+    height: auto;
+    border-radius: 16px;
+    gap: 20px;
+  }
+
+  .feedback-container h2 {
+    font-size: 20px;
+    text-align: center;
+    align-self: center;
+  }
+
+  .feedback-container form {
+    width: 100%;
+    margin-left: 0;
+    gap: 16px;
+  }
+
+  .feedback-container textarea {
+    font-size: 14px;
+    padding: 10px;
+    min-height: 70px;
+  }
+
+  .rating {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .rating .rating-button {
+    width: 60px;
+    height: 60px;
+    font-size: 14px;
+    padding: 10px;
+  }
+}

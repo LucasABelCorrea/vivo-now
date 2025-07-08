@@ -22,7 +22,7 @@ h1 {
   flex-direction: column;
   gap: 16px;
   background: linear-gradient(135deg, var(--purple-vivo), var(--second-purple));
-  color: white;
+  color: #fff;
   border-radius: 20px;
   padding: 20px;
   height: 30%;
@@ -68,4 +68,50 @@ h1 {
 a {
   text-decoration: none;
   color: #fff;
+}
+
+@media (max-width: 768px) {
+  .time-wrapper {
+    width: 90%;
+    height: auto;
+    padding: 24px;
+    gap: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .card {
+    padding: 16px;
+    height: auto;
+  }
+
+  .titulo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .name {
+    font-size: 18px;
+  }
+
+  .card-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 0;
+  }
+
+  .contact {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .icon {
+    font-size: 28px;
+  }
 }

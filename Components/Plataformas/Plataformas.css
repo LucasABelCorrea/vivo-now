@@ -30,7 +30,7 @@ h1 {
 
 .card-plataforma {
   background: linear-gradient(135deg, var(--purple-vivo), var(--second-purple));
-  color: #2a2a2a;
+  color: #fff;
   border-radius: 16px;
   min-height: 20vh;
   overflow: hidden;
@@ -38,6 +38,12 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-plataforma:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .capa {

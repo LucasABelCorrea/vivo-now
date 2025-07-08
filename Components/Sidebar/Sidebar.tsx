@@ -1,11 +1,13 @@
 import React from "react";
-import { GrHomeRounded } from "react-icons/gr";
-import { TbFolder } from "react-icons/tb";
-import { CiGrid41 } from "react-icons/ci";
-import { IoPeopleOutline, IoChatbubbleEllipsesOutline } from "react-icons/io5";
-import { VscFeedback } from "react-icons/vsc";
+import {
+  IconHomeRegular,
+  IconFolderRegular,
+  IconChatRegular,
+  IconAppsRegular,
+  IconGroupRegular,
+  IconFaceHappyRegular,
+} from "@telefonica/mistica";
 import { NavLink } from "react-router-dom";
-
 import "./Sidebar.css";
 
 const Sidebar: React.FC = () => {
@@ -18,37 +20,37 @@ const Sidebar: React.FC = () => {
           <ul>
             <li>
               <NavLink to="/home">
-                <GrHomeRounded className="side-icon" />
+                <IconHomeRegular size={24} color="currentColor" className="side-icon" />
                 <span>Home</span>
               </NavLink>
             </li>
             <li>
               <NavLink to="/cursos">
-                <TbFolder className="side-icon" />
+                <IconFolderRegular size={24} color="currentColor" className="side-icon" />
                 <span>Cursos</span>
               </NavLink>
             </li>
             <li>
               <NavLink to="/chat">
-                <IoChatbubbleEllipsesOutline className="side-icon" />
+                <IconChatRegular size={24} color="currentColor" className="side-icon" />
                 <span>Chat</span>
               </NavLink>
             </li>
             <li>
               <NavLink to="/plataformas">
-                <CiGrid41 className="side-icon" />
+                <IconAppsRegular size={24} color="currentColor" className="side-icon" />
                 <span>Plataformas</span>
               </NavLink>
             </li>
             <li>
               <NavLink to="/time">
-                <IoPeopleOutline className="side-icon" />
+                <IconGroupRegular size={24} color="currentColor" className="side-icon" />
                 <span>Time</span>
               </NavLink>
             </li>
             <li>
               <NavLink to="/feedback">
-                <VscFeedback className="side-icon" />
+                <IconFaceHappyRegular size={24} color="currentColor" className="side-icon" />
                 <span>Feedback</span>
               </NavLink>
             </li>

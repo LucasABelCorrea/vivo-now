@@ -14,33 +14,26 @@ const Time: React.FC = () => {
   const [membros, setMembros] = useState<Usuario[]>([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const teamId = localStorage.getItem("teamId"); // ou pegue do token, se preferir
-
-    if (!token || !teamId) {
-      console.warn("❗ Token ou teamId não encontrado.");
-      return;
-    }
-
-    fetch(`http://localhost:8080/teams/${teamId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    // Dados mockados para testes
+    const mockMembros: Usuario[] = [
+      {
+        id: 1,
+        name: "Lucas Correa",
+        email: "lucas.correa@empresa.com",
+        telephone: "(11) 91234-5678",
       },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Erro ao buscar time");
-        return res.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data.users)) {
-          setMembros(data.users);
-        } else {
-          console.warn("❗ Estrutura inesperada na resposta:", data);
-        }
-      })
-      .catch((err) => console.error("Erro ao buscar membros do time:", err));
+      {
+        id: 2,
+        name: "Ana Beatriz",
+        email: "ana.beatriz@empresa.com",
+        telephone: "(21) 99876-5432",
+      },
+    ];
+
+    // Simula carregamento assíncrono
+    setTimeout(() => {
+      setMembros(mockMembros);
+    }, 500);
   }, []);
 
   return (
