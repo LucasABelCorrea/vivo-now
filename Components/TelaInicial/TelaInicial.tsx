@@ -1,7 +1,7 @@
 import React from 'react'
 import "./TelaInicial.css"
 import { useNavigate } from "react-router-dom";
-import { Logo, ButtonPrimary } from "@telefonica/mistica";
+import MyPrimaryButton from '../Button/MyPrimaryButton';
 
 const TelaInicial = () => {
     const navigate = useNavigate();
@@ -14,11 +14,9 @@ const TelaInicial = () => {
     <div className="tela-container">
         <h1>VIVO NOW!</h1>
         <h2>Você Agora na Vivo</h2>
-            <ButtonPrimary onPress={handleNavigateToLogin}
-             style={{ width: '100%', marginTop: 16 }}
-            >
-      Entrar na Jornada
-    </ButtonPrimary>
+            
+            <MyPrimaryButton onPress={handleNavigateToLogin}
+            >Entrar na jornada</MyPrimaryButton>
     </div>
   )
 }

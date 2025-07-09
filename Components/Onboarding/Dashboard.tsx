@@ -9,6 +9,7 @@ import {
   IconFaceSuperHappyRegular,
 } from "@telefonica/mistica";
 import emailjs from "emailjs-com";
+import MyHighlightedCard from '../Card/Card';
 
 type ChecklistItem = {
   id: number;
@@ -210,30 +211,10 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="categorias-grid">
-            {[
-              { title: "Chat", link: "/chat" },
-              { title: "Cursos", link: "/cursos" },
-              { title: "Plataformas", link: "/plataformas" },
-              { title: "Vivo Vibe", link: "" },
-            ].map(({ title, link }) => (
-              <a href={link} key={title} style={{ textDecoration: "none" }}>
-                <div
-                  className="categoria-card"
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.transform =
-                      "scale(1.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.transform =
-                      "scale(1.0)";
-                  }}
-                >
-                  <Text color="textInverse" size={18} weight="bold">
-                    {title}
-                  </Text>
-                </div>
-              </a>
-            ))}
+            <MyHighlightedCard title="Chat" link="/chat" />
+            <MyHighlightedCard title="Cursos" link="/cursos" />
+            <MyHighlightedCard title="Plataformas" link="/plataformas" />
+            <MyHighlightedCard title="Vivo Vibe" link="" />
           </div>
         </div>
 
