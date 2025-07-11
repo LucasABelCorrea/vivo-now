@@ -1,8 +1,9 @@
 import { useState, useEffect, FormEvent, JSX } from "react";
 import "./Login.css";
-import { ButtonPrimary, VivoLogo } from "@telefonica/mistica";
+import {  VivoLogo } from "@telefonica/mistica";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import MyPrimaryButton from '../Button/MyPrimaryButton';
 
 const Login = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
@@ -110,18 +111,7 @@ const Login = (): JSX.Element => {
 
           {error && <p className="error-message">{error}</p>}
 
-          <ButtonPrimary
-            onPress={() => {
-              document
-                .querySelector("form")
-                ?.dispatchEvent(
-                  new Event("submit", { cancelable: true, bubbles: true })
-                );
-            }}
-            style={{ width: "100%", marginTop: 16 }}
-          >
-            Entrar
-          </ButtonPrimary>
+       <MyPrimaryButton>Entrar</MyPrimaryButton>
         </form>
       </div>
 

@@ -1,4 +1,3 @@
-// Components/Card/Card.tsx
 import React from 'react';
 import { Text } from '@telefonica/mistica';
 import './Card.css';

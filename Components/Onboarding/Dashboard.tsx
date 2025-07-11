@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Onboarding.css";
 import StageCard from "./StageCard";
-import { ButtonPrimary, Text } from "@telefonica/mistica";
 import {
   IconFaceSadRegular,
   IconFaceNeutralRegular,
@@ -10,6 +9,7 @@ import {
 } from "@telefonica/mistica";
 import emailjs from "emailjs-com";
 import MyHighlightedCard from '../Card/Card';
+import MyPrimaryButton from '../Button/MyPrimaryButton';
 
 type ChecklistItem = {
   id: number;
@@ -190,23 +190,25 @@ const Dashboard: React.FC = () => {
                 placeholder="Adicionar novo item"
                 onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
               />
-              <ButtonPrimary
+
+              <MyPrimaryButton
                 onPress={handleAddItem}
                 className="botao-etapa"
                 style={{ marginTop: 8 }}
               >
                 Adicionar
-              </ButtonPrimary>
+              </MyPrimaryButton>
             </div>
 
             {checklist.length > 0 && (
-              <ButtonPrimary
+              <MyPrimaryButton
                 onPress={handleConcluirEtapa}
                 className="botao-etapa"
                 style={{ marginTop: 12 }}
               >
                 Concluir etapa
-              </ButtonPrimary>
+              </MyPrimaryButton>
+
             )}
           </div>
 
@@ -240,17 +242,16 @@ const Dashboard: React.FC = () => {
                   level === 1
                     ? IconFaceSadRegular
                     : level === 2
-                    ? IconFaceNeutralRegular
-                    : level === 3
-                    ? IconFaceHappyRegular
-                    : IconFaceSuperHappyRegular;
+                      ? IconFaceNeutralRegular
+                      : level === 3
+                        ? IconFaceHappyRegular
+                        : IconFaceSuperHappyRegular;
 
                 return (
                   <label
                     key={level}
-                    className={`humor-icon ${
-                      selectedHumor === String(level) ? "selected" : ""
-                    }`}
+                    className={`humor-icon ${selectedHumor === String(level) ? "selected" : ""
+                      }`}
                     onClick={() => setSelectedHumor(String(level))}
                   >
                     <input
@@ -283,13 +284,14 @@ const Dashboard: React.FC = () => {
               onChange={(e) => setComentario(e.target.value)}
             />
 
-            <ButtonPrimary
+            <MyPrimaryButton
               onPress={handleEnviarRelatorio}
               className="botao-etapa"
               style={{ marginTop: 12 }}
             >
               Enviar relatório semanal
-            </ButtonPrimary>
+            </MyPrimaryButton>
+
           </div>
         </div>
       </div>
