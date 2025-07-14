@@ -10,7 +10,7 @@ type MyHighlightedCardProps = {
 const MyHighlightedCard: React.FC<MyHighlightedCardProps> = ({ title, link }) => {
   return (
     <a href={link} className="card-link">
-      <div className="categoria-card">
+      <div className="categoria-cards">
         <Text color="textInverse" size={18} weight="bold">
           {title}
         </Text>

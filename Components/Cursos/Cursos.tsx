@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { CiSearch } from "react-icons/ci";
-import "./Cursos.css";
+import CursoCard from "./CursosCard";
+
 
 interface Curso {
   id: string;
@@ -11,8 +11,6 @@ interface Curso {
 
 const Cursos: React.FC = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
-  const [inputBusca, setInputBusca] = useState("");
-  const [filtro, setFiltro] = useState("");
 
   useEffect(() => {
     const mockCursos: Curso[] = [
@@ -39,10 +37,6 @@ const Cursos: React.FC = () => {
     setCursos(mockCursos);
   }, []);
 
-  const cursosFiltrados = cursos.filter((curso) =>
-    curso.titulo.toLowerCase().includes(filtro.toLowerCase())
-  );
-
   return (
     <div className="plataformas-wrapper">
       <div className="margin">
@@ -51,23 +45,13 @@ const Cursos: React.FC = () => {
         </div>
 
         <div className="grid">
-          {cursosFiltrados.map((curso) => (
-            <div key={curso.id} className="card-curso">
-              <div className="capa-curso">
-                <h2>{curso.titulo}</h2>
-              </div>
-              <div className="info">
-                <p>{curso.descricao}</p>
-              </div>
-              <a
-                href={curso.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-curso"
-              >
-                Acessar curso
-              </a>
-            </div>
+          {cursos.map((curso) => (
+            <CursoCard
+              key={curso.id}
+              titulo={curso.titulo}
+              descricao={curso.descricao}
+              link={curso.link}
+            />
           ))}
         </div>
       </div>

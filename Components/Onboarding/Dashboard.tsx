@@ -194,7 +194,7 @@ const Dashboard: React.FC = () => {
               <MyPrimaryButton
                 onPress={handleAddItem}
                 className="botao-etapa"
-                style={{ marginTop: 8 }}
+                style={{ marginTop: 1 }}
               >
                 Adicionar
               </MyPrimaryButton>
