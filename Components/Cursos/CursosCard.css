@@ -1,10 +1,8 @@
 .card-curso {
   display: flex;
-  background: #8250f8;
-  border-left: 8px solid var(--purple-vivo);
+  background: #660099;
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   flex-direction: column;
   justify-content: space-between;
   gap: 12px;
@@ -17,11 +15,11 @@
 }
 
 .capa-curso {
-  background-color: rgba(255, 255, 255, 0.05);
   height: 100px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex;
+  margin-left: 12px;
 }
 
 
@@ -48,5 +46,7 @@
 }
 
 .info {
-  padding: 0 16px;
+  padding: 0 0px;
+  display: flex;
+   margin-left: 12px;
 }
