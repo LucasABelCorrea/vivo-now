@@ -23,7 +23,9 @@
 }
 
 /* Estados */
-.loading, .erro, .empty {
+.loading,
+.erro,
+.empty {
   text-align: center;
   margin-top: 3rem;
   font-size: 1.2rem;
@@ -32,7 +34,9 @@
   border-radius: 8px;
 }
 
-.loading { color: var(--purple-vivo); }
+.loading {
+  color: var(--purple-vivo);
+}
 
 .erro {
   color: #d32f2f;
@@ -47,7 +51,9 @@
 }
 
 /* Etapas */
-.onboarding-title { display: flex; }
+.onboarding-title {
+  display: flex;
+}
 
 .onboarding-subtitle {
   color: var(--purple-vivo);
@@ -242,6 +248,23 @@
 }
 
 /* --------------------------Categoria Cards-------------------------- */
+
+.categoria-card {
+  background: linear-gradient(135deg, var(--purple-vivo), var(--second-purple));
+  color: #fff;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s ease;
+  cursor: pointer;
+  height: 20vh;
+}
+
 .categorias-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -351,5 +374,4 @@ textarea {
     width: 100%;
     padding: 20px;
   }
-
 }

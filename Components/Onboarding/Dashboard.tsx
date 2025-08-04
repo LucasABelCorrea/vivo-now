@@ -37,17 +37,7 @@ const Dashboard: React.FC = () => {
   const [data, setData] = useState<OnboardingDashboard | null>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-
-  const [checklist, setChecklist] = useState<ChecklistItem[]>(() => {
-    const stored = localStorage.getItem("checklist");
-    try {
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [newItem, setNewItem] = useState("");
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
   const [selectedHumor, setSelectedHumor] = useState("");
   const [duvida, setDuvida] = useState("");
   const [evento, setEvento] = useState("");
@@ -55,41 +45,49 @@ const Dashboard: React.FC = () => {
   const [enviado, setEnviado] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("checklist", JSON.stringify(checklist));
-  }, [checklist]);
-
-  useEffect(() => {
-    const mockData: OnboardingDashboard = {
-      user: {
-        name: "Lucas Correa",
-        currentLevel: 3,
-        journeyDays: 42,
-      },
-      stages: [
-        {
-          id: 1,
-          title: "Bem-vindo à empresa",
-          progress: 1,
-          status: "active",
-          checklist: [
-            { id: 1, label: "Recebeu equipamento", completed: false },
-            { id: 2, label: "Criou conta nos sistemas", completed: false },
+    const fetchData = async () => {
+      try {
+        // Simulação de chamada à API
+        const mockData: OnboardingDashboard = {
+          user: {
+            name: "Lucas Correa",
+            currentLevel: 3,
+            journeyDays: 42,
+          },
+          stages: [
+            {
+              id: 1,
+              title: "Bem-vindo à empresa",
+              progress: 1,
+              status: "active",
+              checklist: [
+                { id: 1, label: "Recebeu equipamento", completed: false },
+                { id: 2, label: "Criou conta nos sistemas", completed: false },
+              ],
+            },
+            {
+              id: 2,
+              title: "Conhecendo o time",
+              progress: 0.6,
+              status: "locked",
+              checklist: [],
+            },
           ],
-        },
-        {
-          id: 2,
-          title: "Conhecendo o time",
-          progress: 0.6,
-          status: "locked",
-          checklist: [],
-        },
-      ],
+        };
+
+        setTimeout(() => {
+          setData(mockData);
+          const etapaAtiva = mockData.stages.find((s) => s.status === "active");
+          setChecklist(etapaAtiva?.checklist ?? []);
+          setLoading(false);
+        }, 1000);
+      } catch (error) {
+        setErro("Erro ao carregar dados.");
+        setLoading(false);
+      }
     };
 
-    setTimeout(() => {
-      setData(mockData);
-      setLoading(false);
-    }, 1000);
+    fetchData();
   }, []);
 
   const handleToggleItem = (id: number) => {
@@ -98,16 +96,6 @@ const Dashboard: React.FC = () => {
         item.id === id ? { ...item, completed: !item.completed } : item
       )
     );
-  };
-
-  const handleAddItem = () => {
-    if (newItem.trim()) {
-      setChecklist((prev) => [
-        ...prev,
-        { id: Date.now(), label: newItem.trim(), completed: false },
-      ]);
-      setNewItem("");
-    }
   };
 
   const handleConcluirEtapa = () => {
@@ -165,7 +153,7 @@ const Dashboard: React.FC = () => {
             <Box padding={16}>
               {checklist.length > 0 ? (
                 <div className="checklist checklist-independente">
-                  {checklist.map((item) => (
+                 {checklist.map((item) => (
                     <div key={item.id} style={{ marginBottom: 8 }}>
                       <Checkbox
                         name={`checkbox-${item.id}`}
@@ -178,25 +166,8 @@ const Dashboard: React.FC = () => {
                   ))}
                 </div>
               ) : (
-                <p className="checklist-vazia">Nenhum item adicionado ainda.</p>
+                <p className="checklist-vazia">Nenhum item disponível.</p>
               )}
-
-              <div className="checklist-add">
-                <input
-                  type="text"
-                  value={newItem}
-                  onChange={(e) => setNewItem(e.target.value)}
-                  placeholder="Adicionar novo item"
-                  onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
-                />
-                <ButtonPrimary
-                  onPress={handleAddItem}
-                  className="botao-etapa"
-                  style={{ marginTop: 8 }}
-                >
-                  Adicionar
-                </ButtonPrimary>
-              </div>
 
               {checklist.length > 0 && (
                 <ButtonPrimary
