@@ -34,90 +34,6 @@ h1 {
   }
 }
 
-.card-curso {
-  display: flex;
-  background: #8250f8;
-  border-left: 8px solid var(--purple-vivo);
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
-  transition: 0.3s;
-}
-
-.card-curso:hover {
-  transform: translateY(-4px);
-}
-
-.capa-curso {
-  background-color: rgba(255, 255, 255, 0.05);
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-}
-
-h2 {
-  font-size: 28px;
-  color: #fff;
-}
-
-.link-curso {
-  display: inline-block;
-  background-color: #f06497;
-  width: 40%;
-  color: white;
-  text-decoration: none;
-  padding: 12px;
-  margin-left: 14px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  transition: all 0.25s ease-in-out;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.link-curso:hover {
-  background-color: #d95386;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(240, 100, 151, 0.5);
-}
-
-.capa {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-}
-
-.info {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.info h2 {
-  font-size: 24px;
-  color: #fff;
-}
-
-.info p {
-  font-size: 16px;
-  color: #fff;
-  flex-grow: 1;
-}
-
-.curso {
-  font-size: 13px;
-  color: var(--purple-vivo);
-  font-weight: 500;
-  align-self: flex-end;
-}
-
 .campo-busca {
   position: relative;
   width: 100%;
@@ -144,3 +60,4 @@ h2 {
   color: #000;
   cursor: pointer;
 }
+

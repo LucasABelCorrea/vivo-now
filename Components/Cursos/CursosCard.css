@@ -1,0 +1,52 @@
+.card-curso {
+  display: flex;
+  background: #660099;
+  border-radius: 12px;
+  padding: 16px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: 0.3s;
+  color: #ffff;
+}
+
+.card-curso:hover {
+  transform: translateY(-4px);
+}
+
+.capa-curso {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: flex;
+  margin-left: 12px;
+}
+
+
+.link-curso {
+  display: inline-block;
+  background-color: #f06497;
+  width: 40%;
+  color: white;
+  text-decoration: none;
+  padding: 12px;
+  margin-left: 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.25s ease-in-out;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.link-curso:hover {
+  background-color: #d95386;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(240, 100, 151, 0.5);
+}
+
+.info {
+  padding: 0 0px;
+  display: flex;
+   margin-left: 12px;
+}

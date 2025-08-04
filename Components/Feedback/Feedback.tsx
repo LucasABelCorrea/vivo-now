@@ -2,13 +2,14 @@ import React, { useState, useRef } from "react";
 import { ButtonPrimary, ButtonSecondary } from "@telefonica/mistica";
 import "./Feedback.css";
 import emailjs from "emailjs-com";
+import MyPrimaryButton from '../Button/MyPrimaryButton';
 
 const Feedback: React.FC = () => {
   const [rating, setRating] = useState<number | null>(null);
   const [dificuldade, setDificuldade] = useState("");
   const [comentario, setComentario] = useState("");
 
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null!);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,16 +71,9 @@ const Feedback: React.FC = () => {
           placeholder="Escreva aqui..."
         />
 
-        <ButtonPrimary
-          onPress={() => {
-            formRef.current?.dispatchEvent(
-              new Event("submit", { cancelable: true, bubbles: true })
-            );
-          }}
-          style={{ width: "100%", marginTop: 16 }}
-        >
-          Enviar feedback
-        </ButtonPrimary>
+       <MyPrimaryButton formRef={formRef}>
+      Enviar feedback
+     </MyPrimaryButton>
       </form>
     </div>
   );
