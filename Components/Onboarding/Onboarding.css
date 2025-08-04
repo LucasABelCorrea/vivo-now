@@ -308,7 +308,7 @@
 /* --------------------------Report da Semana-------------------------- */
 .humor-options {
   display: flex;
-  gap: 1rem;
+  gap: 10px;
   flex-wrap: wrap;
 }
 

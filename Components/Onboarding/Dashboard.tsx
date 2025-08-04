@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Onboarding.css";
 import StageCard from "./StageCard";
-import { ButtonPrimary, Text } from "@telefonica/mistica";
+import { ButtonPrimary, Checkbox, Text, Box } from "@telefonica/mistica";
 import {
   IconFaceSadRegular,
   IconFaceNeutralRegular,
@@ -162,51 +162,52 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="checklist-wrapper">
-            {checklist.length > 0 ? (
-              <ul className="checklist checklist-independente">
-                {checklist.map((item) => (
-                  <li key={item.id}>
-                    <label>
-                      <input
-                        type="checkbox"
+            <Box padding={16}>
+              {checklist.length > 0 ? (
+                <div className="checklist checklist-independente">
+                  {checklist.map((item) => (
+                    <div key={item.id} style={{ marginBottom: 8 }}>
+                      <Checkbox
+                        name={`checkbox-${item.id}`}
                         checked={item.completed}
                         onChange={() => handleToggleItem(item.id)}
-                      />
-                      <span>{item.label}</span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="checklist-vazia">Nenhum item adicionado ainda.</p>
-            )}
+                      >
+                        {item.label}
+                      </Checkbox>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="checklist-vazia">Nenhum item adicionado ainda.</p>
+              )}
 
-            <div className="checklist-add">
-              <input
-                type="text"
-                value={newItem}
-                onChange={(e) => setNewItem(e.target.value)}
-                placeholder="Adicionar novo item"
-                onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
-              />
-              <ButtonPrimary
-                onPress={handleAddItem}
-                className="botao-etapa"
-                style={{ marginTop: 8 }}
-              >
-                Adicionar
-              </ButtonPrimary>
-            </div>
+              <div className="checklist-add">
+                <input
+                  type="text"
+                  value={newItem}
+                  onChange={(e) => setNewItem(e.target.value)}
+                  placeholder="Adicionar novo item"
+                  onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
+                />
+                <ButtonPrimary
+                  onPress={handleAddItem}
+                  className="botao-etapa"
+                  style={{ marginTop: 8 }}
+                >
+                  Adicionar
+                </ButtonPrimary>
+              </div>
 
-            {checklist.length > 0 && (
-              <ButtonPrimary
-                onPress={handleConcluirEtapa}
-                className="botao-etapa"
-                style={{ marginTop: 12 }}
-              >
-                Concluir etapa
-              </ButtonPrimary>
-            )}
+              {checklist.length > 0 && (
+                <ButtonPrimary
+                  onPress={handleConcluirEtapa}
+                  className="botao-etapa"
+                  style={{ marginTop: 12 }}
+                >
+                  Concluir etapa
+                </ButtonPrimary>
+              )}
+            </Box>
           </div>
 
           <div className="categorias-grid">
@@ -228,7 +229,7 @@ const Dashboard: React.FC = () => {
                       "scale(1.0)";
                   }}
                 >
-                  <Text color="textInverse" size={18} weight="bold">
+                  <Text size={18} weight="bold">
                     {title}
                   </Text>
                 </div>
