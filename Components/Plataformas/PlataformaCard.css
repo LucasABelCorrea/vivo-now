@@ -30,6 +30,8 @@
 
 .custom-btn:hover {
   background-color: #d95386;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(240, 100, 151, 0.5);
 }
 
 .card-link {
