@@ -31,7 +31,7 @@ const ChatWindow = ({
       <div className="chat-header">
         {isMobile && onBack && (
           <button className="back-button" onClick={onBack}>
-            ← Voltar
+            Voltar
           </button>
         )}
         <span>{contactName}</span>

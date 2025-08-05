@@ -164,7 +164,9 @@
 
 @media (max-width: 768px) {
   .chat-layout {
-    flex-direction: column;
+    height: calc(100vh - 60px); /* altura ajustada para caber abaixo do header */
+    padding-bottom: 5%;
+    overflow: hidden;
   }
 
   .contact-list {
@@ -184,12 +186,13 @@
 
   .back-button {
     background: none;
-    border: none;
-    color: #6a0dad;
+    border-radius: 200px;
+    background-color: #6a0dad;
+    color: #fff;
     font-weight: bold;
     font-size: 1rem;
     cursor: pointer;
-    padding: 0;
+    padding: 10px;
   }
 
   .empty-chat {
