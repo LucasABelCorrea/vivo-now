@@ -149,40 +149,43 @@ const Dashboard: React.FC = () => {
             ))}
           </div>
 
-      <div className="checklist-wrapper">
-  <Box padding={16}>
-    {checklist.length > 0 ? (
-      <div className="checklist-custom">
-        {checklist.map((item) => (
-          <div
-            key={item.id}
-            className={`checklist-item ${item.completed ? 'completed' : ''}`}
-          >
-            <Checkbox
-              name={`checkbox-${item.id}`}
-              checked={item.completed}
-              onChange={() => handleToggleItem(item.id)}
-            >
-              {item.label}
-            </Checkbox>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <Text> Nenhum item disponível. </Text>
-    )}
+          <div className="checklist-wrapper">
+            <Box padding={16}>
+              {checklist.length > 0 ? (
+                <div className="checklist-custom">
+                  {checklist.map((item) => (
+                    <div
+                      key={item.id}
+                      className={`checklist-item ${item.completed ? "completed" : ""}`}
+                      style={{ maxWidth: "400px" }} // define a largura menor
+                    >
+                      <Checkbox
+                        name={`checkbox-${item.id}`}
+                        checked={item.completed}
+                        onChange={() => handleToggleItem(item.id)}
+                      >
+                        <span className="checkbox-label">{item.label}</span>
+                      </Checkbox>
 
-    {checklist.length > 0 && (
-      <ButtonPrimary
-        onPress={handleConcluirEtapa}
-        className="botao-etapa"
-        style={{ marginTop: 12 }}
-      >
-        Concluir etapa
-      </ButtonPrimary>
-    )}
-  </Box>
-</div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Text> Nenhum item disponível. </Text>
+              )}
+
+              {checklist.length > 0 && (
+                <ButtonPrimary
+                  onPress={handleConcluirEtapa}
+                  className="botao-etapa"
+                  style={{ marginTop: 12 }}
+                >
+                  Concluir etapa
+                </ButtonPrimary>
+              )}
+            </Box>
+          </div>
+
 
 
           <div className="categorias-grid">
@@ -235,17 +238,16 @@ const Dashboard: React.FC = () => {
                   level === 1
                     ? IconFaceSadRegular
                     : level === 2
-                    ? IconFaceNeutralRegular
-                    : level === 3
-                    ? IconFaceHappyRegular
-                    : IconFaceSuperHappyRegular;
+                      ? IconFaceNeutralRegular
+                      : level === 3
+                        ? IconFaceHappyRegular
+                        : IconFaceSuperHappyRegular;
 
                 return (
                   <label
                     key={level}
-                    className={`humor-icon ${
-                      selectedHumor === String(level) ? "selected" : ""
-                    }`}
+                    className={`humor-icon ${selectedHumor === String(level) ? "selected" : ""
+                      }`}
                     onClick={() => setSelectedHumor(String(level))}
                   >
                     <input
