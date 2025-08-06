@@ -149,37 +149,41 @@ const Dashboard: React.FC = () => {
             ))}
           </div>
 
-          <div className="checklist-wrapper">
-            <Box padding={16}>
-              {checklist.length > 0 ? (
-                <div className="checklist checklist-independente">
-                 {checklist.map((item) => (
-                    <div key={item.id} style={{ marginBottom: 8 }}>
-                      <Checkbox
-                        name={`checkbox-${item.id}`}
-                        checked={item.completed}
-                        onChange={() => handleToggleItem(item.id)}
-                      >
-                        {item.label}
-                      </Checkbox>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="checklist-vazia">Nenhum item disponível.</p>
-              )}
-
-              {checklist.length > 0 && (
-                <ButtonPrimary
-                  onPress={handleConcluirEtapa}
-                  className="botao-etapa"
-                  style={{ marginTop: 12 }}
-                >
-                  Concluir etapa
-                </ButtonPrimary>
-              )}
-            </Box>
+      <div className="checklist-wrapper">
+  <Box padding={16}>
+    {checklist.length > 0 ? (
+      <div className="checklist-custom">
+        {checklist.map((item) => (
+          <div
+            key={item.id}
+            className={`checklist-item ${item.completed ? 'completed' : ''}`}
+          >
+            <Checkbox
+              name={`checkbox-${item.id}`}
+              checked={item.completed}
+              onChange={() => handleToggleItem(item.id)}
+            >
+              {item.label}
+            </Checkbox>
           </div>
+        ))}
+      </div>
+    ) : (
+      <Text> Nenhum item disponível. </Text>
+    )}
+
+    {checklist.length > 0 && (
+      <ButtonPrimary
+        onPress={handleConcluirEtapa}
+        className="botao-etapa"
+        style={{ marginTop: 12 }}
+      >
+        Concluir etapa
+      </ButtonPrimary>
+    )}
+  </Box>
+</div>
+
 
           <div className="categorias-grid">
             {[
@@ -289,3 +293,4 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
+

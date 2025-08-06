@@ -190,7 +190,7 @@
   display: flex;
   align-items: center;
 }
-
+/*
 .checklist input[type="checkbox"] {
   width: 18px;
   height: 18px;
@@ -198,7 +198,7 @@
   cursor: pointer;
   transition: transform 0.2s ease;
 }
-
+ */
 .checklist input[type="checkbox"]:hover {
   transform: scale(1.1);
 }
@@ -207,6 +207,29 @@
   text-decoration: line-through;
   color: var(--second-purple);
 }
+ 
+
+  .checklist-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checklist-item {
+  border: 1px solid #e5e5e5;
+  background-color: #fdfdff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.2s ease-in-out;
+ 
+}
+
+
+.checklist-item.completed span {
+  text-decoration: line-through;
+  color: #999;
+}
+
 
 .checklist-geral {
   background: #f9f9f9;
@@ -250,7 +273,7 @@
 /* --------------------------Categoria Cards-------------------------- */
 
 .categoria-card {
-  background: linear-gradient(135deg, var(--purple-vivo), var(--second-purple));
+  background: #660099;
   color: #fff;
   padding: 2rem 1rem;
   display: flex;
