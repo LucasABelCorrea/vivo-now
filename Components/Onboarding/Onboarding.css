@@ -209,21 +209,6 @@
 
 /* --------------------------Categoria Cards-------------------------- */
 
-.categoria-card {
-  background: #660099;
-  color: #fff;
-  padding: 2rem 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.25s ease;
-  cursor: pointer;
-  height: 20vh;
-}
 
 .categorias-grid {
   display: grid;

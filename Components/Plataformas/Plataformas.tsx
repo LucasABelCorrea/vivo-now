@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import "./Plataformas.css";
-import PlataformaCard from './PlataformaCard';
+import CardButton from "../CardButton/CardButton";
+
 
 interface Plataforma {
   id: string;
   name: string;
   type_access: string;
   url: string;
+
 }
 
 const Plataformas: React.FC = () => {
@@ -73,11 +75,11 @@ const Plataformas: React.FC = () => {
 
         <div className="grid">
           {plataformasFiltradas.map((item) => (
-            <PlataformaCard
+            <CardButton
               key={item.id}
-              title={item.name}
-              description={item.type_access}
-              url={item.url}
+              titulo={item.name}
+              descricao={item.type_access}
+              link={item.url}
             />
           ))}
         </div>

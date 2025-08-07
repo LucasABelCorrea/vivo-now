@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from '@telefonica/mistica';
-import './CursosCard.css';
+import './CardButton.css';
 
 type CursoCardProps = {
   titulo: string;
@@ -8,10 +8,10 @@ type CursoCardProps = {
   link: string;
 };
 
-const CursoCard: React.FC<CursoCardProps> = ({ titulo, descricao, link }) => {
+const CardButton: React.FC<CursoCardProps> = ({ titulo, descricao, link }) => {
   return (
-    <div className="card-curso">
-      <div className="capa-curso">
+    <div className="card-button">
+      <div className="capa-button">
         <Text color="textInverse" textAlign="center" weight="bold" size={24}>
           {titulo}
         </Text>
@@ -23,7 +23,7 @@ const CursoCard: React.FC<CursoCardProps> = ({ titulo, descricao, link }) => {
         href={link}
         target="_blank"
         rel="noopener noreferrer"
-        className="link-curso"
+        className="link-button"
       >
         Acessar curso
       </a>
@@ -31,4 +31,4 @@ const CursoCard: React.FC<CursoCardProps> = ({ titulo, descricao, link }) => {
   );
 };
 
-export default CursoCard;
+export default CardButton;

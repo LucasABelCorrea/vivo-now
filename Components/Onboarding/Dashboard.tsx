@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Onboarding.css";
 import StageCard from "./StageCard";
+import Card from "../Card/Card";
 import { ButtonPrimary, Checkbox, Text, Box } from "@telefonica/mistica";
 import {
   IconFaceSadRegular,
@@ -196,21 +197,10 @@ const Dashboard: React.FC = () => {
               { title: "Vivo Vibe", link: "" },
             ].map(({ title, link }) => (
               <a href={link} key={title} style={{ textDecoration: "none" }}>
-                <div
-                  className="categoria-card"
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.transform =
-                      "scale(1.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.transform =
-                      "scale(1.0)";
-                  }}
-                >
-                  <Text size={18} weight="bold">
-                    {title}
-                  </Text>
-                </div>
+                <Card
+                   title={title}
+                   link={link}
+                />
               </a>
             ))}
           </div>

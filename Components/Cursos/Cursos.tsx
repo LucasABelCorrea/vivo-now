@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CursoCard from "./CursosCard";
+import CardButton from "../CardButton/CardButton";
 
 
 interface Curso {
@@ -46,7 +46,7 @@ const Cursos: React.FC = () => {
 
         <div className="grid">
           {cursos.map((curso) => (
-            <CursoCard
+            <CardButton
               key={curso.id}
               titulo={curso.titulo}
               descricao={curso.descricao}

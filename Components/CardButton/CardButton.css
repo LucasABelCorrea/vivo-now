@@ -1,4 +1,4 @@
-.card-curso {
+.card-button {
   display: flex;
   background: #660099;
   border-radius: 12px;
@@ -10,11 +10,11 @@
   color: #ffff;
 }
 
-.card-curso:hover {
+.card-button:hover {
   transform: translateY(-4px);
 }
 
-.capa-curso {
+.capa-button {
   height: 100px;
   display: flex;
   align-items: center;
@@ -23,7 +23,7 @@
 }
 
 
-.link-curso {
+.link-button {
   display: inline-block;
   background-color: #f06497;
   width: 40%;
@@ -39,7 +39,7 @@
   text-align: center;
 }
 
-.link-curso:hover {
+.link-button:hover {
   background-color: #d95386;
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(240, 100, 151, 0.5);
