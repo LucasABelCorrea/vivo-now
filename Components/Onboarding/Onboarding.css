@@ -70,11 +70,12 @@
   transition: border-color 0.3s ease;
   display: flex;
   flex-direction: column;
-  height: 25vh;
+  justify-content: flex-start;
+  height: auto;
+  min-height: 280px;
 }
 
 .stage-card.active {
-  position: relative;
   background: var(--purple-vivo);
   color: #fff;
 }
@@ -114,13 +115,18 @@
   color: #fff;
 }
 
+.etapa-descricao {
+  font-size: 0.95rem;
+  color: #eee;
+  margin-bottom: 1rem;
+}
+
 /* Progresso */
 .etapa-progresso {
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
+  margin-top: auto;
+  align-self: stretch;
   display: flex;
-  justify-content: center;
+  padding-top: 1rem;
 }
 
 .progress-circle {
@@ -170,15 +176,21 @@
   color: #777;
 }
 
-/* --------------------------Checklist-------------------------- */
-/* Container dos itens do checklist */
+/* Checklist */
+.stage-tasks {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
 .checklist-custom {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* Item com fundo branco e borda suave */
 .checklist-item {
   border: 1px solid #e5e5e5;
   background-color: #fdfdff;
@@ -187,18 +199,30 @@
   max-width: 400px;
 }
 
-/* Texto riscado quando concluído */
 .checklist-item.completed .checkbox-label {
   text-decoration: line-through;
   color: #999;
 }
 
-/* Estilo do label (sempre preto) */
 .checkbox-label {
   color: #111 !important;
   font-size: 14px;
 }
 
+/* Botão de expandir tarefas */
+.botao-expand-tasks {
+  background: transparent;
+  border: none;
+  font-weight: bold;
+  color: inherit;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+/* Cards duplos */
 .cards-duplos {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -207,9 +231,7 @@
   width: 100%;
 }
 
-/* --------------------------Categoria Cards-------------------------- */
-
-
+/* Categoria Cards */
 .categorias-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -222,18 +244,37 @@
 .jornada {
   display: flex;
   gap: 10px;
+  justify-content: space-between;
+}
+
+.jornada > .widget {
+  flex: 1 1 calc(50% - 10px);
+  min-width: 280px;
 }
 
 .dias-jornada p {
   padding: 12px;
-  font-size: 28px;
+  font-size: 150%;
 }
 
-/* --------------------------Widgets-------------------------- */
+/* Widgets */
 .widget {
   background: #f0edff;
   border-radius: 24px;
   padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.widget-card {
+  background: #f0edff;
+  border-radius: 24px;
+  padding: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
@@ -244,7 +285,7 @@
 
 .badge-nivel {
   background: var(--purple-vivo);
-  color: white;
+  color: #fff;
   font-weight: bold;
   padding: 0.8rem 1.4rem;
   border-radius: 30px;
@@ -253,7 +294,7 @@
   font-size: 1rem;
 }
 
-/* --------------------------Report da Semana-------------------------- */
+/* Report da Semana */
 .humor-options {
   display: flex;
   gap: 10px;
@@ -292,7 +333,7 @@ textarea {
   outline: none;
 }
 
-/* --------------------------Utilidades-------------------------- */
+/* Utilidades */
 .stage-wrapper {
   margin-bottom: 2rem;
 }
@@ -303,7 +344,9 @@ textarea {
   font-size: 16px;
 }
 
-/* --------------------------Responsivo-------------------------- */
+
+
+/* Responsivo */
 @media (max-width: 960px) {
   .layout-onboarding {
     flex-direction: column;
@@ -318,5 +361,22 @@ textarea {
   .coluna-lateral {
     width: 100%;
     padding: 20px;
+  }
+
+  .progress-circle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .stage-card {
+    padding: 1rem;
+  }
+
+  .jornada {
+    flex-direction: column;
+  }
+
+  .jornada > .widget {
+    flex: 1 1 100%;
   }
 }
