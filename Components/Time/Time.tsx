@@ -3,38 +3,73 @@ import { LuPhone } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
 import "./Time.css";
 
-interface Usuario {
+interface UserDTO {
   id: number;
   name: string;
+  lastName: string;
   email: string;
+  position: string;
   telephone: string;
+  role: string;
+  teamId: number;
+  onboardingIds: number[];
 }
 
+interface TeamDTO {
+  id: number;
+  name: string;
+  department: string;
+  platformIds: number[];
+  users: UserDTO[];
+}
+
+const getTeamById = async (teamId: string, token: string): Promise<TeamDTO> => {
+  const response = await fetch(`http://localhost:8080/teams/${teamId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar membros do time");
+  }
+
+  const teamData: TeamDTO = await response.json();
+  return teamData;
+};
+
 const Time: React.FC = () => {
-  const [membros, setMembros] = useState<Usuario[]>([]);
+  const [membros, setMembros] = useState<UserDTO[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => {
-    // Dados mockados para testes
-    const mockMembros: Usuario[] = [
-      {
-        id: 1,
-        name: "Lucas Correa",
-        email: "lucas.correa@empresa.com",
-        telephone: "(11) 91234-5678",
-      },
-      {
-        id: 2,
-        name: "Ana Beatriz",
-        email: "ana.beatriz@empresa.com",
-        telephone: "(21) 99876-5432",
-      },
-    ];
+    const teamId = localStorage.getItem("teamId");
+    const token = localStorage.getItem("token");
 
-    // Simula carregamento assíncrono
-    setTimeout(() => {
-      setMembros(mockMembros);
-    }, 500);
+    if (!teamId || !token) {
+      setErro("TeamId ou token não encontrados no localStorage");
+      setLoading(false);
+      return;
+    }
+
+    const fetchTeam = async () => {
+      try {
+        const teamData = await getTeamById(teamId, token);
+        setMembros(teamData.users);
+        setLoading(false);
+      } catch (error: any) {
+        setErro(error.message || "Erro desconhecido");
+        setLoading(false);
+      }
+    };
+
+    fetchTeam();
   }, []);
+
+  if (loading) return <p>Carregando membros do time...</p>;
+  if (erro) return <p style={{ color: "red" }}>{erro}</p>;
+  if (membros.length === 0) return <p>Nenhum membro encontrado.</p>;
 
   return (
     <div className="time-wrapper">
@@ -42,7 +77,9 @@ const Time: React.FC = () => {
       {membros.map((membro) => (
         <div key={membro.id} className="card">
           <div className="titulo">
-            <span className="name">{membro.name}</span>
+            <span className="name">
+              {membro.name} {membro.lastName}
+            </span>
           </div>
 
           <div className="card-content">

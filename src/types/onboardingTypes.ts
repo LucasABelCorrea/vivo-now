@@ -1,24 +1,47 @@
-export interface ChecklistItem {
+export interface UserDTO {
   id: number;
-  label: string;
-  completed: boolean;
-}
-
-export interface RoadmapStage {
-  id: number;
-  title: string;
-  progress: number;
-  checklist: ChecklistItem[];
-  status: "active" | "locked" | "completed";
-}
-
-export interface UserStatus {
   name: string;
-  currentLevel: number;
-  journeyDays: number;
+  lastName: string;
+  email: string;
+  position: string;
+  telephone: string;
+  role: string;
+  teamId: number;
+  onboardingIds: number[];
 }
 
-export interface OnboardingDashboard {
-  user: UserStatus;
-  stages: RoadmapStage[];
+export interface TaskDTO {
+  id: number;
+  name: string;
+  completed: boolean;
+  standard: boolean;
 }
+
+export interface StepDTO {
+  id: number;
+  name: string;
+  description: string;
+  orderStep: number;
+  task: TaskDTO[];
+}
+
+export interface ReportDTO {
+  id: number;
+  comment: string;
+  createdAt: string;
+}
+
+export interface Onboarding {
+  id: number;
+  dt_begin: string;
+  dt_end: string;
+  active: boolean;
+  manager: UserDTO;
+  buddy: UserDTO;
+  collaborator: UserDTO;
+  steps: StepDTO[];
+  reports: ReportDTO[];
+  currentStep: StepDTO;
+}
+
+

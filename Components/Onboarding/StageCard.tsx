@@ -1,35 +1,45 @@
 import React, { useState } from "react";
-import { RoadmapStage, ChecklistItem } from "../../src/types/onboardingTypes";
-import { BiLock } from "react-icons/bi";
+import { TaskDTO } from "../../src/types/onboardingTypes";
 import { FaLock } from "react-icons/fa";
 import "./Onboarding.css";
 
-interface Props {
-  stage: RoadmapStage;
-  showChecklist?: boolean;
+interface StepDTO {
+  id: number;
+  name: string;
+  description: string;
+  orderStep: number;
+  task: TaskDTO[];
 }
 
-const StageCard: React.FC<Props> = ({ stage, showChecklist = true }) => {
-  const [checklist, setChecklist] = useState<ChecklistItem[]>(stage.checklist);
-  const toggleItem = (id: number) => {
-    setChecklist((prev) =>
+interface Props {
+  step: StepDTO;
+  status: "active" | "locked" | "completed";
+}
+
+const StageCard: React.FC<Props> = ({ step, status }) => {
+  const [localChecklist, setLocalChecklist] = useState<TaskDTO[]>(step.task);
+
+  const toggleItem = (taskId: number) => {
+    setLocalChecklist((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, completed: !item.completed } : item
+        item.id === taskId ? { ...item, completed: !item.completed } : item
       )
     );
   };
 
-  const progressPercentage = Math.round(stage.progress * 100);
+  const total = localChecklist.length;
+  const done = localChecklist.filter((item) => item.completed).length;
+  const progressPercentage = total > 0 ? Math.round((done / total) * 100) : 0;
 
   return (
     <div className="stage-wrapper">
-      <div className={`stage-card ${stage.status}`}>
+      <div className={`stage-card ${status}`}>
         <div>
-          <span className="etapa-numero">Etapa {stage.id}</span>
-          <h3 className="etapa-titulo">{stage.title}</h3>
+          <span className="etapa-numero">Etapa {step.orderStep}</span>
+          <h3 className="etapa-titulo">{step.name}</h3>
+          <p className="etapa-descricao">{step.description}</p>
 
-          {/* Etapa em andamento */}
-          {stage.status === "active" && (
+          {status === "active" && (
             <div className="etapa-progresso">
               <svg viewBox="0 0 36 36" className="progress-circle">
                 <path
@@ -47,8 +57,8 @@ const StageCard: React.FC<Props> = ({ stage, showChecklist = true }) => {
               </svg>
             </div>
           )}
-          {/* Etapa bloqueada */}
-          {stage.status === "locked" && (
+
+          {status === "locked" && (
             <div className="card-bloqueado">
               <FaLock className="icone-bloqueado" />
             </div>

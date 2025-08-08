@@ -10,35 +10,13 @@ import {
   IconFaceSuperHappyRegular,
 } from "@telefonica/mistica";
 import emailjs from "emailjs-com";
-
-type ChecklistItem = {
-  id: number;
-  label: string;
-  completed: boolean;
-};
-
-type Step = {
-  id: number;
-  title: string;
-  progress: number;
-  status: "active" | "locked" | "completed";
-  checklist: ChecklistItem[];
-};
-
-type OnboardingDashboard = {
-  user: {
-    name: string;
-    currentLevel: number;
-    journeyDays: number;
-  };
-  stages: Step[];
-};
+import { Onboarding, StepDTO, TaskDTO } from "../../src/types/onboardingTypes";
 
 const Dashboard: React.FC = () => {
-  const [data, setData] = useState<OnboardingDashboard | null>(null);
+  const [data, setData] = useState<Onboarding | null>(null);
   const [loading, setLoading] = useState(true);
-  const [erro, setErro] = useState<string | null>(null);
-  const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [checklist, setChecklist] = useState<TaskDTO[]>([]);
   const [selectedHumor, setSelectedHumor] = useState("");
   const [duvida, setDuvida] = useState("");
   const [evento, setEvento] = useState("");
@@ -47,43 +25,77 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      
+      if (!token || !userId) {
+        setError("Usuário não autenticado.");
+        setLoading(false);
+        return;
+      }
+      
       try {
-        // Simulação de chamada à API
-        const mockData: OnboardingDashboard = {
-          user: {
-            name: "Lucas Correa",
-            currentLevel: 3,
-            journeyDays: 42,
-          },
-          stages: [
-            {
-              id: 1,
-              title: "Bem-vindo à empresa",
-              progress: 1,
-              status: "active",
-              checklist: [
-                { id: 1, label: "Recebeu equipamento", completed: false },
-                { id: 2, label: "Criou conta nos sistemas", completed: false },
-              ],
+        // Buscar dados do usuário
+        const userResponse = await fetch(
+          `http://localhost:8080/users/${userId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
-            {
-              id: 2,
-              title: "Conhecendo o time",
-              progress: 0.6,
-              status: "locked",
-              checklist: [],
-            },
-          ],
-        };
+          }
+        );
+        
+        if (!userResponse.ok) {
+          const errorBody = await userResponse.json();
+          throw new Error(
+            errorBody.message || "Erro ao buscar dados do usuário."
+          );
+        }
+        
+        const userData = await userResponse.json();
+        
+        const teamId: string = userData.teamId;
+        localStorage.setItem ("teamId", teamId);
+        
+        const onboardingIds: number[] = userData.onboardingIds || [];
 
-        setTimeout(() => {
-          setData(mockData);
-          const etapaAtiva = mockData.stages.find((s) => s.status === "active");
-          setChecklist(etapaAtiva?.checklist ?? []);
+        if (onboardingIds.length === 0) {
+          setError("Nenhum onboarding encontrado para o usuário.");
           setLoading(false);
-        }, 1000);
-      } catch (error) {
-        setErro("Erro ao carregar dados.");
+          return;
+        }
+
+        // Para simplicidade, pegar o primeiro onboarding
+        const onboardingId = onboardingIds[0];
+
+        const onboardingResponse = await fetch(
+          `http://localhost:8080/onboardings/${onboardingId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!onboardingResponse.ok) {
+          const errorBody = await onboardingResponse.json();
+          throw new Error(
+            errorBody.message || `Erro ao buscar onboarding ${onboardingId}`
+          );
+        }
+
+        const onboardingData: Onboarding = await onboardingResponse.json();
+
+        setData(onboardingData);
+
+        // Atualiza checklist com as tasks do currentStep
+        setChecklist(onboardingData.currentStep?.task || []);
+
+        setLoading(false);
+      } catch (err: any) {
+        setError(err.message || "Erro ao carregar dados.");
         setLoading(false);
       }
     };
@@ -105,7 +117,7 @@ const Dashboard: React.FC = () => {
 
   const handleEnviarRelatorio = () => {
     const templateParams = {
-      usuario: data?.user.name ?? "Anônimo",
+      usuario: data?.collaborator?.name ?? "Anônimo",
       humor: selectedHumor,
       duvida,
       evento,
@@ -134,19 +146,21 @@ const Dashboard: React.FC = () => {
   };
 
   if (loading) return <p className="loading">Carregando onboarding...</p>;
-  if (erro) return <p className="erro">{erro}</p>;
+  if (error) return <p className="erro">{error}</p>;
   if (!data) return <p className="empty">Dados não encontrados.</p>;
 
   return (
     <div className="onboarding-container">
       <div className="layout-onboarding">
         <div className="coluna-central">
-          <h1 className="onboarding-title">Olá, {data.user.name}!</h1>
+          <h1 className="onboarding-title">
+            Olá, {data.collaborator?.name} {data.collaborator?.lastName}!
+          </h1>
           <h2 className="onboarding-subtitle">Roadmap Onboarding</h2>
 
           <div className="cards-duplos">
-            {data.stages.map((stage) => (
-              <StageCard key={stage.id} stage={stage} />
+            {data.steps.map((step) => (
+              <StageCard key={step.id} step={step} status="active" />
             ))}
           </div>
 
@@ -157,17 +171,18 @@ const Dashboard: React.FC = () => {
                   {checklist.map((item) => (
                     <div
                       key={item.id}
-                      className={`checklist-item ${item.completed ? "completed" : ""}`}
-                      style={{ maxWidth: "400px" }} // define a largura menor
+                      className={`checklist-item ${
+                        item.completed ? "completed" : ""
+                      }`}
+                      style={{ maxWidth: "400px" }}
                     >
                       <Checkbox
                         name={`checkbox-${item.id}`}
                         checked={item.completed}
                         onChange={() => handleToggleItem(item.id)}
                       >
-                        <span className="checkbox-label">{item.label}</span>
+                        <span className="checkbox-label">{item.name}</span>
                       </Checkbox>
-
                     </div>
                   ))}
                 </div>
@@ -187,8 +202,6 @@ const Dashboard: React.FC = () => {
             </Box>
           </div>
 
-
-
           <div className="categorias-grid">
             {[
               { title: "Chat", link: "/chat" },
@@ -197,10 +210,7 @@ const Dashboard: React.FC = () => {
               { title: "Vivo Vibe", link: "" },
             ].map(({ title, link }) => (
               <a href={link} key={title} style={{ textDecoration: "none" }}>
-                <Card
-                   title={title}
-                   link={link}
-                />
+                <Card title={title} link={link} />
               </a>
             ))}
           </div>
@@ -210,12 +220,17 @@ const Dashboard: React.FC = () => {
           <div className="jornada">
             <div className="widget dias-jornada">
               <h3>Dias da jornada</h3>
-              <p className="dias-jornada">{data.user.journeyDays}/90</p>
+              <p className="dias-jornada">
+                {data.dt_begin} até {data.dt_end}
+              </p>
             </div>
 
             <div className="widget">
               <h3>Seu nível atual</h3>
-              <div className="badge-nivel">Nível {data.user.currentLevel}</div>
+              {/* Aqui você pode calcular nível com base na ordem da currentStep */}
+              <div className="badge-nivel">
+                Nível {data.currentStep?.orderStep ?? "?"}
+              </div>
             </div>
           </div>
 
@@ -228,16 +243,17 @@ const Dashboard: React.FC = () => {
                   level === 1
                     ? IconFaceSadRegular
                     : level === 2
-                      ? IconFaceNeutralRegular
-                      : level === 3
-                        ? IconFaceHappyRegular
-                        : IconFaceSuperHappyRegular;
+                    ? IconFaceNeutralRegular
+                    : level === 3
+                    ? IconFaceHappyRegular
+                    : IconFaceSuperHappyRegular;
 
                 return (
                   <label
                     key={level}
-                    className={`humor-icon ${selectedHumor === String(level) ? "selected" : ""
-                      }`}
+                    className={`humor-icon ${
+                      selectedHumor === String(level) ? "selected" : ""
+                    }`}
                     onClick={() => setSelectedHumor(String(level))}
                   >
                     <input
@@ -285,4 +301,3 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
-

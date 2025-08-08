@@ -10,6 +10,7 @@ import Plataformas from "../Components/Plataformas/Plataformas";
 import Cursos from "../Components/Cursos/Cursos";
 import MainLayout from "../src/layouts/MainLayout";
 import Chat from "../Components/Chat/Chat";
+import Test from "../Components/Test/Test"
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/plataformas" element={<Plataformas />} />
             <Route path="/cursos" element={<Cursos />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/test" element={<Test />} />
           </Route>
         </Routes>
       </BrowserRouter>

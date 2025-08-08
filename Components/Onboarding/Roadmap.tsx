@@ -1,21 +1,20 @@
 import React from "react";
-import { RoadmapStage } from "../../src/types/onboardingTypes";
+import { StepDTO } from "../../src/types/onboardingTypes";
 import StageCard from "./StageCard";
 import "./Onboarding.css";
 
-interface RoadmapProps {
-  stages: RoadmapStage[];
+interface OnboardingProps {
+  steps: StepDTO[];
 }
 
-const Roadmap: React.FC<RoadmapProps> = ({ stages }) => {
+const Roadmap: React.FC<OnboardingProps> = ({ steps }) => {
   return (
     <div className="roadmap">
-      {stages.map((stage) => (
-        <StageCard key={stage.id} stage={stage} />
+      {steps.map((step) => (
+        <StageCard key={step.id} step={step} status={"active"} />
       ))}
     </div>
   );
 };
-
 
 export default Roadmap;

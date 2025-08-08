@@ -1,165 +1,177 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ContactList from "./ContactList";
 import ChatWindow from "./ChatWindow";
-import { Message } from "../../src/types/Message";
 import "./Chat.css";
 
-interface Contact {
-  id: string;
+interface UserDTO {
+  id: number;
   name: string;
-  lastMessage?: string;
+  lastName: string;
+  email: string;
+  position: string;
+  telephone: string;
+  role: string;
+  teamId: number;
+  onboardingIds: number[];
 }
 
-const Chat = () => {
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [selectedContactId, setSelectedContactId] = useState<string | null>(
-    null
-  );
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [showContacts, setShowContacts] = useState(true);
+interface MessageDTO {
+  id: number;
+  content: string;
+  time: string;
+  senderName: string;
+}
 
-  const mockContacts: Contact[] = [
-    { id: "1", name: "Ana Silva", lastMessage: "Perfeito! Aqui está: link..." },
-    { id: "2", name: "Bruno Costa", lastMessage: "Você pode me ajudar com..." },
-    { id: "3", name: "Camila Oliveira", lastMessage: "Obrigada pela ajuda!" },
-  ];
+interface ChatDTO {
+  id: number;
+  participants: UserDTO[];
+  messages: MessageDTO[];
+}
 
-  const mockMessages: Record<string, Message[]> = {
-    "1": [
-      {
-        id: "m1",
-        sender: "agent",
-        text: "Olá Ana! Seja muito bem-vinda! Estou aqui para te auxiliar nessa nova jornada. Como posso te ajudar hoje?",
-        timestamp: "2025-08-01T10:00:00Z",
-      },
-      {
-        id: "m2",
-        sender: "user",
-        text: "Oi! Preciso de acesso à Plataforma XYZ, como faço para solicitar?",
-        timestamp: "2025-08-01T10:01:00Z",
-      },
-      {
-        id: "m3",
-        sender: "agent",
-        text: "Ótima pergunta! Você pode conferir na nossa seção “Plataformas” como solicitar acesso a ela. Quer que eu te envie o link direto?",
-        timestamp: "2025-08-01T10:02:00Z",
-      },
-      {
-        id: "m4",
-        sender: "user",
-        text: "Quero sim, por favor!",
-        timestamp: "2025-08-01T10:03:00Z",
-      },
-      {
-        id: "m5",
-        sender: "agent",
-        text: "Perfeito! Aqui está: link. Se precisar de mais alguma coisa, é só me chamar!",
-        timestamp: "2025-08-01T10:04:00Z",
-      },
-    ],
-    "2": [
-      {
-        id: "m6",
-        sender: "user",
-        text: "Você pode me ajudar com o acesso ao sistema?",
-        timestamp: "2025-08-01T11:00:00Z",
-      },
-      {
-        id: "m7",
-        sender: "agent",
-        text: "Claro! Qual sistema você precisa acessar?",
-        timestamp: "2025-08-01T11:01:00Z",
-      },
-    ],
-    "3": [
-      {
-        id: "m8",
-        sender: "agent",
-        text: "Oi Camila, tudo certo com seu acesso?",
-        timestamp: "2025-08-01T12:00:00Z",
-      },
-      {
-        id: "m9",
-        sender: "user",
-        text: "Sim! Obrigada pela ajuda!",
-        timestamp: "2025-08-01T12:01:00Z",
-      },
-    ],
-  };
+const fetchUserChats = async (
+  userId: number,
+  token: string
+): Promise<ChatDTO[]> => {
+  const res = await fetch(`http://localhost:8080/users/${userId}/chats`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Erro ao buscar chats do usuário");
+  return res.json();
+};
 
-  const handleSend = (text: string) => {
-    if (!selectedContactId) return;
+const fetchChatMessages = async (
+  senderId: number,
+  chatId: number,
+  token: string
+): Promise<MessageDTO[]> => {
+  const res = await fetch(`http://localhost:8080/chats/${chatId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Erro ao buscar mensagens do chat");
+  const chat: ChatDTO = await res.json();
+  return chat.messages;
+};
 
-    const newMessage: Message = {
-      id: crypto.randomUUID(),
-      sender: "user",
-      text,
-      timestamp: new Date().toISOString(),
-    };
+const sendMessageAPI = async (
+  chatId: number,
+  senderId: number,
+  token: string,
+  content: string
+): Promise<MessageDTO> => {
+  const res = await fetch(`http://localhost:8080/chats/${chatId}/messages`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ senderId, content }),
+  });
+  if (!res.ok) throw new Error("Erro ao enviar mensagem");
+  return res.json();
+};
 
-    setMessages((prev) => [...prev, newMessage]);
-  };
-
-  const handleBackToContacts = () => {
-    setSelectedContactId(null);
-    setShowContacts(true);
-  };
+const Chat: React.FC<{ userId: number; token: string }> = ({
+  userId,
+  token,
+}) => {
+  const [chats, setChats] = useState<ChatDTO[]>([]);
+  const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+  const [messages, setMessages] = useState<MessageDTO[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const pollingRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    setContacts(mockContacts);
-
-    const resizeHandler = () => {
-      const mobile = window.innerWidth <= 768;
-      setIsMobile(mobile);
-      if (!mobile) setShowContacts(true);
+    const loadChats = async () => {
+      try {
+        setLoading(true);
+        const userChats = await fetchUserChats(userId, token);
+        setChats(userChats);
+        setLoading(false);
+      } catch (e: any) {
+        setError(e.message);
+        setLoading(false);
+      }
     };
-
-    window.addEventListener("resize", resizeHandler);
-    return () => window.removeEventListener("resize", resizeHandler);
-  }, []);
+    loadChats();
+  }, [userId, token]);
 
   useEffect(() => {
-    if (selectedContactId) {
-      const msgs = mockMessages[selectedContactId] || [];
-      setMessages(msgs);
-      if (isMobile) setShowContacts(false);
+    if (selectedChatId === null) {
+      setMessages([]);
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+      return;
     }
-  }, [selectedContactId]);
+
+    const loadMessages = async () => {
+      setLoadingMessages(true);
+      try {
+        const msgs = await fetchChatMessages(userId, selectedChatId, token);
+        setMessages(msgs);
+        setLoadingMessages(false);
+      } catch (e: any) {
+        setError(e.message);
+        setLoadingMessages(false);
+      }
+    };
+
+    loadMessages();
+
+    if (pollingRef.current) clearInterval(pollingRef.current);
+    pollingRef.current = setInterval(loadMessages, 5000);
+
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+    };
+  }, [selectedChatId, userId, token]);
+
+  const handleSend = async (text: string) => {
+    if (!selectedChatId) return;
+    try {
+      const newMsg = await sendMessageAPI(selectedChatId, userId, token, text);
+      setMessages((prev) => [...prev, newMsg]);
+    } catch (e: any) {
+      setError(e.message);
+    }
+  };
+
+  const getContactName = (chat: ChatDTO) => {
+    const otherParticipant = chat.participants.find((p) => p.id !== userId);
+    return otherParticipant
+      ? `${otherParticipant.name} ${otherParticipant.lastName}`
+      : "Sem contato";
+  };
+
+  if (loading) return <p>Carregando chats...</p>;
+  if (error) return <p style={{ color: "red" }}>Erro: {error}</p>;
 
   return (
     <div className="chat-layout">
-      {showContacts && (
-        <ContactList
-          contacts={contacts}
-          onSelect={setSelectedContactId}
-          selectedId={selectedContactId}
-        />
-      )}
+      {/* Lista contatos - usa chats para montar contatos */}
+      <ContactList
+        contacts={chats.map((chat) => ({
+          id: chat.id.toString(),
+          name: getContactName(chat),
+        }))}
+        onSelect={(id) => setSelectedChatId(Number(id))}
+        selectedId={selectedChatId?.toString() || null}
+      />
 
-      {!showContacts && selectedContactId && (
+      {/* Janela do chat */}
+      {selectedChatId !== null ? (
         <ChatWindow
-          contactName={
-            contacts.find((c) => c.id === selectedContactId)?.name || ""
-          }
+          contactName={getContactName(
+            chats.find((c) => c.id === selectedChatId)!
+          )}
           messages={messages}
           onSend={handleSend}
-          onBack={handleBackToContacts}
-          isMobile={isMobile}
+          loading={loadingMessages}
         />
-      )}
-
-      {!isMobile && selectedContactId && (
-        <ChatWindow
-          contactName={
-            contacts.find((c) => c.id === selectedContactId)?.name || ""
-          }
-          messages={messages}
-          onSend={handleSend}
-        />
-      )}
-
-      {!isMobile && !selectedContactId && (
+      ) : (
         <div className="empty-chat">Selecione um contato</div>
       )}
     </div>

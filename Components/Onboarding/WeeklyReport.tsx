@@ -28,7 +28,7 @@ const WeeklyReport: React.FC = () => {
       .send("SEU_SERVICE_ID", "SEU_TEMPLATE_ID", formData, "SEU_PUBLIC_KEY")
       .then(
         () => {
-          setStatus("Relatório enviado com sucesso! ✅");
+          setStatus("Relatório enviado com sucesso!");
           setFormData({ humor: "", progresso: "", dificuldades: "" });
         },
         () => setStatus("Erro ao enviar. Tente novamente.")

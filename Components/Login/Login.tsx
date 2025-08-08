@@ -1,20 +1,19 @@
 import { useState, useEffect, FormEvent, JSX } from "react";
 import "./Login.css";
-import {  VivoLogo } from "@telefonica/mistica";
+import { VivoLogo } from "@telefonica/mistica";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import MyPrimaryButton from '../Button/MyPrimaryButton';
+import MyPrimaryButton from "../Button/MyPrimaryButton";
 
 const Login = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [logoSize, setLogoSize] = useState<number>(500); 
+  const [logoSize, setLogoSize] = useState<number>(500);
 
   const navigate = useNavigate();
 
- 
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -30,7 +29,7 @@ const Login = (): JSX.Element => {
       }
     };
 
-    handleResize(); // define o tamanho ao carregar
+    handleResize(); // define logo ao carregar
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -56,8 +55,11 @@ const Login = (): JSX.Element => {
       const resultado = await response.json();
       console.log("Login bem-sucedido:", resultado);
 
-      if (resultado.token) {
-        localStorage.setItem("token", resultado.token);
+      const { token, userId } = resultado;
+
+      if (token && userId) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", userId);
       }
 
       navigate("/home");
@@ -67,7 +69,9 @@ const Login = (): JSX.Element => {
       console.error("Erro ao fazer login:", erro);
       setError(erro.message || "Erro inesperado ao fazer login.");
     }
+
   };
+
 
   return (
     <div className="container">
@@ -111,7 +115,7 @@ const Login = (): JSX.Element => {
 
           {error && <p className="error-message">{error}</p>}
 
-       <MyPrimaryButton>Entrar</MyPrimaryButton>
+          <MyPrimaryButton>Entrar</MyPrimaryButton>
         </form>
       </div>
 
