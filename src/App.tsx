@@ -11,6 +11,7 @@ import Cursos from "../Components/Cursos/Cursos";
 import MainLayout from "../src/layouts/MainLayout";
 import Chat from "../Components/Chat/Chat";
 import Test from "../Components/Test/Test"
+import ManagerPlatform from "../Components/ManagerPlatform/ManagerPlatform";
 
 function App() {
   return (
@@ -28,8 +29,9 @@ function App() {
             <Route path="/time" element={<Time />} />
             <Route path="/plataformas" element={<Plataformas />} />
             <Route path="/cursos" element={<Cursos />} />
-            <Route path="/chat" element={<Chat />} />
+            <Route path="/chat" element={<Chat userId={0} token={""} />} />
             <Route path="/test" element={<Test />} />
+            <Route path="/manager" element={<ManagerPlatform />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -1,0 +1,188 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #ffffff;
+  color: #333;
+}
+
+/* Layout principal */
+.container {
+  display: flex;
+  height: 100vh;
+  background-color: #ffffff;
+}
+
+/* Sidebar branca com texto roxo */
+.sidebar {
+  width: 240px;
+  background-color: #ffffff;
+  color: #660099;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-right: 1px solid #eee;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: #660099;
+}
+
+.sidebar nav ul {
+  list-style: none;
+}
+
+.sidebar nav ul li {
+  margin-bottom: 20px;
+}
+
+.sidebar button {
+  background: none;
+  border: none;
+  color: #660099;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 0;
+  width: 100%;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.sidebar button:hover {
+  background-color: #fce4ec;
+}
+
+.sidebar button.active {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #F06497;
+}
+
+/* Main content */
+main {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #000000; /* cor preta */
+}
+
+
+/* Busca e criação */
+.busca-criar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.busca-criar input {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Botão “Criar plataforma” estilizado */
+.btn-criar {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-criar:hover {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+
+/* Cards com fundo roxo */
+.card {
+  background-color: #660099;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  color: white;
+}
+
+.card strong {
+  font-size: 16px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+/* Modo de acesso com tom rosado #F06497 */
+.modo-acesso {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 4px;
+  background-color: #F06497;
+  color: white;
+}
+
+.modo-acesso.buddy {
+  background-color: #F06497;
+}
+
+.modo-acesso.link {
+  background-color: #F06497;
+}
+
+.modo-acesso.liberado {
+  background-color: #F06497;
+}
+
+/* Botão adicionar */
+.btn-adicionar {
+  margin-top: 12px;
+  background-color: #ffffff;
+  color: #660099;
+  border: 2px solid #ffffff;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-adicionar:hover {
+  background-color: #ffffff;
+  color: #4a148c;
+}
+
+/* Grid de plataformas */
+.plataformas-equipe,
+.plataformas-disponiveis {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
