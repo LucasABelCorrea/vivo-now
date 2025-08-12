@@ -347,7 +347,7 @@ const Dashboard: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       if (res.status === 403) {
         throw new Error("Você não tem permissão para avançar esta etapa.");
       }
@@ -440,6 +440,15 @@ const Dashboard: React.FC = () => {
       )
     : null;
 
+  // Aqui o controle para habilitar/desabilitar botão
+  const currentStepTasks =
+    data?.steps?.find((step) => step.orderStep === data.currentStep?.orderStep)
+      ?.tasks ?? [];
+
+  const allTasksCompleted =
+    currentStepTasks.length > 0 &&
+    currentStepTasks.every((task) => task.completed);
+
   return (
     <div className="onboarding-container">
       <div className="layout-onboarding">
@@ -482,13 +491,14 @@ const Dashboard: React.FC = () => {
                     </div>
                   ))}
 
-                  <div style={{ marginTop: "2rem"}}>
+                  <div style={{ marginTop: "2rem" }}>
                     <MyPrimaryButton
                       onPress={() => {
-                        if (!data?.id || advancing) return; // ✅ Bloqueia clique se inválido ou carregando
+                        if (!data?.id || advancing) return;
                         handleConcluirEtapa();
                       }}
                       style={{ width: "100%", maxWidth: 300 }}
+                      disabled={!allTasksCompleted || advancing}
                     >
                       {advancing ? "Concluindo..." : "Concluir etapa"}
                     </MyPrimaryButton>
@@ -598,3 +608,4 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
+

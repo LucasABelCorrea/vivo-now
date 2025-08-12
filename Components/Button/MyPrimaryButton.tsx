@@ -7,6 +7,7 @@ type MyPrimaryButtonProps = {
   formRef?: RefObject<HTMLFormElement>;
   className?: string;
   style?: CSSProperties;
+  disabled?: boolean;
 };
 
 const MyPrimaryButton: React.FC<MyPrimaryButtonProps> = ({
