@@ -46,9 +46,10 @@ const Time: React.FC = () => {
   useEffect(() => {
     const teamId = localStorage.getItem("teamId");
     const token = localStorage.getItem("token");
+    const userId = Number(localStorage.getItem("userId"));
 
-    if (!teamId || !token) {
-      setErro("TeamId ou token não encontrados no localStorage");
+    if (!teamId || !token || !userId) {
+      setErro("TeamId, token ou userId não encontrados no localStorage");
       setLoading(false);
       return;
     }
@@ -56,7 +57,10 @@ const Time: React.FC = () => {
     const fetchTeam = async () => {
       try {
         const teamData = await getTeamById(teamId, token);
-        setMembros(teamData.users);
+        const outrosMembros = teamData.users.filter(
+          (user) => user.id !== userId
+        );
+        setMembros(outrosMembros);
         setLoading(false);
       } catch (error: any) {
         setErro(error.message || "Erro desconhecido");
@@ -69,7 +73,7 @@ const Time: React.FC = () => {
 
   if (loading) return <p>Carregando membros do time...</p>;
   if (erro) return <p style={{ color: "red" }}>{erro}</p>;
-  if (membros.length === 0) return <p>Nenhum membro encontrado.</p>;
+  if (membros.length === 0) return <p>Nenhum outro membro encontrado.</p>;
 
   return (
     <div className="time-wrapper">

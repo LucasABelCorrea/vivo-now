@@ -1,14 +1,16 @@
-import { Message } from "../../src/types/Message";
+import { MessageDTO } from "../../Components/Chat/Chat";
 import MessageBubble from "./MessageBubble";
-import { useState } from "react";
-import "./Chat.css"; // ou ajuste o caminho conforme seu projeto
+import { useState, useEffect, useRef } from "react";
+import "./Chat.css";
 
 interface Props {
   contactName: string;
-  messages: Message[];
+  messages: MessageDTO[];
   onSend: (text: string) => void;
   onBack?: () => void;
   isMobile?: boolean;
+  loading: boolean;
+  currentUserName: string; // 👈 novo prop
 }
 
 const ChatWindow = ({
@@ -17,14 +19,32 @@ const ChatWindow = ({
   onSend,
   onBack,
   isMobile,
+  loading,
+  currentUserName,
 }: Props) => {
   const [text, setText] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!text.trim()) return;
-    onSend(text);
-    setText("");
+
+    try {
+      await onSend(text);
+      setText("");
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+    }
   };
+
+  // Scroll automático para a última mensagem
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  const normalize = (str: string | null | undefined) =>
+    str?.trim().toLowerCase();
 
   return (
     <div className="chat-window">
@@ -37,10 +57,21 @@ const ChatWindow = ({
         <span>{contactName}</span>
       </div>
 
-      <div className="chat-messages">
-        {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
-        ))}
+      <div className="chat-messages-container">
+        <div className="chat-messages">
+          {messages.map((msg, index) => {
+            const isOwn =
+              normalize(msg.senderName) === normalize(currentUserName);
+            return (
+              <MessageBubble
+                key={`${msg.id}-${index}`}
+                message={msg}
+                isOwn={isOwn}
+              />
+            );
+          })}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
       <div className="chat-input-area custom-input">
@@ -50,7 +81,9 @@ const ChatWindow = ({
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button onClick={handleSend}>Enviar</button>
+        <button onClick={handleSend} disabled={loading}>
+          {loading ? "Enviando..." : "Enviar"}
+        </button>
       </div>
     </div>
   );

@@ -29,7 +29,7 @@ const Login = (): JSX.Element => {
       }
     };
 
-    handleResize(); // define logo ao carregar
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -55,23 +55,38 @@ const Login = (): JSX.Element => {
       const resultado = await response.json();
       console.log("Login bem-sucedido:", resultado);
 
-      const { token, userId } = resultado;
+      const { token, userId, role } = resultado;
 
-      if (token && userId) {
+      if (token && userId && role) {
         localStorage.setItem("token", token);
-        localStorage.setItem("userId", userId);
+        localStorage.setItem("userId", userId.toString());
+        localStorage.setItem("role", role);
+
+        // Navegação baseada na role
+        switch (role.toUpperCase()) {
+          case "COLLABORATOR":
+            navigate("/home");
+            break;
+          case "MANAGER":
+            navigate("/manager-plataformas");
+            break;
+          case "BUDDY":
+            navigate("/test");
+            break;
+          default:
+            navigate("/test"); // fallback para roles desconhecidas
+        }
+      } else {
+        throw new Error("Dados de login incompletos.");
       }
 
-      navigate("/home");
       setEmail("");
       setPassword("");
     } catch (erro: any) {
       console.error("Erro ao fazer login:", erro);
       setError(erro.message || "Erro inesperado ao fazer login.");
     }
-
   };
-
 
   return (
     <div className="container">

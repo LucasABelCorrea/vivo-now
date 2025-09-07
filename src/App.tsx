@@ -29,9 +29,9 @@ function App() {
             <Route path="/time" element={<Time />} />
             <Route path="/plataformas" element={<Plataformas />} />
             <Route path="/cursos" element={<Cursos />} />
-            <Route path="/chat" element={<Chat userId={0} token={""} />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/test" element={<Test />} />
-            <Route path="/manager" element={<ManagerPlatform />} />
+            <Route path="/manager-plataformas" element={<ManagerPlatform />} />
           </Route>
         </Routes>
       </BrowserRouter>

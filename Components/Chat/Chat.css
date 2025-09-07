@@ -1,8 +1,10 @@
 /* Layout geral */
 .chat-layout {
   display: flex;
+  flex-direction: row;
   height: 100%;
-  background-color: #f4f2fc;
+  max-height: 90vh;
+  overflow: hidden;
 }
 
 /* Lista de contatos */
@@ -11,10 +13,13 @@
   border-right: 1px solid #ddd;
   background-color: #fff;
   padding: 1rem;
+  overflow-y: auto;
 }
 
+/* Contato */
 .contact-item {
   display: flex;
+  align-items: center;
   gap: 10px;
   padding: 0.8rem;
   cursor: pointer;
@@ -35,16 +40,18 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  font-size: 1rem;
 }
 
 /* Janela de chat */
 .chat-window {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #f4f2fc;
+  flex: 1;
+  overflow: hidden;
 }
 
+/* Cabeçalho do chat */
 .chat-header {
   padding: 1rem;
   border-bottom: 1px solid #ccc;
@@ -52,45 +59,62 @@
   font-size: 1.1rem;
 }
 
-.chat-messages {
+/* Container com scroll */
+.chat-messages-container {
   flex: 1;
   overflow-y: auto;
   padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
-/* Mensagens */
-.message {
+/* Lista de mensagens */
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Bolhas de mensagem */
+.message-bubble {
   max-width: 70%;
   padding: 0.75rem 1rem;
   border-radius: 16px;
   font-size: 0.95rem;
   line-height: 1.4;
   word-wrap: break-word;
+  word-break: break-word;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.message.user {
+/* Mensagem enviada pelo usuário logado */
+.message-bubble.own {
+  align-self: flex-start;
+  background-color: #ffffff;
+  color: #000;
+  border-radius: 16px 16px 16px 0;
+}
+
+.message-bubble.other {
   align-self: flex-end;
-  background-color: white;
-  color: black;
+  background-color: #6a0dad;
+  color: #fff;
   border-radius: 16px 16px 0 16px;
 }
 
-.message.agent {
-  align-self: flex-start;
-  background-color: #6a0dad;
-  color: white;
-  border-radius: 16px 16px 16px 0;
+.message-time {
+  font-size: 0.7rem;
+  color: #999;
+  margin-top: 4px;
+  align-self: flex-end;
+  display: block;
+  text-align: right;
 }
 
 /* Campo de entrada */
 .chat-input-area {
   display: flex;
   padding: 1rem;
+  background-color: #f4f2fc;
 }
-
 
 .chat-input-area input {
   flex: 1;
@@ -98,16 +122,28 @@
   padding: 0.8rem;
   border-radius: 8px 0 0 8px;
   outline: none;
-  background-color: #6a0dad;
+  background-color: #4b0082;
+  color: #fff;
+}
+
+.chat-input-area input::placeholder {
+  color: #fff;
+  opacity: 1;
 }
 
 .chat-input-area button {
   padding: 0.8rem 1.2rem;
   border: none;
-  background-color: #6a0dad;
+  background-color: #f06497;
   color: white;
   border-radius: 0 8px 8px 0;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chat-input-area button:hover {
+  background-color: #d95386;
+  box-shadow: 0 6px 18px rgba(240, 100, 151, 0.5);
 }
 
 /* Quando nenhum contato está selecionado */
@@ -120,38 +156,7 @@
   color: #888;
 }
 
-/* Estilo para o input da área de mensagem */
-.chat-input-area.custom-input input {
-  background-color: #4b0082; /* roxo */
-  color: #fff; /* texto digitado em branco */
-  border: none;
-  padding: 0.8rem;
-  border-radius: 8px 0 0 8px;
-  outline: none;
-}
-
-/* Placeholder branco */
-.chat-input-area.custom-input input::placeholder {
-  color: #fff;
-  opacity: 1;
-}
-
-/* Botão rosa */
-.chat-input-area.custom-input button {
-  background-color: #f06497;
-  color: #fff;
-  border: none;
-  padding: 0.8rem 1.2rem;
-  border-radius: 0 8px 8px 0;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.chat-input-area.custom-input button:hover {
-  background-color: #d95386;
-  box-shadow: 0 6px 18px rgba(240, 100, 151, 0.5);
-}
-
+/* Botão de voltar */
 .back-button {
   background: none;
   border: none;
@@ -162,11 +167,12 @@
   margin-right: 10px;
 }
 
+/* Responsivo */
 @media (max-width: 768px) {
   .chat-layout {
-    height: calc(100vh - 60px); /* altura ajustada para caber abaixo do header */
+    flex-direction: column;
+    height: calc(100vh - 60px);
     padding-bottom: 5%;
-    overflow: hidden;
   }
 
   .contact-list {
@@ -185,20 +191,13 @@
   }
 
   .back-button {
-    background: none;
-    border-radius: 200px;
     background-color: #6a0dad;
     color: #fff;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
     padding: 10px;
+    border-radius: 200px;
   }
 
   .empty-chat {
     display: none;
   }
 }
-
-
-

@@ -1,9 +1,8 @@
-// Dashboard.tsx
 import React, { useEffect, useState } from "react";
 import "./Onboarding.css";
 import StageCard from "./StageCard";
 import Card from "../Card/Card";
-import { ButtonPrimary, Checkbox, Text, Box } from "@telefonica/mistica";
+import { ButtonPrimary, Checkbox } from "@telefonica/mistica";
 import {
   IconFaceSadRegular,
   IconFaceNeutralRegular,
@@ -18,24 +17,12 @@ interface StepDTO {
   name: string;
   description: string;
   orderStep: number;
-  // compatibilidade: backend pode enviar "task" ou "tasks"
   task?: TaskDTO[];
   tasks?: TaskDTO[];
 }
 
 const API_BASE =
   (import.meta as any).env?.VITE_API_BASE || "http://localhost:8080";
-
-const formatDate = (isoOrAny: any) => {
-  if (!isoOrAny) return "?";
-  try {
-    const d = new Date(isoOrAny);
-    if (isNaN(d.getTime())) return String(isoOrAny);
-    return d.toLocaleDateString("pt-BR");
-  } catch {
-    return String(isoOrAny);
-  }
-};
 
 const normalizeUser = (userApi: any) => ({
   id: userApi?.id ?? userApi?.userId ?? null,
@@ -60,17 +47,13 @@ const normalizeOnboarding = (api: any): Onboarding => {
   const currentStep =
     api?.currentStep ??
     api?.current_step ??
-    (Array.isArray(steps) ? steps.find((s: any) => s?.current) : undefined) ??
-    undefined;
+    (Array.isArray(steps) ? steps.find((s: any) => s?.current) : undefined);
 
   const tasks: TaskDTO[] =
     currentStep?.task ?? currentStep?.tasks ?? currentStep?.taskList ?? [];
 
   const collaborator =
-    api?.collaborator ??
-    api?.user ??
-    (api?.owner ? api.owner : undefined) ??
-    undefined;
+    api?.collaborator ?? api?.user ?? api?.owner ?? undefined;
 
   return {
     id: api?.id ?? api?.onboardingId ?? null,
@@ -80,8 +63,8 @@ const normalizeOnboarding = (api: any): Onboarding => {
     steps: steps as StepDTO[],
     currentStep: {
       ...(currentStep ?? {}),
-      task: tasks as TaskDTO[],
-      tasks: tasks as TaskDTO[],
+      task: tasks,
+      tasks: tasks,
     } as StepDTO,
     collaborator,
     active: api?.active ?? true,
@@ -102,14 +85,12 @@ const Dashboard: React.FC = () => {
   const [data, setData] = useState<Onboarding | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [checklist, setChecklist] = useState<TaskDTO[]>([]);
   const [selectedHumor, setSelectedHumor] = useState("");
   const [duvida, setDuvida] = useState("");
   const [evento, setEvento] = useState("");
   const [comentario, setComentario] = useState("");
   const [enviado, setEnviado] = useState(false);
   const [advancing, setAdvancing] = useState(false);
-  const [taskUpdatingIds, setTaskUpdatingIds] = useState<number[]>([]); // ids em atualização
 
   useEffect(() => {
     const fetchData = async () => {
@@ -176,13 +157,6 @@ const Dashboard: React.FC = () => {
         const onboardingData = normalizeOnboarding(onbApi);
 
         setData(onboardingData);
-
-        const initialTasks: TaskDTO[] =
-          onboardingData.currentStep?.task ??
-          onboardingData.currentStep?.task ??
-          [];
-        setChecklist(initialTasks);
-
         setLoading(false);
       } catch (err: any) {
         setError(err?.message ?? "Erro ao carregar dados.");
@@ -193,55 +167,6 @@ const Dashboard: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleToggleTask = async (taskId: number, stepId: number) => {
-    if (!data || !data.steps) return;
-
-    const token = localStorage.getItem("token");
-    const step = data.steps.find((s) => s.id === stepId);
-    if (!step || !step.tasks) return;
-
-    const task = step.tasks.find((t) => t.id === taskId);
-    if (!task) return;
-
-    const newCompleted = !task.completed;
-
-    try {
-      const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-        body: JSON.stringify({ completed: newCompleted }),
-      });
-
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => null);
-        throw new Error(errBody?.message || "Erro ao atualizar tarefa");
-      }
-
-      const updated = await res.json();
-      const updatedTask: TaskDTO = {
-        ...task,
-        ...(updated as Partial<TaskDTO>),
-      };
-
-      const updatedSteps = data.steps.map((s) =>
-        s.id === stepId
-          ? {
-              ...s,
-              tasks: s.tasks?.map((t) => (t.id === taskId ? updatedTask : t)),
-            }
-          : s
-      );
-
-      setData((prev) => (prev ? { ...prev, steps: updatedSteps } : prev));
-    } catch (err) {
-      console.error("Erro ao atualizar tarefa:", err);
-    }
-  };
-
-  // Recarrega o onboarding atual (usado após next-step)
   const refreshOnboarding = async () => {
     if (!data?.id) return;
     const token = localStorage.getItem("token");
@@ -252,39 +177,26 @@ const Dashboard: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!res.ok) {
-        const errBody = await safeJson(res);
-        console.error("Falha ao recarregar onboarding:", errBody?.message);
-        return;
-      }
+      if (!res.ok) return;
       const onbApi = await safeJson(res);
       const onboardingData = normalizeOnboarding(onbApi);
       setData(onboardingData);
-      const initialTasks: TaskDTO[] =
-        onboardingData.currentStep?.task ??
-        onboardingData.currentStep?.task ??
-        [];
-      setChecklist(initialTasks);
     } catch (e) {
       console.error("Erro ao recarregar onboarding", e);
     }
   };
 
-  // Toggle de checkbox: atualização otimista + PUT /tasks/{id}
   const handleToggleItem = async (id: number) => {
     const token = localStorage.getItem("token");
 
-    // Atualização otimista
     setData((prev) => {
       if (!prev) return prev;
 
       const updatedSteps = prev.steps?.map((step) => {
         if (step.orderStep !== prev.currentStep?.orderStep) return step;
-
         const updatedTasks = (step.tasks ?? []).map((task) =>
           task.id === id ? { ...task, completed: !task.completed } : task
         );
-
         return { ...step, tasks: updatedTasks };
       });
 
@@ -292,42 +204,16 @@ const Dashboard: React.FC = () => {
     });
 
     try {
-      const res = await fetch(`${API_BASE}/tasks/${id}`, {
+      await fetch(`${API_BASE}/tasks/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ completed: true }), // ou o valor real
-      });
-
-      if (!res.ok) {
-        throw new Error("Erro ao atualizar tarefa.");
-      }
-
-      const updatedTask = await res.json();
-
-      // Atualiza com dados do backend
-      setData((prev) => {
-        if (!prev) return prev;
-
-        const updatedSteps = prev.steps?.map((step) => {
-          if (step.orderStep !== prev.currentStep?.orderStep) return step;
-
-          const updatedTasks = (step.tasks ?? []).map((task) =>
-            task.id === id
-              ? { ...task, completed: updatedTask.completed }
-              : task
-          );
-
-          return { ...step, tasks: updatedTasks };
-        });
-
-        return { ...prev, steps: updatedSteps };
+        body: JSON.stringify({ completed: true }),
       });
     } catch (err) {
       console.error("Erro ao atualizar task:", err);
-      // rollback se quiser
     }
   };
 
@@ -337,6 +223,21 @@ const Dashboard: React.FC = () => {
       setError("Onboarding inválido.");
       return;
     }
+
+    // validação: só permite avançar se todas as tasks estiverem concluídas
+    const currentStepTasks =
+      data.steps?.find((step) => step.orderStep === data.currentStep?.orderStep)
+        ?.tasks ?? [];
+
+    const allTasksCompleted =
+      currentStepTasks.length > 0 &&
+      currentStepTasks.every((task) => task.completed);
+
+    if (!allTasksCompleted) {
+      alert("Finalize todas as tarefas antes de concluir a etapa.");
+      return;
+    }
+
     const token = localStorage.getItem("token");
     setAdvancing(true);
     try {
@@ -357,6 +258,7 @@ const Dashboard: React.FC = () => {
         console.log(errBody);
         throw new Error(errBody?.message || "Erro ao avançar etapa.");
       }
+
       // sucesso: recarrega onboarding atualizado
       await refreshOnboarding();
     } catch (err: any) {
@@ -367,19 +269,14 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // Envia relatório via POST /onboardings/{id}/reports
   const handleEnviarRelatorio = async () => {
-    if (!data?.id) {
-      setError("Onboarding inválido.");
-      return;
-    }
+    if (!data?.id) return;
     const token = localStorage.getItem("token");
     const payload = {
       feeling: Number(selectedHumor) || null,
       question: duvida || null,
       event: evento || null,
       comment: comentario || null,
-      // createdAt é gerenciado pelo backend (se necessário, pode enviar createdAt: new Date().toISOString())
     };
 
     try {
@@ -392,21 +289,13 @@ const Dashboard: React.FC = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) {
-        const errBody = await safeJson(res);
-        throw new Error(errBody?.message || "Erro ao enviar relatório.");
-      }
-
-      // opcional: pegar o relatório criado
-      const created = await safeJson(res);
-      console.log("Relatório criado:", created);
+      if (!res.ok) throw new Error("Erro ao enviar relatório.");
 
       setEnviado(true);
       setSelectedHumor("");
       setDuvida("");
       setEvento("");
       setComentario("");
-      // atualizar lista de reports no state se quiser
       await refreshOnboarding();
       setTimeout(() => setEnviado(false), 5000);
     } catch (err: any) {
@@ -415,9 +304,9 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  if (loading) return <p className="loading">Carregando onboarding...</p>;
-  if (error) return <p className="erro">{error}</p>;
-  if (!data) return <p className="empty">Dados não encontrados.</p>;
+  if (loading) return <p>Carregando onboarding...</p>;
+  if (error) return <p>{error}</p>;
+  if (!data) return <p>Dados não encontrados.</p>;
 
   const dtBegin = data?.dt_begin ? new Date(data.dt_begin) : null;
   const dtEnd = data?.dt_end ? new Date(data.dt_end) : null;
@@ -440,7 +329,6 @@ const Dashboard: React.FC = () => {
       )
     : null;
 
-  // Aqui o controle para habilitar/desabilitar botão
   const currentStepTasks =
     data?.steps?.find((step) => step.orderStep === data.currentStep?.orderStep)
       ?.tasks ?? [];
@@ -453,10 +341,10 @@ const Dashboard: React.FC = () => {
     <div className="onboarding-container">
       <div className="layout-onboarding">
         <div className="coluna-central">
-          <h1 className="onboarding-title">
+          <h1>
             Olá, {data.collaborator?.name} {data.collaborator?.lastName}!
           </h1>
-          <h2 className="onboarding-subtitle">Roadmap Onboarding</h2>
+          <h2>Roadmap Onboarding</h2>
 
           <div className="cards-duplos">
             {data.steps?.map((step) => (
@@ -467,36 +355,31 @@ const Dashboard: React.FC = () => {
               />
             ))}
           </div>
+
           {data.steps
             ?.filter((step) => step.orderStep === data.currentStep?.orderStep)
             .map((step) =>
               step.tasks?.length ? (
                 <div
                   key={`checklist-${step.id}`}
-                  className="checklist-custom"
                   style={{ marginBottom: "2rem" }}
                 >
-                  <h4 style={{ marginBottom: "1rem" }}>
-                    Tarefas da etapa {step.orderStep}
-                  </h4>
+                  <h4>Tarefas da etapa {step.orderStep}</h4>
                   {step.tasks.map((task) => (
-                    <div key={task.id} className="checklist-item">
+                    <div key={task.id}>
                       <Checkbox
                         name={`task-${task.id}`}
                         checked={!!task.completed}
                         onChange={() => handleToggleItem(task.id)}
                       >
-                        <span className="checkbox-label">{task.name}</span>
+                        <span style={{ color: "#000" }}>{task.name}</span>
                       </Checkbox>
                     </div>
                   ))}
 
                   <div style={{ marginTop: "2rem" }}>
                     <MyPrimaryButton
-                      onPress={() => {
-                        if (!data?.id || advancing) return;
-                        handleConcluirEtapa();
-                      }}
+                      onPress={handleConcluirEtapa}
                       style={{ width: "100%", maxWidth: 300 }}
                       disabled={!allTasksCompleted || advancing}
                     >
@@ -522,27 +405,22 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="coluna-lateral">
-          <div className="jornada">
-            <div className="widget-card dias-jornada">
-              <h3>Dias da jornada</h3>
-              <p className="dias-jornada">
-                {diasConcluidos !== null && totalDias !== null
-                  ? `${diasConcluidos} / ${totalDias}`
-                  : "Datas da jornada não definidas"}
-              </p>
-            </div>
+          <div className="widget-card">
+            <h3>Dias da jornada</h3>
+            <p>
+              {diasConcluidos !== null && totalDias !== null
+                ? `${diasConcluidos} / ${totalDias}`
+                : "Datas da jornada não definidas"}
+            </p>
+          </div>
 
-            <div className="widget-card">
-              <h3>Seu nível atual</h3>
-              <div className="badge-nivel">
-                Nível {data.currentStep?.orderStep ?? "?"}
-              </div>
-            </div>
+          <div className="widget-card">
+            <h3>Seu nível atual</h3>
+            <div>Nível {data.currentStep?.orderStep ?? "?"}</div>
           </div>
 
           <div className="widget">
             <h3>Como você se sentiu essa semana?</h3>
-
             <div className="humor-options">
               {[1, 2, 3, 4].map((level) => {
                 const Icon =
@@ -594,7 +472,6 @@ const Dashboard: React.FC = () => {
 
             <ButtonPrimary
               onPress={handleEnviarRelatorio}
-              className="botao-etapa"
               style={{ marginTop: 12 }}
             >
               Enviar relatório semanal
@@ -608,4 +485,3 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
-

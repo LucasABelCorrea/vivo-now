@@ -118,7 +118,6 @@ const StageCard: React.FC<Props> = ({ step, status, onTaskUpdated }) => {
     <div className="stage-wrapper">
       <div className={`stage-card ${status}`}>
         <div>
-          <span className="etapa-numero">Etapa {step.orderStep}</span>
           <h3 className="etapa-titulo">{step.name}</h3>
           <p className="etapa-descricao">{step.description}</p>
 
