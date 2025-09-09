@@ -16,9 +16,11 @@ const formatTime = (isoString: string) => {
 
 const MessageBubble = ({ message, isOwn }: Props) => {
   return (
-    <div className={`message-bubble ${isOwn ? "own" : "other"}`}>
-      <p>{message.content}</p>
-      <span className="message-time">{formatTime(message.time)}</span>
+    <div className={`message-bubble-wrapper ${isOwn ? "own" : "other"}`}>
+      <div className="message-bubble">
+        <p>{message.content}</p>
+        <span className="message-time">{formatTime(message.time)}</span>
+      </div>
     </div>
   );
 };

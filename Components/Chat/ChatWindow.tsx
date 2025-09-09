@@ -10,7 +10,8 @@ interface Props {
   onBack?: () => void;
   isMobile?: boolean;
   loading: boolean;
-  currentUserName: string; // 👈 novo prop
+  currentUserId: number;
+  currentUserName: string;
 }
 
 const ChatWindow = ({
@@ -20,6 +21,7 @@ const ChatWindow = ({
   onBack,
   isMobile,
   loading,
+  currentUserId,
   currentUserName,
 }: Props) => {
   const [text, setText] = useState("");
@@ -36,15 +38,11 @@ const ChatWindow = ({
     }
   };
 
-  // Scroll automático para a última mensagem
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-
-  const normalize = (str: string | null | undefined) =>
-    str?.trim().toLowerCase();
 
   return (
     <div className="chat-window">
@@ -60,8 +58,8 @@ const ChatWindow = ({
       <div className="chat-messages-container">
         <div className="chat-messages">
           {messages.map((msg, index) => {
-            const isOwn =
-              normalize(msg.senderName) === normalize(currentUserName);
+            const isOwn = msg.senderName === currentUserName;
+
             return (
               <MessageBubble
                 key={`${msg.id}-${index}`}

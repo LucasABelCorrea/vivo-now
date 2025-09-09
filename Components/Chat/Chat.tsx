@@ -16,6 +16,7 @@ interface UserDTO {
 }
 
 export interface MessageDTO {
+  senderId?: number;
   text?: ReactNode;
   id: number;
   content: string;
@@ -44,19 +45,12 @@ const fetchUserChats = async (
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error("Erro ao buscar chats:", errorText);
-    throw new Error("Erro ao buscar chats do usuário");
-  }
+  if (!res.ok) throw new Error("Erro ao buscar chats do usuário");
 
   const chats: ChatDTO[] = await res.json();
   return chats.map((chat) => {
     const other = chat.participants.find((p) => p.id !== userId);
-    return {
-      ...chat,
-      receiverId: other ? other.id : userId,
-    };
+    return { ...chat, receiverId: other ? other.id : userId };
   });
 };
 
@@ -64,30 +58,22 @@ const fetchCollaboratorChats = async (
   userId: number,
   token: string
 ): Promise<ChatDTO[]> => {
+  const endpoints = ["manager", "buddy"];
   const chats: ChatDTO[] = [];
 
-  const managerRes = await fetch(
-    `http://localhost:8080/users/${userId}/chat/manager`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-  if (managerRes.ok) {
-    const managerChat: ChatDTO = await managerRes.json();
-    const other = managerChat.participants.find((p) => p.id !== userId);
-    chats.push({ ...managerChat, receiverId: other ? other.id : userId });
-  }
+  for (const type of endpoints) {
+    const res = await fetch(
+      `http://localhost:8080/users/${userId}/chat/${type}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
-  const buddyRes = await fetch(
-    `http://localhost:8080/users/${userId}/chat/buddy`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+    if (res.ok) {
+      const chat: ChatDTO = await res.json();
+      const other = chat.participants.find((p) => p.id !== userId);
+      chats.push({ ...chat, receiverId: other ? other.id : userId });
     }
-  );
-  if (buddyRes.ok) {
-    const buddyChat: ChatDTO = await buddyRes.json();
-    const other = buddyChat.participants.find((p) => p.id !== userId);
-    chats.push({ ...buddyChat, receiverId: other ? other.id : userId });
   }
 
   return chats;
@@ -104,7 +90,9 @@ const fetchChatMessages = async (
       headers: { Authorization: `Bearer ${token}` },
     }
   );
+
   if (!res.ok) throw new Error("Erro ao buscar mensagens do chat");
+
   const chat: ChatDTO = await res.json();
   return chat.messages;
 };
@@ -126,15 +114,17 @@ const sendMessageAPI = async (
       body: JSON.stringify({ content }),
     }
   );
+
   if (!res.ok) throw new Error("Erro ao enviar mensagem");
+
   return res.json();
 };
 
 const Chat: React.FC = () => {
   const token = localStorage.getItem("token");
   const userId = Number(localStorage.getItem("userId"));
-  const userName = localStorage.getItem("userName")?.trim().toLowerCase() || "";
   const role = localStorage.getItem("role");
+  const userName = localStorage.getItem("userName") || "";
 
   const [chats, setChats] = useState<ChatDTO[]>([]);
   const [selectedChat, setSelectedChat] = useState<ChatDTO | null>(null);
@@ -164,9 +154,9 @@ const Chat: React.FC = () => {
         }
 
         setChats(userChats);
-        setLoading(false);
       } catch (e: any) {
         setError(e.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -177,14 +167,13 @@ const Chat: React.FC = () => {
   useEffect(() => {
     if (!selectedChat || !userId || !token) {
       setMessages([]);
-      if (pollingRef.current) {
-        clearInterval(pollingRef.current);
-      }
+      if (pollingRef.current) clearInterval(pollingRef.current);
       return;
     }
 
     const loadMessages = async () => {
       try {
+        setLoadingMessages(true);
         const msgs = await fetchChatMessages(
           userId,
           selectedChat.receiverId,
@@ -193,6 +182,8 @@ const Chat: React.FC = () => {
         setMessages(msgs);
       } catch (e: any) {
         setError(e.message);
+      } finally {
+        setLoadingMessages(false);
       }
     };
 
@@ -200,14 +191,13 @@ const Chat: React.FC = () => {
     pollingRef.current = window.setInterval(loadMessages, 5000);
 
     return () => {
-      if (pollingRef.current) {
-        clearInterval(pollingRef.current);
-      }
+      if (pollingRef.current) clearInterval(pollingRef.current);
     };
   }, [selectedChat, userId, token]);
 
   const handleSend = async (text: string) => {
     if (!selectedChat || !userId || !token) return;
+
     try {
       await sendMessageAPI(userId, selectedChat.receiverId, token, text);
       const updatedMessages = await fetchChatMessages(
@@ -222,20 +212,18 @@ const Chat: React.FC = () => {
   };
 
   const getContactName = (chat: ChatDTO) => {
-    const otherParticipant = chat.participants.find((p) => p.id !== userId);
-    return otherParticipant
-      ? `${otherParticipant.name} ${otherParticipant.lastName}`
-      : "Sem contato";
+    const other = chat.participants.find((p) => p.id !== userId);
+    return other ? `${other.name} ${other.lastName}` : "Sem contato";
   };
-
-  if (loading) return <p>Carregando chats...</p>;
-  if (error) return <p style={{ color: "red" }}>Erro: {error}</p>;
 
   const contacts: Contact[] = chats.map((chat) => ({
     id: chat.id.toString(),
     name: getContactName(chat),
     receiverId: chat.receiverId,
   }));
+
+  if (loading) return <p>Carregando chats...</p>;
+  if (error) return <p style={{ color: "red" }}>Erro: {error}</p>;
 
   return (
     <div className="chat-layout">
@@ -253,6 +241,7 @@ const Chat: React.FC = () => {
           messages={messages}
           onSend={handleSend}
           loading={loadingMessages}
+          currentUserId={userId}
           currentUserName={userName}
         />
       ) : (
