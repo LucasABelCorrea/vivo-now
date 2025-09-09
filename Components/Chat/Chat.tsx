@@ -153,6 +153,15 @@ const Chat: React.FC = () => {
           throw new Error("Role não reconhecida para chat");
         }
 
+        // ✅ Salva o nome do usuário logado no localStorage
+        const loggedUser = userChats
+          .flatMap((chat) => chat.participants)
+          .find((p) => p.id === userId);
+
+        if (loggedUser) {
+          localStorage.setItem("userName", loggedUser.name);
+        }
+
         setChats(userChats);
       } catch (e: any) {
         setError(e.message);

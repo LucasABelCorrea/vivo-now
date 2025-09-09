@@ -58,7 +58,13 @@ const ChatWindow = ({
       <div className="chat-messages-container">
         <div className="chat-messages">
           {messages.map((msg, index) => {
-            const isOwn = msg.senderName === currentUserName;
+            const isOwn =
+              msg.senderName.trim().toLowerCase() ===
+              currentUserName.trim().toLowerCase();
+
+            console.log(
+              `Mensagem: ${msg.content} | Remetente: ${msg.senderName} | Usuário atual: ${currentUserName} | isOwn: ${isOwn}`
+            );
 
             return (
               <MessageBubble

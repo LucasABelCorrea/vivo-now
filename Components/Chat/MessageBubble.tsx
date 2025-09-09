@@ -14,12 +14,23 @@ const formatTime = (isoString: string) => {
   });
 };
 
-const MessageBubble = ({ message, isOwn }: Props) => {
+const MessageBubble = ({
+  message,
+  isOwn,
+}: {
+  message: MessageDTO;
+  isOwn: boolean;
+}) => {
   return (
     <div className={`message-bubble-wrapper ${isOwn ? "own" : "other"}`}>
       <div className="message-bubble">
         <p>{message.content}</p>
-        <span className="message-time">{formatTime(message.time)}</span>
+        <span className="message-time">
+          {new Date(message.time).toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
       </div>
     </div>
   );
