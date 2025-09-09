@@ -11,6 +11,8 @@ import {
 } from "@telefonica/mistica";
 import { Onboarding, TaskDTO } from "../../src/types/onboardingTypes";
 import MyPrimaryButton from "../Button/MyPrimaryButton";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface StepDTO {
   id: number;
@@ -270,6 +272,18 @@ const Dashboard: React.FC = () => {
   };
 
   const handleEnviarRelatorio = async () => {
+    let hasError = false;
+
+    if (!selectedHumor) {
+      toast.error("O campo 'Como você se sentiu essa semana?' é obrigatório.");
+      hasError = true;
+    }
+    if (!duvida.trim()) {
+      toast.error("O campo 'Teve alguma dúvida essa semana?' é obrigatório.");
+      hasError = true;
+    }
+    if (hasError) return;
+
     if (!data?.id) return;
     const token = localStorage.getItem("token");
     const payload = {
@@ -298,8 +312,10 @@ const Dashboard: React.FC = () => {
       setComentario("");
       await refreshOnboarding();
       setTimeout(() => setEnviado(false), 5000);
+      toast.success("Relatório enviado com sucesso!");
     } catch (err: any) {
       console.error("Erro ao enviar relatório:", err);
+      toast.error("Erro ao enviar relatório.");
       setError(err?.message ?? "Erro ao enviar relatório.");
     }
   };
@@ -339,6 +355,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="onboarding-container">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="layout-onboarding">
         <div className="coluna-central">
           <h1>
