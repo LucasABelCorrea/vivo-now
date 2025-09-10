@@ -13,6 +13,7 @@ import { Onboarding, TaskDTO } from "../../src/types/onboardingTypes";
 import MyPrimaryButton from "../Button/MyPrimaryButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaLock } from "react-icons/fa";
 
 interface StepDTO {
   id: number;
@@ -236,7 +237,7 @@ const Dashboard: React.FC = () => {
       currentStepTasks.every((task) => task.completed);
 
     if (!allTasksCompleted) {
-      alert("Finalize todas as tarefas antes de concluir a etapa.");
+      toast.error("Finalize todas as tarefas antes de concluir a etapa.");
       return;
     }
 
@@ -358,19 +359,161 @@ const Dashboard: React.FC = () => {
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="layout-onboarding">
         <div className="coluna-central">
-          <h1>
+          <h1 className="titulo">
             Olá, {data.collaborator?.name} {data.collaborator?.lastName}!
           </h1>
           <h2>Roadmap Onboarding</h2>
 
-          <div className="cards-duplos">
-            {data.steps?.map((step) => (
-              <StageCard
-                key={(step as any).id}
-                step={step as StepDTO}
-                status="active"
-              />
-            ))}
+          <div
+            className="cards-duplos"
+            style={{
+              justifyContent: "center",
+              display: "flex",
+              gap: "2rem",
+              marginBottom: "2rem",
+              width: "100%",
+            }}
+          >
+            {/* Se não há etapas ou dados */}
+            {!data?.steps?.length ? (
+              <div
+                className="stage-card locked"
+                style={{
+                  background: "#ccc",
+                  color: "#444",
+                  opacity: 0.8,
+                  minWidth: 280,
+                  minHeight: 180,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  fontSize: 18,
+                }}
+              >
+                <div style={{ margin: "12px 0" }}>
+                  <FaLock size={32} color="#444" />
+                </div>
+                <div>Sem etapas disponíveis</div>
+              </div>
+            ) : null}
+
+            {/* Se todas as etapas foram concluídas */}
+            {data?.steps?.length &&
+              (data?.currentStep?.orderStep ?? 0) > data.steps.length && (
+                <div
+                  className="stage-card locked"
+                  style={{
+                    background: "#35363A",
+                    color: "#fff",
+                    minWidth: 380,
+                    minHeight: 180,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    fontWeight: 500,
+                    fontSize: 28,
+                    paddingLeft: 40,
+                    boxShadow: "0px 8px 24px 0px #00000014",
+                    borderRadius: 16,
+                    margin: "0 auto",
+                  }}
+                >
+                  <span>Sem mais etapas</span>
+                  <span style={{ marginTop: 8 }}>disponíveis</span>
+                </div>
+              )}
+
+            {/* Se está na primeira etapa */}
+            {data?.currentStep?.orderStep === 1 && data?.steps?.[0] && (
+              <>
+                <StageCard
+                  key={data.steps[0].id}
+                  step={{
+                    ...data.steps[0],
+                    name: data.steps[0].name || "",
+                    description: data.steps[0].description || "",
+                    orderStep: data.steps[0].orderStep ?? 1,
+                  }}
+                  status="active"
+                />
+                {data.steps[1] && (
+                  <div
+                    className="stage-card locked"
+                    style={{
+                      background: "#1a1919",
+                      color: "#fff",
+                      opacity: 0.7,
+                      minWidth: 280,
+                      minHeight: 180,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div style={{ fontWeight: "bold", fontSize: 18 }}>
+                      Próxima etapa: {data.steps[1].name || ""}
+                    </div>
+                    <div style={{ margin: "12px 0" }}>
+                      <FaLock size={32} color="#fff" />
+                    </div>
+                    <div>Bloqueada</div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Se está em qualquer etapa intermediária */}
+            {data?.currentStep?.orderStep &&
+              data?.currentStep?.orderStep > 1 &&
+              data?.currentStep?.orderStep <= (data?.steps?.length ?? 0) &&
+              data?.steps?.[data.currentStep.orderStep - 1] && (
+                <StageCard
+                  key={data.steps[data.currentStep.orderStep - 1].id}
+                  step={{
+                    ...data.steps[data.currentStep.orderStep - 1],
+                    name: data.steps[data.currentStep.orderStep - 1].name || "",
+                    description:
+                      data.steps[data.currentStep.orderStep - 1].description || "",
+                    orderStep: data.steps[data.currentStep.orderStep - 1].orderStep ?? 1,
+                  }}
+                  status="active"
+                />
+              )}
+
+            {
+              // Mostra o card cinza se não houver currentStep ou se não houver etapa correspondente ao currentStep
+              (!data.currentStep ||
+                !data.steps?.some(
+                  (step) => step.orderStep === data.currentStep?.orderStep
+                )) && (
+                <div
+                  className="stage-card locked"
+                  style={{
+                    background: "#35363A",
+                    color: "#fff",
+                    minWidth: 380,
+                    minHeight: 180,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    fontWeight: 500,
+                    fontSize: 28,
+                    paddingLeft: 40,
+                    boxShadow: "0px 8px 24px 0px #00000014",
+                    borderRadius: 16,
+                    margin: "0 auto",
+                  }}
+                >
+                  <span>Sem mais etapas</span>
+                  <span style={{ marginTop: 8 }}>disponíveis</span>
+                </div>
+              )
+            }
           </div>
 
           {data.steps
