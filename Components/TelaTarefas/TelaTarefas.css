@@ -1,0 +1,181 @@
+.tela-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+.tela-card {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.titulo {
+  color: #6a1b9a;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.subtitulo {
+  color: #6a1b9a;
+  font-size: 1.2rem;
+  margin: 2rem 0 1rem;
+}
+
+/* Tarefas base */
+.tarefas-grid {
+  display: flex;
+  gap: 7rem;
+  margin-bottom: 2rem;
+}
+
+.tarefa-box {
+  background-color: #6a1b9a;
+  color: white;
+  border-radius: 12px;
+  padding: 1rem ;
+  width: 300px;
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tarefa-label {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.copiar-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.copiar-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: white;
+}
+
+/* Blocos roxos */
+.bloco-roxo.full-width {
+  background-color: #6a1b9a;
+  color: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.bloco-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bloco-title {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.bloco-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editar-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.apagar-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.bloco-conteudo p {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.ativo {
+  color: #00ff99;
+  font-weight: bold;
+}
+
+/* Descrição e Tarefas */
+.descricao-label {
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.tarefas-label {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Tarefas dentro da etapa */
+.tarefa-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.tarefa-item {
+  background-color: white;
+  color: #6a1b9a;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  cursor: default;
+  border: none;
+}
+
+/* Botão pontilhado abaixo das tarefas */
+.criar-tarefa-pontilhado {
+  width: 150px;
+  padding: 0.5rem 1rem;
+  border: 1px dashed white;
+  border-radius: 8px;
+  background: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: rem;
+}
+
+
+.criar-etapa-compacto {
+  background-color: white;
+  color: #6a1b9a;
+  border: 1px dashed rgb(0, 0, 0);
+  width: 160px;               /* mesma largura do botão de tarefa */
+  padding: 1rem 1rem;       /* mesmo padding horizontal */
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+
