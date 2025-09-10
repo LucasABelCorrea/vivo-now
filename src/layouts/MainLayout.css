@@ -7,7 +7,7 @@
 .main-content {
   flex: 1;
   padding: 32px;
-  margin-left: 260px; /* Isso só é necessário no desktop */
+  margin-left: 260px; 
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,6 +20,7 @@
 
   .main-content {
     padding: 16px;
-    margin-left: 0; /* <<< ADICIONE ISSO */
+    margin-left: 0; 
+    margin-bottom: 100px;
   }
 }

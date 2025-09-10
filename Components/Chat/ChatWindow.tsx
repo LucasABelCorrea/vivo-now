@@ -77,13 +77,18 @@ const ChatWindow = ({
           <div ref={messagesEndRef} />
         </div>
       </div>
-
       <div className="chat-input-area custom-input">
         <input
           type="text"
           placeholder="Escreva sua mensagem"
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault(); // evita quebra de linha no input
+              handleSend();
+            }
+          }}
         />
         <button onClick={handleSend} disabled={loading}>
           {loading ? "Enviando..." : "Enviar"}

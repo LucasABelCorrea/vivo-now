@@ -181,6 +181,17 @@
   margin-right: 10px;
 }
 
+.notification-dot {
+  width: 10px;
+  height: 10px;
+  background-color: purple; /* bolinha roxa */
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: 10px;
+  align-self: center;
+}
+
+
 /* Responsivo */
 @media (max-width: 768px) {
   .chat-layout {

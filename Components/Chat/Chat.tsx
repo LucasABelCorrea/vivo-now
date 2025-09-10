@@ -35,6 +35,7 @@ interface Contact {
   id: string;
   name: string;
   receiverId: number;
+  hasNotification?: boolean;
 }
 
 const fetchUserChats = async (
@@ -132,6 +133,8 @@ const Chat: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [unreadChats, setUnreadChats] = useState<Record<number, boolean>>({});
+  const [lastRead, setLastRead] = useState<Record<number, number>>({});
   const pollingRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -153,7 +156,6 @@ const Chat: React.FC = () => {
           throw new Error("Role não reconhecida para chat");
         }
 
-        // ✅ Salva o nome do usuário logado no localStorage
         const loggedUser = userChats
           .flatMap((chat) => chat.participants)
           .find((p) => p.id === userId);
@@ -174,6 +176,37 @@ const Chat: React.FC = () => {
   }, [userId, token, role]);
 
   useEffect(() => {
+    if (!userId || !token) return;
+
+    const checkForNewMessages = async () => {
+      try {
+        for (const chat of chats) {
+          const msgs = await fetchChatMessages(userId, chat.receiverId, token);
+          const lastMessage = msgs[msgs.length - 1];
+
+          if (lastMessage && lastMessage.senderId !== userId) {
+            const lastReadId = lastRead[chat.id] || 0;
+
+            if (lastMessage.id > lastReadId) {
+              if (chat.id !== selectedChat?.id) {
+                setUnreadChats((prev) => ({
+                  ...prev,
+                  [chat.id]: true,
+                }));
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Erro ao verificar mensagens novas:", e);
+      }
+    };
+
+    const interval = window.setInterval(checkForNewMessages, 5000);
+    return () => clearInterval(interval);
+  }, [chats, userId, token, selectedChat, lastRead]);
+
+  useEffect(() => {
     if (!selectedChat || !userId || !token) {
       setMessages([]);
       if (pollingRef.current) clearInterval(pollingRef.current);
@@ -189,6 +222,20 @@ const Chat: React.FC = () => {
           token
         );
         setMessages(msgs);
+
+        const lastMessage = msgs[msgs.length - 1];
+        if (lastMessage) {
+          setLastRead((prev) => ({
+            ...prev,
+            [selectedChat.id]: lastMessage.id,
+          }));
+
+          setUnreadChats((prev) => {
+            const updated = { ...prev };
+            delete updated[selectedChat.id];
+            return updated;
+          });
+        }
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -229,6 +276,7 @@ const Chat: React.FC = () => {
     id: chat.id.toString(),
     name: getContactName(chat),
     receiverId: chat.receiverId,
+    hasNotification: unreadChats[chat.id] || false,
   }));
 
   if (loading) return <p>Carregando chats...</p>;
@@ -238,9 +286,18 @@ const Chat: React.FC = () => {
     <div className="chat-layout">
       <ContactList
         contacts={contacts}
-        onSelect={(id) =>
-          setSelectedChat(chats.find((c) => c.id === Number(id)) || null)
-        }
+        onSelect={(id) => {
+          const chat = chats.find((c) => c.id === Number(id)) || null;
+          setSelectedChat(chat);
+
+          if (chat) {
+            setUnreadChats((prev) => {
+              const updated = { ...prev };
+              delete updated[chat.id];
+              return updated;
+            });
+          }
+        }}
         selectedId={selectedChat?.id.toString() || null}
       />
 
@@ -261,3 +318,4 @@ const Chat: React.FC = () => {
 };
 
 export default Chat;
+         

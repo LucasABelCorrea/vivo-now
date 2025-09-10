@@ -2,6 +2,7 @@ interface Contact {
   id: string;
   name: string;
   lastMessage?: string;
+  hasNotification?: boolean; // 🔔 flag de notificação
 }
 
 interface Props {
@@ -23,10 +24,15 @@ const ContactList = ({ contacts, onSelect, selectedId }: Props) => {
           onClick={() => onSelect(contact.id)}
         >
           <div className="avatar-circle">{contact.name[0]}</div>
-          <div>
+          <div className="contact-info">
             <strong>{contact.name}</strong>
             <p>{contact.lastMessage || "Mensagem"}</p>
           </div>
+
+          {/* 🔔 bolinha de notificação */}
+          {contact.hasNotification && (
+            <span className="notification-dot"></span>
+          )}
         </div>
       ))}
     </div>
