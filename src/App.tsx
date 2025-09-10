@@ -12,6 +12,9 @@ import MainLayout from "../src/layouts/MainLayout";
 import Chat from "../Components/Chat/Chat";
 import Test from "../Components/Test/Test"
 import ManagerPlatform from "../Components/ManagerPlatform/ManagerPlatform";
+import RelatorioSemanal from "../Components/RelatorioSemanal/RelatorioSemanal";
+import TelaTarefas from "../Components/TelaTarefas/TelaTarefas";
+
 
 function App() {
   return (
@@ -32,6 +35,10 @@ function App() {
             <Route path="/chat" element={<Chat userId={0} token={""} />} />
             <Route path="/test" element={<Test />} />
             <Route path="/manager" element={<ManagerPlatform />} />
+            <Route path="/relatorio-semanal" element={<RelatorioSemanal />} />
+            <Route path="/tarefasbase" element={<TelaTarefas />} />
+
+
           </Route>
         </Routes>
       </BrowserRouter>
