@@ -24,6 +24,11 @@
   padding: 0.8rem;
   cursor: pointer;
   border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+
+.contact-item:hover {
+  background-color: #f0f0f0;
 }
 
 .contact-item.active {
@@ -43,12 +48,23 @@
   font-size: 1rem;
 }
 
+.contact-info {
+  flex: 1;
+}
+
+.contact-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
 /* Janela de chat */
 .chat-window {
   display: flex;
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+  width: 100%;
 }
 
 /* Cabeçalho do chat */
@@ -57,6 +73,9 @@
   border-bottom: 1px solid #ccc;
   font-weight: bold;
   font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Container com scroll */
@@ -126,14 +145,15 @@
 /* Campo de entrada */
 .chat-input-area {
   display: flex;
-  padding: 1rem;
-  background-color: #f4f2fc;
+  width: 90%;
+  margin: auto;
 }
 
 .chat-input-area input {
   flex: 1;
   border: none;
   padding: 0.8rem;
+  height: 57px;
   border-radius: 8px 0 0 8px;
   outline: none;
   background-color: #4b0082;
@@ -146,13 +166,14 @@
 }
 
 .chat-input-area button {
-  padding: 0.8rem 1.2rem;
+  padding: 1.2rem;
   border: none;
   background-color: #f06497;
-  color: white;
+  color: #fff;
   border-radius: 0 8px 8px 0;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  height: fit-content;
 }
 
 .chat-input-area button:hover {
@@ -172,32 +193,45 @@
 
 /* Botão de voltar */
 .back-button {
-  background: none;
-  border: none;
-  color: #6a0dad;
+  background-color: #6a0dad;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
   font-weight: bold;
   font-size: 1rem;
+  border: none;
   cursor: pointer;
-  margin-right: 10px;
+  transition: background-color 0.3s ease;
 }
 
+.back-button:hover {
+  background-color: #5a0099;
+}
+
+/* Notificação */
 .notification-dot {
   width: 10px;
   height: 10px;
-  background-color: purple; /* bolinha roxa */
+  background-color: purple;
   border-radius: 50%;
   margin-left: auto;
   margin-right: 10px;
   align-self: center;
 }
 
-
 /* Responsivo */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .chat-layout {
     flex-direction: column;
-    height: calc(100vh - 60px);
-    padding-bottom: 5%;
+    height: 75vh;
+  }
+
+  .chat-input-area {
+    padding: 1rem;
+  }
+
+  .chat-input-area input {
+    height: 56px;
   }
 
   .contact-list {
@@ -209,20 +243,11 @@
     width: 100%;
   }
 
-  .chat-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .back-button {
-    background-color: #6a0dad;
-    color: #fff;
-    padding: 10px;
-    border-radius: 200px;
-  }
-
   .empty-chat {
     display: none;
+  }
+
+  .chat-header {
+    flex-wrap: wrap;
   }
 }

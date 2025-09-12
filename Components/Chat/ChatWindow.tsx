@@ -1,6 +1,6 @@
-import { MessageDTO } from "../../Components/Chat/Chat";
-import MessageBubble from "./MessageBubble";
 import { useState, useEffect, useRef } from "react";
+import { MessageDTO } from "./Chat";
+import MessageBubble from "./MessageBubble";
 import "./Chat.css";
 
 interface Props {
@@ -29,13 +29,8 @@ const ChatWindow = ({
 
   const handleSend = async () => {
     if (!text.trim()) return;
-
-    try {
-      await onSend(text);
-      setText("");
-    } catch (error) {
-      console.error("Erro ao enviar mensagem:", error);
-    }
+    await onSend(text);
+    setText("");
   };
 
   useEffect(() => {
@@ -59,12 +54,9 @@ const ChatWindow = ({
         <div className="chat-messages">
           {messages.map((msg, index) => {
             const isOwn =
+              msg.senderId === currentUserId ||
               msg.senderName.trim().toLowerCase() ===
-              currentUserName.trim().toLowerCase();
-
-            console.log(
-              `Mensagem: ${msg.content} | Remetente: ${msg.senderName} | Usuário atual: ${currentUserName} | isOwn: ${isOwn}`
-            );
+                currentUserName.trim().toLowerCase();
 
             return (
               <MessageBubble
@@ -77,7 +69,8 @@ const ChatWindow = ({
           <div ref={messagesEndRef} />
         </div>
       </div>
-      <div className="chat-input-area custom-input">
+
+      <div className="chat-input-area">
         <input
           type="text"
           placeholder="Escreva sua mensagem"
@@ -85,7 +78,7 @@ const ChatWindow = ({
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault(); // evita quebra de linha no input
+              e.preventDefault();
               handleSend();
             }
           }}

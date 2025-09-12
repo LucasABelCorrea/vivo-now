@@ -1,7 +1,15 @@
-import React, { useEffect, useState, useRef, ReactNode } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ContactList from "./ContactList";
 import ChatWindow from "./ChatWindow";
 import "./Chat.css";
+
+export interface MessageDTO {
+  id: number;
+  content: string;
+  time: string;
+  senderName: string;
+  senderId?: number;
+}
 
 interface UserDTO {
   id: number;
@@ -13,15 +21,6 @@ interface UserDTO {
   role: string;
   teamId: number;
   onboardingIds: number[];
-}
-
-export interface MessageDTO {
-  senderId?: number;
-  text?: ReactNode;
-  id: number;
-  content: string;
-  time: string;
-  senderName: string;
 }
 
 interface ChatDTO {
@@ -45,9 +44,7 @@ const fetchUserChats = async (
   const res = await fetch(`http://localhost:8080/users/${userId}/chats`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-
   if (!res.ok) throw new Error("Erro ao buscar chats do usuário");
-
   const chats: ChatDTO[] = await res.json();
   return chats.map((chat) => {
     const other = chat.participants.find((p) => p.id !== userId);
@@ -61,7 +58,6 @@ const fetchCollaboratorChats = async (
 ): Promise<ChatDTO[]> => {
   const endpoints = ["manager", "buddy"];
   const chats: ChatDTO[] = [];
-
   for (const type of endpoints) {
     const res = await fetch(
       `http://localhost:8080/users/${userId}/chat/${type}`,
@@ -69,14 +65,12 @@ const fetchCollaboratorChats = async (
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-
     if (res.ok) {
       const chat: ChatDTO = await res.json();
       const other = chat.participants.find((p) => p.id !== userId);
       chats.push({ ...chat, receiverId: other ? other.id : userId });
     }
   }
-
   return chats;
 };
 
@@ -91,9 +85,7 @@ const fetchChatMessages = async (
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-
   if (!res.ok) throw new Error("Erro ao buscar mensagens do chat");
-
   const chat: ChatDTO = await res.json();
   return chat.messages;
 };
@@ -115,14 +107,12 @@ const sendMessageAPI = async (
       body: JSON.stringify({ content }),
     }
   );
-
   if (!res.ok) throw new Error("Erro ao enviar mensagem");
-
   return res.json();
 };
 
 const Chat: React.FC = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || "";
   const userId = Number(localStorage.getItem("userId"));
   const role = localStorage.getItem("role");
   const userName = localStorage.getItem("userName") || "";
@@ -130,81 +120,36 @@ const Chat: React.FC = () => {
   const [chats, setChats] = useState<ChatDTO[]>([]);
   const [selectedChat, setSelectedChat] = useState<ChatDTO | null>(null);
   const [messages, setMessages] = useState<MessageDTO[]>([]);
-  const [loading, setLoading] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [unreadChats, setUnreadChats] = useState<Record<number, boolean>>({});
-  const [lastRead, setLastRead] = useState<Record<number, number>>({});
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
+  const [showChatOnly, setShowChatOnly] = useState(false);
+  const [lastReadMessageIdMap, setLastReadMessageIdMap] = useState<
+    Record<number, number>
+  >({});
   const pollingRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!userId || !token || !role) {
-      setError("Usuário não autenticado. Faça login novamente.");
-      return;
-    }
+    const handleResize = () => setIsMobileView(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
+  useEffect(() => {
     const loadChats = async () => {
       try {
-        setLoading(true);
         let userChats: ChatDTO[] = [];
-
         if (role === "MANAGER" || role === "BUDDY") {
           userChats = await fetchUserChats(userId, token);
         } else if (role === "COLLABORATOR") {
           userChats = await fetchCollaboratorChats(userId, token);
-        } else {
-          throw new Error("Role não reconhecida para chat");
         }
-
-        const loggedUser = userChats
-          .flatMap((chat) => chat.participants)
-          .find((p) => p.id === userId);
-
-        if (loggedUser) {
-          localStorage.setItem("userName", loggedUser.name);
-        }
-
         setChats(userChats);
-      } catch (e: any) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
+      } catch (error) {
+        console.error(error);
       }
     };
-
     loadChats();
   }, [userId, token, role]);
-
-  useEffect(() => {
-    if (!userId || !token) return;
-
-    const checkForNewMessages = async () => {
-      try {
-        for (const chat of chats) {
-          const msgs = await fetchChatMessages(userId, chat.receiverId, token);
-          const lastMessage = msgs[msgs.length - 1];
-
-          if (lastMessage && lastMessage.senderId !== userId) {
-            const lastReadId = lastRead[chat.id] || 0;
-
-            if (lastMessage.id > lastReadId) {
-              if (chat.id !== selectedChat?.id) {
-                setUnreadChats((prev) => ({
-                  ...prev,
-                  [chat.id]: true,
-                }));
-              }
-            }
-          }
-        }
-      } catch (e) {
-        console.error("Erro ao verificar mensagens novas:", e);
-      }
-    };
-
-    const interval = window.setInterval(checkForNewMessages, 5000);
-    return () => clearInterval(interval);
-  }, [chats, userId, token, selectedChat, lastRead]);
 
   useEffect(() => {
     if (!selectedChat || !userId || !token) {
@@ -215,7 +160,6 @@ const Chat: React.FC = () => {
 
     const loadMessages = async () => {
       try {
-        setLoadingMessages(true);
         const msgs = await fetchChatMessages(
           userId,
           selectedChat.receiverId,
@@ -223,23 +167,15 @@ const Chat: React.FC = () => {
         );
         setMessages(msgs);
 
-        const lastMessage = msgs[msgs.length - 1];
-        if (lastMessage) {
-          setLastRead((prev) => ({
+        const lastMsg = msgs[msgs.length - 1];
+        if (lastMsg) {
+          setLastReadMessageIdMap((prev) => ({
             ...prev,
-            [selectedChat.id]: lastMessage.id,
+            [selectedChat.id]: lastMsg.id,
           }));
-
-          setUnreadChats((prev) => {
-            const updated = { ...prev };
-            delete updated[selectedChat.id];
-            return updated;
-          });
         }
-      } catch (e: any) {
-        setError(e.message);
-      } finally {
-        setLoadingMessages(false);
+      } catch (error) {
+        console.error("Erro ao atualizar mensagens:", error);
       }
     };
 
@@ -252,8 +188,7 @@ const Chat: React.FC = () => {
   }, [selectedChat, userId, token]);
 
   const handleSend = async (text: string) => {
-    if (!selectedChat || !userId || !token) return;
-
+    if (!selectedChat) return;
     try {
       await sendMessageAPI(userId, selectedChat.receiverId, token, text);
       const updatedMessages = await fetchChatMessages(
@@ -262,8 +197,8 @@ const Chat: React.FC = () => {
         token
       );
       setMessages(updatedMessages);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -272,50 +207,55 @@ const Chat: React.FC = () => {
     return other ? `${other.name} ${other.lastName}` : "Sem contato";
   };
 
-  const contacts: Contact[] = chats.map((chat) => ({
-    id: chat.id.toString(),
-    name: getContactName(chat),
-    receiverId: chat.receiverId,
-    hasNotification: unreadChats[chat.id] || false,
-  }));
+  const contacts: Contact[] = chats.map((chat) => {
+    const lastMessage = chat.messages[chat.messages.length - 1];
+    const lastReadId = lastReadMessageIdMap[chat.id] || 0;
 
-  if (loading) return <p>Carregando chats...</p>;
-  if (error) return <p style={{ color: "red" }}>Erro: {error}</p>;
+    const isUnread =
+      lastMessage &&
+      lastMessage.senderId !== userId &&
+      lastMessage.id > lastReadId;
+
+    return {
+      id: chat.id.toString(),
+      name: getContactName(chat),
+      receiverId: chat.receiverId,
+      hasNotification: isUnread,
+    };
+  });
 
   return (
     <div className="chat-layout">
-      <ContactList
-        contacts={contacts}
-        onSelect={(id) => {
-          const chat = chats.find((c) => c.id === Number(id)) || null;
-          setSelectedChat(chat);
-
-          if (chat) {
-            setUnreadChats((prev) => {
-              const updated = { ...prev };
-              delete updated[chat.id];
-              return updated;
-            });
-          }
-        }}
-        selectedId={selectedChat?.id.toString() || null}
-      />
-
-      {selectedChat ? (
-        <ChatWindow
-          contactName={getContactName(selectedChat)}
-          messages={messages}
-          onSend={handleSend}
-          loading={loadingMessages}
-          currentUserId={userId}
-          currentUserName={userName}
+      {!isMobileView || !showChatOnly ? (
+        <ContactList
+          contacts={contacts}
+          onSelect={(id) => {
+            const chat = chats.find((c) => c.id === Number(id)) || null;
+            setSelectedChat(chat);
+            if (isMobileView) setShowChatOnly(true);
+          }}
+          selectedId={selectedChat?.id.toString() || null}
         />
-      ) : (
-        <div className="empty-chat">Selecione um contato</div>
-      )}
+      ) : null}
+
+      {!isMobileView || showChatOnly ? (
+        selectedChat ? (
+          <ChatWindow
+            contactName={getContactName(selectedChat)}
+            messages={messages}
+            onSend={handleSend}
+            loading={loadingMessages}
+            currentUserId={userId}
+            currentUserName={userName}
+            onBack={isMobileView ? () => setShowChatOnly(false) : undefined}
+            isMobile={isMobileView}
+          />
+        ) : (
+          <div className="empty-chat">Selecione um contato</div>
+        )
+      ) : null}
     </div>
   );
 };
 
 export default Chat;
-         

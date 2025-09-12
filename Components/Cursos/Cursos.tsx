@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CardButton from "../CardButton/CardButton";
-
+import "./Cursos.css"; // Certifique-se de importar o CSS aqui
 
 interface Curso {
   id: string;
@@ -38,7 +38,7 @@ const Cursos: React.FC = () => {
   }, []);
 
   return (
-    <div className="plataformas-wrapper">
+    <div className="cursos-wrapper">
       <div className="margin">
         <div className="titulo">
           <h1>Seus cursos</h1>
@@ -46,12 +46,13 @@ const Cursos: React.FC = () => {
 
         <div className="grid">
           {cursos.map((curso) => (
-            <CardButton
-              key={curso.id}
-              titulo={curso.titulo}
-              descricao={curso.descricao}
-              link={curso.link}
-            />
+            <div className="card-button" key={curso.id}>
+              <CardButton
+                titulo={curso.titulo}
+                descricao={curso.descricao}
+                link={curso.link}
+              />
+            </div>
           ))}
         </div>
       </div>

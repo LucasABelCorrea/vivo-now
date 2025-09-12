@@ -79,7 +79,7 @@ h1 {
 
 .campo-busca .lupa {
   position: absolute;
-  top: 60%;
+  top: 40%;
   right: 12px;
   transform: translateY(-50%);
   background: none;
@@ -109,4 +109,58 @@ h1 {
   background-color: #d95386;
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(240, 100, 151, 0.5);
+}
+
+@media (max-width: 768px) {
+  .plataformas-wrapper {
+    padding: 24px;
+  }
+
+  .titulo h1 {
+    font-size: 22px;
+  }
+
+  .margin {
+    gap: 48px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr; /* Uma única coluna */
+    gap: 16px;
+  }
+
+  .info h2 {
+    font-size: 20px;
+  }
+
+  .info p {
+    font-size: 14px;
+  }
+
+  .plataforma {
+    font-size: 12px;
+  }
+
+  .campo-busca {
+    max-width: 50%;
+    margin: auto;
+    margin-top: 10%;
+  }
+
+  .campo-busca input {
+    font-size: 14px;
+    padding: 10px 40px 10px 12px;
+  }
+
+  .campo-busca .lupa {
+    font-size: 16px;
+    right: 10px;
+  }
+
+  .link-plataforma {
+    width: 100%;
+    margin-left: 0;
+    font-size: 14px;
+    padding: 12px;
+  }
 }

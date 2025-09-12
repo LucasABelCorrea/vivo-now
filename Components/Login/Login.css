@@ -1,13 +1,13 @@
-/* Container principal */
+* {
+  box-sizing: border-box;
+}
 .container {
   width: 80%;
-  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #f0edff;
   padding: 40px;
-  margin: 60px auto;
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   gap: 32px;
@@ -48,6 +48,7 @@ h4 {
 /* Campos de entrada */
 .input-field {
   margin-bottom: 15px;
+  width: 100%;
 }
 
 .input-field h3 {
@@ -58,6 +59,7 @@ h4 {
 
 .input-field input {
   width: 100%;
+  max-width: 100%;
   padding: 12px 16px;
   font-size: 16px;
   border-radius: 8px;
@@ -65,6 +67,7 @@ h4 {
   outline: none;
   background-color: white;
   box-shadow: 0 0 0 1px #ccc;
+  box-sizing: border-box;
 }
 
 /* Input com ícone (senha) */
@@ -80,7 +83,7 @@ h4 {
 .toggle-icon {
   position: absolute;
   right: 10px;
-  top: 60%;
+  top: 40%;
   transform: translateY(-50%);
   background: transparent;
   border: none;
@@ -107,26 +110,19 @@ h4 {
   object-fit: contain;
 }
 
-/* Responsividade */
+
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
+    flex-wrap: nowrap;
     width: 90%;
-    padding: 24px;
-    margin: 40px auto;
+    padding: 100px;
+    margin: auto;
+    align-items: normal;
   }
 
-  .logo-container {
-    order: -1;
-    width: 100%;
-    justify-content: center;
-    margin-bottom: 16px;
-  }
-
-  .logo-container .vivo-logo,
-  .logo-container img {
-    width: 120px;
-    height: auto;
+  .logo-container{
+    display: none;
   }
 
   h1 {
@@ -143,7 +139,12 @@ h4 {
     font-size: 14px;
   }
 
-  button {
-    font-size: 14px;
+  .input-field {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .input-field input {
+    width: 100%;
   }
 }
