@@ -84,7 +84,7 @@ const Plataformas: React.FC = () => {
           <div className="campo-busca">
             <input
               type="text"
-              placeholder="Insira a plataforma que deseja buscar"
+              placeholder="Insira a plataforma"
               value={inputBusca}
               onChange={(e) => setInputBusca(e.target.value)}
             />

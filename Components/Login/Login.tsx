@@ -62,7 +62,6 @@ const Login = (): JSX.Element => {
        localStorage.setItem("userId", userId.toString());
        localStorage.setItem("role", role);
 
-       // 👇 Salva o nome com base no email (antes do @)
        const nomeExtraido = email.split("@")[0].trim();
        localStorage.setItem("userName", nomeExtraido);
 
