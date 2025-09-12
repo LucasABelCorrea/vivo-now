@@ -386,32 +386,8 @@ const Dashboard: React.FC = () => {
                 <CardEtapaInfo tipo="sem-etapas" />
               )}
 
-            {/* Se está na primeira etapa */}
-            {data?.currentStep?.orderStep === 1 && data?.steps?.[0] && (
-              <>
-                <StageCard
-                  key={data.steps[0].id}
-                  step={{
-                    ...data.steps[0],
-                    name: data.steps[0].name || "",
-                    description: data.steps[0].description || "",
-                    orderStep: data.steps[0].orderStep ?? 1,
-                  }}
-                  status="active"
-                />
-                {data.steps[1] && (
-                  <CardEtapaInfo
-                    tipo="bloqueado"
-                    proximaEtapaNome={data.steps[1].name || ""}
-                  />
-                )}
-              </>
-            )}
-
-            {/* Se está em qualquer etapa intermediária */}
+            {/* Exibe apenas a etapa atual (card roxo) */}
             {data?.currentStep?.orderStep &&
-              data?.currentStep?.orderStep > 1 &&
-              data?.currentStep?.orderStep <= (data?.steps?.length ?? 0) &&
               data?.steps?.[data.currentStep.orderStep - 1] && (
                 <StageCard
                   key={data.steps[data.currentStep.orderStep - 1].id}
@@ -426,8 +402,8 @@ const Dashboard: React.FC = () => {
                 />
               )}
 
+            {/* Card cinza se não houver currentStep ou etapa correspondente */}
             {
-              // Card cinza se não houver currentStep ou etapa correspondente
               (!data.currentStep ||
                 !data.steps?.some(
                   (step) => step.orderStep === data.currentStep?.orderStep

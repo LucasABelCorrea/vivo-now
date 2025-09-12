@@ -80,25 +80,6 @@
   color: #fff;
 }
 
-.stage-card.locked {
-  background: #1a1919;
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.card-bloqueado {
-  background: #1a1919;
-  color: #fff;
-  opacity: 0.7;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  width: 50%;
-  height: 100%;
-  box-sizing: border-box;
-}
 
 .card-sem-etapas {
   background: #35363a;
@@ -184,17 +165,6 @@
   justify-content: center;
   gap: 0.4rem;
   margin-top: 1rem;
-}
-
-.icone-bloqueado {
-  font-size: 2rem;
-  color: #555;
-}
-
-.texto-bloqueada {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #777;
 }
 
 /* Checklist */
@@ -408,8 +378,7 @@ textarea {
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
   }
-  .stage-card,
-  .card-bloqueado {
+  .stage-card {
     min-height: 220px;
     padding: 1rem;
   }
