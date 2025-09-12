@@ -68,7 +68,7 @@ const Login = (): JSX.Element => {
             navigate("/home");
             break;
           case "MANAGER":
-            navigate("/manager-plataformas");
+            navigate("/manager");
             break;
           case "BUDDY":
             navigate("/test");

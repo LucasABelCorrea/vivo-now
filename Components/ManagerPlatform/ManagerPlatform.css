@@ -11,13 +11,6 @@ body {
   color: #333;
 }
 
-/* Layout principal */
-.container {
-  display: flex;
-  height: 100vh;
-  background-color: #ffffff;
-}
-
 /* Sidebar branca com texto roxo */
 .sidebar {
   width: 240px;
@@ -72,6 +65,8 @@ main {
   flex: 1;
   padding: 40px;
   overflow-y: auto;
+  width: 100%;
+  height: 100%;
 }
 
 h2 {
@@ -120,11 +115,17 @@ h2 {
 /* Cards com fundo roxo */
 .card {
   background-color: #660099;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   color: white;
+  min-height: 100px; /* altura mínima */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20px;
 }
+
 
 .card strong {
   font-size: 16px;
@@ -183,6 +184,7 @@ h2 {
 .plataformas-equipe,
 .plataformas-disponiveis {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr); /* sempre 2 colunas */
+  gap: 30px; /* mais espaço entre os cards */
+  justify-content: center;
 }

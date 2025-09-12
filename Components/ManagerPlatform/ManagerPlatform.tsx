@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../ManagerPlatform/ManagerPlatform.css";
+import CardButton from "../CardButton/CardButton";
 
 type Plataforma = {
   id: number;
@@ -81,19 +82,18 @@ export default function App() {
   }
 
   return (
-    <div className="container">
+   
       <main>
         <section>
           <h2>Plataformas da equipe</h2>
           <div className="plataformas-equipe">
             {equipe.map((p) => (
-              <div key={p.id} className="card equipe">
-                <strong>{p.nome}</strong>
-                <p>Modo de ter acesso:</p>
-                <span className={`modo-acesso ${p.modoAcessoClass}`}>
-                  {p.acessoLabel}
-                </span>
-              </div>
+              <CardButton
+                key={p.id}
+                titulo={p.nome}
+                descricao={p.acessoLabel}
+                link="#"
+              />
             ))}
           </div>
         </section>
@@ -120,23 +120,16 @@ export default function App() {
 
           <div className="plataformas-disponiveis">
             {filtradas.map((p) => (
-              <div key={p.id} className="card disponivel">
-                <strong>{p.nome}</strong>
-                <p>Modo de ter acesso:</p>
-                <span className={`modo-acesso ${p.modoAcessoClass}`}>
-                  {p.acessoLabel}
-                </span>
-                <button
-                  className="btn-adicionar"
-                  onClick={() => adicionarNaEquipe(p.id)}
-                >
-                  + Adicionar plataforma na equipe
-                </button>
-              </div>
+              <CardButton
+                key={p.id}
+                titulo={p.nome}
+                descricao={p.acessoLabel}
+                link="#"
+              />
             ))}
           </div>
         </section>
       </main>
-    </div>
+   
   );
 }
