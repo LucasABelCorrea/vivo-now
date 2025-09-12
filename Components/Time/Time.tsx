@@ -79,7 +79,7 @@ const Time: React.FC = () => {
     <div className="time-wrapper">
       <h1>Seu time</h1>
       {membros.map((membro) => (
-        <div key={membro.id} className="card">
+        <div key={membro.id} className="card-time">
           <div className="titulo">
             <span className="name">
               {membro.name} {membro.lastName}

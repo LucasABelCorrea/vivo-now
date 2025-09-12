@@ -81,8 +81,7 @@ export default function App() {
     setEquipe((old) => [...old, plataforma]);
   }
 
-  return (
-   
+  return ( 
       <main>
         <section>
           <h2>Plataformas da equipe</h2>
@@ -130,6 +129,7 @@ export default function App() {
           </div>
         </section>
       </main>
+      
    
   );
 }

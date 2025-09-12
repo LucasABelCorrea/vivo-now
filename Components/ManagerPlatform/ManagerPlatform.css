@@ -23,6 +23,7 @@ body {
   border-right: 1px solid #eee;
 }
 
+
 .logo {
   font-size: 24px;
   font-weight: bold;
@@ -58,6 +59,17 @@ body {
   font-weight: bold;
   text-decoration: underline;
   color: #F06497;
+}
+
+.card strong {
+  font-size: 16px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 14px;
+  margin-bottom: 6px;
 }
 
 /* Main content */
@@ -97,12 +109,13 @@ h2 {
   background-color: #ffffff;
   color: #000000;
   border: 2px solid #000000;
-  padding: 12px 20px;
+  padding: 6px 10px;
   font-size: 14px;
   font-weight: bold;
-  border-radius: 30px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
+  height: 42px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -112,31 +125,6 @@ h2 {
 }
 
 
-/* Cards com fundo roxo */
-.card {
-  background-color: #660099;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  color: white;
-  min-height: 100px; /* altura mínima */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 20px;
-}
-
-
-.card strong {
-  font-size: 16px;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.card p {
-  font-size: 14px;
-  margin-bottom: 6px;
-}
 
 /* Modo de acesso com tom rosado #F06497 */
 .modo-acesso {
@@ -185,6 +173,41 @@ h2 {
 .plataformas-disponiveis {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* sempre 2 colunas */
-  gap: 30px; /* mais espaço entre os cards */
-  justify-content: center;
+  gap: 50px; /* mais espaço entre os cards */
+  width: 100%;
 }
+
+@media (max-width: 1900px) {
+  .plataformas-equipe,
+  .plataformas-disponiveis
+ {
+  width: 80%;
+  }
+}
+
+@media (max-width: 1300px) {
+  .plataformas-equipe,
+  .plataformas-disponiveis
+ {
+  width: 90%;
+  gap: 30px;
+  }
+}
+
+
+@media (max-width: 924px) {
+  .plataformas-equipe,
+  .plataformas-disponiveis,
+  section {
+   grid-template-columns: 1fr; /* 1 coluna */
+    width: 100%; /* ocupa toda a largura */
+    gap: 30px; 
+   display: flex; 
+   flex-direction: column;
+   align-items: center;
+
+   
+  }
+}
+
+
