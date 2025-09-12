@@ -14,7 +14,7 @@ const Plataformas: React.FC = () => {
   useEffect(() => {
     const fetchPlataformasPorTime = async () => {
       const token = localStorage.getItem("token");
-      const teamId = localStorage.getItem("teamId"); // Supondo que você tenha isso salvo
+      const teamId = localStorage.getItem("teamId"); 
 
       if (!token || !teamId) {
         setErro("Usuário não está autenticado ou sem time definido.");
