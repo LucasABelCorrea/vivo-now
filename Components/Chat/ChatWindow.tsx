@@ -53,10 +53,16 @@ const ChatWindow = ({
       <div className="chat-messages-container">
         <div className="chat-messages">
           {messages.map((msg, index) => {
-            const isOwn =
-              msg.senderId === currentUserId ||
-              msg.senderName.trim().toLowerCase() ===
-                currentUserName.trim().toLowerCase();
+           const normalize = (str: string) =>
+             str
+               .normalize("NFD")
+               .replace(/[\u0300-\u036f]/g, "")
+               .trim()
+               .toLowerCase();
+
+           const isOwn =
+             normalize(msg.senderName) === normalize(currentUserName);
+
 
             return (
               <MessageBubble

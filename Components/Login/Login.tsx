@@ -34,60 +34,62 @@ const Login = (): JSX.Element => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError(null);
+ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+   event.preventDefault();
+   setError(null);
 
-    try {
-      const response = await fetch("http://localhost:8080/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+   try {
+     const response = await fetch("http://localhost:8080/auth/login", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify({ email, password }),
+     });
 
-      if (!response.ok) {
-        const errorBody = await response.json();
-        throw new Error(errorBody.message || "Credenciais inválidas");
-      }
+     if (!response.ok) {
+       const errorBody = await response.json();
+       throw new Error(errorBody.message || "Credenciais inválidas");
+     }
 
-      const resultado = await response.json();
-      console.log("Login bem-sucedido:", resultado);
+     const resultado = await response.json();
+     console.log("Login bem-sucedido:", resultado);
 
-      const { token, userId, role } = resultado;
+     const { token, userId, role } = resultado;
 
-      if (token && userId && role) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("userId", userId.toString());
-        localStorage.setItem("role", role);
+     if (token && userId && role) {
+       localStorage.setItem("token", token);
+       localStorage.setItem("userId", userId.toString());
+       localStorage.setItem("role", role);
 
-        // Navegação baseada na role
-        switch (role.toUpperCase()) {
-          case "COLLABORATOR":
-            navigate("/home");
-            break;
-          case "MANAGER":
-            navigate("/manager");
-            break;
-          case "BUDDY":
-            navigate("/test");
-            break;
-          default:
-            navigate("/test"); // fallback para roles desconhecidas
-        }
-      } else {
-        throw new Error("Dados de login incompletos.");
-      }
+       // 👇 Salva o nome com base no email (antes do @)
+       const nomeExtraido = email.split("@")[0].trim();
+       localStorage.setItem("userName", nomeExtraido);
 
-      setEmail("");
-      setPassword("");
-    } catch (erro: any) {
-      console.error("Erro ao fazer login:", erro);
-      setError(erro.message || "Erro inesperado ao fazer login.");
-    }
-  };
+       switch (role.toUpperCase()) {
+         case "COLLABORATOR":
+           navigate("/home");
+           break;
+         case "MANAGER":
+           navigate("/manager");
+           break;
+         case "BUDDY":
+           navigate("/test");
+           break;
+         default:
+           navigate("/test");
+       }
+     } else {
+       throw new Error("Dados de login incompletos.");
+     }
 
+     setEmail("");
+     setPassword("");
+   } catch (erro: any) {
+     console.error("Erro ao fazer login:", erro);
+     setError(erro.message || "Erro inesperado ao fazer login.");
+   }
+ };
   return (
     <div className="container">
       <div className="form">

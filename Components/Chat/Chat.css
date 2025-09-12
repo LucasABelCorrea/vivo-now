@@ -1,13 +1,19 @@
-/* Layout geral */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 .chat-layout {
   display: flex;
   flex-direction: row;
-  height: 100%;
-  max-height: 90vh;
+  height: 90vh; 
   overflow: hidden;
 }
 
-/* Lista de contatos */
 .contact-list {
   width: 300px;
   border-right: 1px solid #ddd;
@@ -16,7 +22,6 @@
   overflow-y: auto;
 }
 
-/* Contato */
 .contact-item {
   display: flex;
   align-items: center;
@@ -58,16 +63,16 @@
   color: #666;
 }
 
-/* Janela de chat */
 .chat-window {
   display: flex;
   flex-direction: column;
   flex: 1;
   overflow: hidden;
   width: 100%;
+  height: 100%; 
+  min-height: 0;
 }
 
-/* Cabeçalho do chat */
 .chat-header {
   padding: 1rem;
   border-bottom: 1px solid #ccc;
@@ -78,21 +83,23 @@
   gap: 0.5rem;
 }
 
-/* Container com scroll */
 .chat-messages-container {
   flex: 1;
   overflow-y: auto;
   padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
 }
 
-/* Lista de mensagens */
 .chat-messages {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* Wrapper externo para alinhamento */
 .message-bubble-wrapper {
   display: flex;
   width: 100%;
@@ -106,7 +113,6 @@
   justify-content: flex-start;
 }
 
-/* Bolha de mensagem */
 .message-bubble {
   max-width: 70%;
   padding: 0.75rem 1rem;
@@ -120,21 +126,18 @@
   border-radius: 16px;
 }
 
-/* Estilo para bolha enviada */
 .message-bubble-wrapper.own .message-bubble {
   background-color: #6a0dad;
   color: #fff;
   border-radius: 16px 16px 0 16px;
 }
 
-/* Estilo para bolha recebida */
 .message-bubble-wrapper.other .message-bubble {
   background-color: #ffffff;
   color: #000;
   border-radius: 16px 16px 16px 0;
 }
 
-/* Horário */
 .message-time {
   font-size: 0.7rem;
   color: #999;
@@ -142,11 +145,12 @@
   text-align: right;
 }
 
-/* Campo de entrada */
 .chat-input-area {
   display: flex;
   width: 90%;
-  margin: auto;
+  margin: 0 auto;
+  flex-shrink: 0; 
+  padding: 0.5rem 0; 
 }
 
 .chat-input-area input {
@@ -181,7 +185,6 @@
   box-shadow: 0 6px 18px rgba(240, 100, 151, 0.5);
 }
 
-/* Quando nenhum contato está selecionado */
 .empty-chat {
   flex: 1;
   display: flex;
@@ -191,7 +194,6 @@
   color: #888;
 }
 
-/* Botão de voltar */
 .back-button {
   background-color: #6a0dad;
   color: #fff;
@@ -208,7 +210,6 @@
   background-color: #5a0099;
 }
 
-/* Notificação */
 .notification-dot {
   width: 10px;
   height: 10px;
@@ -219,7 +220,6 @@
   align-self: center;
 }
 
-/* Responsivo */
 @media (max-width: 1024px) {
   .chat-layout {
     flex-direction: column;
