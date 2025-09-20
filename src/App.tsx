@@ -14,6 +14,9 @@ import Test from "../Components/Test/Test"
 import ManagerPlatform from "../Components/ManagerPlatform/ManagerPlatform";
 import RelatorioSemanal from "../Components/RelatorioSemanal/RelatorioSemanal";
 import TelaTarefas from "../Components/TelaTarefas/TelaTarefas";
+import HomeGestor from "../Components/HomeGestor/HomeGestor";
+import HomeBuddy from "../Components/HomeBuddy/HomeBuddy";
+
 
 
 function App() {
@@ -34,9 +37,12 @@ function App() {
             <Route path="/cursos" element={<Cursos />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/test" element={<Test />} />
-            <Route path="/manager" element={<ManagerPlatform />} />
+            <Route path="/plataformasgestor" element={<ManagerPlatform />} />
             <Route path="/relatorio" element={<RelatorioSemanal />} />
-            <Route path="/tarefas" element={<TelaTarefas />} />
+            <Route path="/edicaoOnboarding/:id" element={<TelaTarefas />} />
+            <Route path="/homegestor" element={<HomeGestor />} /> 
+            <Route path="/homebuddy" element={<HomeBuddy />} />
+           
           </Route>
         </Routes>
       </BrowserRouter>

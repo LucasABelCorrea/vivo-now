@@ -50,11 +50,11 @@ const Login = (): JSX.Element => {
      if (!response.ok) {
        const errorBody = await response.json();
        throw new Error(errorBody.message || "Credenciais inválidas");
+      
      }
 
      const resultado = await response.json();
-     console.log("Login bem-sucedido:", resultado);
-
+          
      const { token, userId, role } = resultado;
 
      if (token && userId && role) {
@@ -70,13 +70,11 @@ const Login = (): JSX.Element => {
            navigate("/home");
            break;
          case "MANAGER":
-           navigate("/manager");
+           navigate("/homegestor");
            break;
          case "BUDDY":
-           navigate("/test");
+           navigate("/homebuddy");
            break;
-         default:
-           navigate("/test");
        }
      } else {
        throw new Error("Dados de login incompletos.");

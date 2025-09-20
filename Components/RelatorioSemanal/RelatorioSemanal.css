@@ -29,7 +29,7 @@ h2 {
   font-size: 1rem;
 }
 
-.humor-options {
+.humor-options-relatorio {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -37,7 +37,7 @@ h2 {
   margin-bottom: 2rem;
 }
 
-.humor-item {
+.humor-item-relatorio {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,7 +45,7 @@ h2 {
   min-width: 80px;
 }
 
-.humor-button {
+.humor-button-relatorio {
   background-color: #6a1b9a;
   border-radius: 8px;
   padding: 8px;
@@ -58,13 +58,13 @@ h2 {
   cursor: pointer;
 }
 
-.humor-button svg {
+.humor-button-relatorio svg {
   width: 32px;
   height: 32px;
   fill: #ffffff;
 }
 
-.humor-label {
+.humor-label-relatorio {
   font-size: 0.85rem;
   color: #6a1b9a;
   text-align: center;

@@ -38,6 +38,24 @@
   color: var(--purple-vivo);
 }
 
+.starIcon {
+  position: relative;
+  display: inline-block;
+}
+
+.starIcon p{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+
+
 .erro {
   color: #d32f2f;
   background: #ffe5e5;
@@ -289,7 +307,7 @@
 /* Report da Semana */
 .humor-options {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   flex-wrap: wrap;
 }
 

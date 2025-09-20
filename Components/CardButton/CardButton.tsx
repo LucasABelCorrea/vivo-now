@@ -25,7 +25,7 @@ const CardButton: React.FC<CursoCardProps> = ({ titulo, descricao, link }) => {
         rel="noopener noreferrer"
         className="link-button"
       >
-        Acessar curso
+        Acessar 
       </a>
     </div>
   );

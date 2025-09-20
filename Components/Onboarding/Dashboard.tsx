@@ -8,6 +8,7 @@ import {
   IconFaceNeutralRegular,
   IconFaceHappyRegular,
   IconFaceSuperHappyRegular,
+  IconStarFilled
 } from "@telefonica/mistica";
 import { Onboarding, TaskDTO } from "../../src/types/onboardingTypes";
 import MyPrimaryButton from "../Button/MyPrimaryButton";
@@ -470,8 +471,9 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="widget-card">
+           
             <h3>Seu nível atual</h3>
-            <div>Nível {data.currentStep?.orderStep ?? "?"}</div>
+            <div className="starIcon"> <IconStarFilled size={80} color=" #660099" /> <p > {data.currentStep?.orderStep ?? "?"}</p> </div>
           </div>
 
           <div className="widget">

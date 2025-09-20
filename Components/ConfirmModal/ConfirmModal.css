@@ -1,0 +1,61 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px; /* espaçamento entre botões */
+}
+
+/* 🔹 Estilo único para TODOS os botões do modal */
+.modal-actions button {
+  background: #ccc;             /* cinza padrão */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #111;                  /* texto escuro no padrão */
+  transition: background-color 150ms ease, color 150ms ease, transform 120ms ease;
+  min-width: 110px;
+}
+
+/* 🔹 Hover/focus — fica roxo */
+.modal-actions button:hover,
+.modal-actions button:focus {
+  background-color: #660099;
+  color: #fff;
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* 🔹 Foco acessível (quando navega por teclado) */
+.modal-actions button:focus-visible {
+  box-shadow: 0 0 0 4px rgba(102, 0, 153, 0.12);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
