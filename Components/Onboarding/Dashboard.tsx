@@ -28,6 +28,14 @@ interface StepDTO {
 const API_BASE =
   (import.meta as any).env?.VITE_API_BASE || "http://localhost:8080";
 
+const safeJson = async (res: Response) => {
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
+};
+
 const normalizeUser = (userApi: any) => ({
   id: userApi?.id ?? userApi?.userId ?? null,
   name: userApi?.name ?? userApi?.firstName ?? "",
@@ -77,13 +85,43 @@ const normalizeOnboarding = (api: any): Onboarding => {
   } as Onboarding;
 };
 
-const safeJson = async (res: Response) => {
-  try {
-    return await res.json();
-  } catch {
-    return null;
+const getUserById = async (userId: string, token: string) => {
+  const res = await fetch(`${API_BASE}/users/${userId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errBody = await safeJson(res);
+    throw new Error(errBody?.message || "Erro ao buscar dados do usuário.");
   }
+
+  const userApi = await safeJson(res);
+  return normalizeUser(userApi);
 };
+
+const getOnboardingById = async (onboardingId: number, token: string) => {
+  const res = await fetch(`${API_BASE}/onboardings/${onboardingId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errBody = await safeJson(res);
+    throw new Error(
+      errBody?.message || `Erro ao buscar onboarding ${onboardingId}`
+    );
+  }
+
+  const onbApi = await safeJson(res);
+  return normalizeOnboarding(onbApi);
+};
+
+/* ---------------- Componente Dashboard (ajustado) ---------------- */
 
 const Dashboard: React.FC = () => {
   const [data, setData] = useState<Onboarding | null>(null);
@@ -96,99 +134,59 @@ const Dashboard: React.FC = () => {
   const [enviado, setEnviado] = useState(false);
   const [advancing, setAdvancing] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId");
+  const fetchData = async () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
 
-      if (!token || !userId) {
-        setError("Usuário não autenticado.");
+    if (!token || !userId) {
+      setError("Usuário não autenticado.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const user = await getUserById(userId, token);
+
+      if (user.teamId !== undefined && user.teamId !== null) {
+        localStorage.setItem("teamId", String(user.teamId));
+      }
+
+      const onboardingIds: number[] = Array.isArray(user.onboardingIds)
+        ? user.onboardingIds.map((v: any) =>
+            typeof v === "string" ? Number(v) : v
+          )
+        : [];
+
+      if (onboardingIds.length === 0) {
+        setError("Nenhum onboarding encontrado para o usuário.");
         setLoading(false);
         return;
       }
 
-      try {
-        const userRes = await fetch(`${API_BASE}/users/${userId}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!userRes.ok) {
-          const errBody = await safeJson(userRes);
-          throw new Error(
-            errBody?.message || "Erro ao buscar dados do usuário."
-          );
-        }
-
-        const userApi = await safeJson(userRes);
-        const user = normalizeUser(userApi);
-
-        if (user.teamId !== undefined && user.teamId !== null) {
-          localStorage.setItem("teamId", String(user.teamId));
-        }
-
-        const onboardingIds: number[] = Array.isArray(user.onboardingIds)
-          ? user.onboardingIds.map((v: any) =>
-              typeof v === "string" ? Number(v) : v
-            )
-          : [];
-
-        if (onboardingIds.length === 0) {
-          setError("Nenhum onboarding encontrado para o usuário.");
-          setLoading(false);
-          return;
-        }
-
-        const onboardingId = onboardingIds[0];
-
-        const onbRes = await fetch(`${API_BASE}/onboardings/${onboardingId}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!onbRes.ok) {
-          const errBody = await safeJson(onbRes);
-          throw new Error(
-            errBody?.message || `Erro ao buscar onboarding ${onboardingId}`
-          );
-        }
-
-        const onbApi = await safeJson(onbRes);
-        const onboardingData = normalizeOnboarding(onbApi);
-
-        setData(onboardingData);
-        setLoading(false);
-      } catch (err: any) {
-        setError(err?.message ?? "Erro ao carregar dados.");
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+      const onboardingData = await getOnboardingById(onboardingIds[0], token);
+      setData(onboardingData);
+      setLoading(false);
+    } catch (err: any) {
+      setError(err?.message ?? "Erro ao carregar dados.");
+      setLoading(false);
+    }
+  };
 
   const refreshOnboarding = async () => {
     if (!data?.id) return;
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || "";
     try {
-      const res = await fetch(`${API_BASE}/onboardings/${data.id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!res.ok) return;
-      const onbApi = await safeJson(res);
-      const onboardingData = normalizeOnboarding(onbApi);
+      const onboardingData = await getOnboardingById(data.id, token);
       setData(onboardingData);
     } catch (e) {
       console.error("Erro ao recarregar onboarding", e);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleToggleItem = async (id: number) => {
     const token = localStorage.getItem("token");
@@ -221,14 +219,12 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // Concluir etapa -> chama PUT /onboardings/{id}/next-step e recarrega dados
   const handleConcluirEtapa = async () => {
     if (!data?.id) {
       setError("Onboarding inválido.");
       return;
     }
 
-    // validação: só permite avançar se todas as tasks estiverem concluídas
     const currentStepTasks =
       data.steps?.find((step) => step.orderStep === data.currentStep?.orderStep)
         ?.tasks ?? [];
@@ -263,7 +259,6 @@ const Dashboard: React.FC = () => {
         throw new Error(errBody?.message || "Erro ao avançar etapa.");
       }
 
-      // sucesso: recarrega onboarding atualizado
       await refreshOnboarding();
     } catch (err: any) {
       console.error("Erro ao avançar etapa:", err);
@@ -376,9 +371,7 @@ const Dashboard: React.FC = () => {
             }}
           >
             {/* Se não há etapas ou dados */}
-            {!data?.steps?.length ? (
-              <CardEtapaInfo tipo="sem-etapas" />
-            ) : null}
+            {!data?.steps?.length ? <CardEtapaInfo tipo="sem-etapas" /> : null}
 
             {/* Se todas as etapas foram concluídas */}
             {data?.steps?.length &&
@@ -395,20 +388,20 @@ const Dashboard: React.FC = () => {
                     ...data.steps[data.currentStep.orderStep - 1],
                     name: data.steps[data.currentStep.orderStep - 1].name || "",
                     description:
-                      data.steps[data.currentStep.orderStep - 1].description || "",
-                    orderStep: data.steps[data.currentStep.orderStep - 1].orderStep ?? 1,
+                      data.steps[data.currentStep.orderStep - 1].description ||
+                      "",
+                    orderStep:
+                      data.steps[data.currentStep.orderStep - 1].orderStep ?? 1,
                   }}
                   status="active"
                 />
               )}
 
             {/* Card cinza se não houver currentStep ou etapa correspondente */}
-            {
-              (!data.currentStep ||
-                !data.steps?.some(
-                  (step) => step.orderStep === data.currentStep?.orderStep
-                )) && <CardEtapaInfo tipo="sem-etapas" />
-            }
+            {(!data.currentStep ||
+              !data.steps?.some(
+                (step) => step.orderStep === data.currentStep?.orderStep
+              )) && <CardEtapaInfo tipo="sem-etapas" />}
           </div>
 
           {data.steps
