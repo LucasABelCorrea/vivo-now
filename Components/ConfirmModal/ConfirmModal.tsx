@@ -35,6 +35,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           <button className="btn-confirmar" onClick={onConfirm}>
             {confirmText}
           </button>
+          
         </div>
       </div>
     </div>

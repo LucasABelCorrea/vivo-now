@@ -85,6 +85,7 @@ const TelaTarefas: React.FC = () => {
             },
             body: JSON.stringify(etapa),
         });
+        
         setInfoMessage("Etapa criada com sucesso!");
     };
 

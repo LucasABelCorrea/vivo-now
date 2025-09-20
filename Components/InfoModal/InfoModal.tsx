@@ -1,5 +1,5 @@
 import React from "react";
-import "../ConfirmModal/ConfirmModal.css"; 
+import "./InfoModal.css"; 
 
 interface InfoModalProps {
   title?: string;
