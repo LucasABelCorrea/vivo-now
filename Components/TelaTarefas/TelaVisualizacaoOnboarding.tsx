@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./TelaTarefas.css";
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+const API_BASE = import.meta.env.VITE_API_BASE;
 const TOKEN = localStorage.getItem("token") || "";
 const TelaVisualizacaoOnboarding: React.FC = () => {
     const { id } = useParams<{ id: string }>();

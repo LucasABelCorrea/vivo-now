@@ -91,6 +91,7 @@
   justify-content: flex-start;
   height: auto;
   min-height: 280px;
+   min-width: 320px;
 }
 
 .stage-card.active {

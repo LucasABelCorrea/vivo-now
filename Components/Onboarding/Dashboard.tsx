@@ -27,7 +27,7 @@ interface StepDTO {
 }
 
 const API_BASE =
-  (import.meta as any).env?.VITE_API_BASE || "http://localhost:8080";
+  (import.meta as any).env?.VITE_API_BASE;
 
 const normalizeUser = (userApi: any) => ({
   id: userApi?.id ?? userApi?.userId ?? null,

@@ -37,9 +37,9 @@ interface Onboarding {
 
 // ================== CONSTANTES ==================
 const API_BASE =
-  (import.meta as any).env?.VITE_API_BASE || "http://localhost:8080";
+  (import.meta as any).env?.VITE_API_BASE;
 const TOKEN = localStorage.getItem("token") || "";
-const GESTOR_ID = 2;
+const GESTOR_ID = localStorage.getItem("userId");
 
 // ================== COMPONENTE ==================
 const HomeGestor: React.FC = () => {
