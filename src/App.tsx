@@ -41,6 +41,10 @@ function App() {
             <Route path="/edicaoOnboarding/:id" element={<TelaTarefas />} />
             <Route path="/homegestor" element={<HomeGestor />} />
             <Route path="/homebuddy" element={<HomeBuddy />} />
+            <Route
+              path="/visualizacaoOnboarding/:id"
+              element={<TelaVisualizacaoOnboarding />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

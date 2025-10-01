@@ -8,11 +8,15 @@ interface Props {
 
 const formatTime = (isoString: string) => {
   const date = new Date(isoString);
+  
+  date.setHours(date.getHours() - 3);
+
   return date.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit",
   });
 };
+
 
 const MessageBubble = ({
   message,
@@ -25,12 +29,7 @@ const MessageBubble = ({
     <div className={`message-bubble-wrapper ${isOwn ? "own" : "other"}`}>
       <div className="message-bubble">
         <p>{message.content}</p>
-        <span className="message-time">
-          {new Date(message.time).toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </span>
+        <span className="message-time">{formatTime(message.time)}</span>
       </div>
     </div>
   );
