@@ -48,6 +48,7 @@ const HomeBuddy: React.FC = () => {
   const [selectedMonthMap, setSelectedMonthMap] = useState<
     Record<number, string>
   >({});
+  const [isLoading, setIsLoading] = useState(true); // 👈 controle de carregamento
 
   const loadBuddy = async () => {
     try {
@@ -102,17 +103,23 @@ const HomeBuddy: React.FC = () => {
       setOnboardings(onboardingsWithReports);
     } catch (err) {
       console.error("Erro fetch onboardings:", err);
+    } finally {
+      setIsLoading(false); // 👈 finaliza carregamento
     }
   };
 
   useEffect(() => {
-    loadBuddy();
-    loadOnboardings();
+    const fetchAll = async () => {
+      setIsLoading(true);
+      await loadBuddy();
+      await loadOnboardings();
+    };
 
-    // Recarrega automaticamente ao voltar para a aba
+    fetchAll();
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        loadOnboardings();
+        fetchAll();
       }
     };
 
@@ -120,6 +127,15 @@ const HomeBuddy: React.FC = () => {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
+  }, []);
+
+  useEffect(() => {
+    const hasReloaded = sessionStorage.getItem("hasReloaded");
+
+    if (!hasReloaded) {
+      sessionStorage.setItem("hasReloaded", "true");
+      window.location.reload();
+    }
   }, []);
 
   const filterReportsByMonth = (
@@ -131,6 +147,14 @@ const HomeBuddy: React.FC = () => {
     if (!selectedMonth) return reports;
     return reports.filter((r) => r.createdAt?.startsWith(selectedMonth));
   };
+
+  if (isLoading) {
+    return (
+      <div className="homebuddy-loading">
+        <h2>Carregando...</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="homebuddy-container">
