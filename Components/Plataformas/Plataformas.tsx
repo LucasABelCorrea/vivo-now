@@ -10,8 +10,7 @@ const Plataformas: React.FC = () => {
   const [filtro, setFiltro] = useState("");
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-const API_BASE =
-  (import.meta as any).env?.VITE_API_BASE;
+const API_BASE = (import.meta as any).env?.VITE_API_BASE;
   
   useEffect(() => {
     const fetchPlataformasPorTime = async () => {

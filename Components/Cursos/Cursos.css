@@ -33,7 +33,7 @@ h1 {
   max-width: 100%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1260px) {
   h1 {
     margin: auto;
   }

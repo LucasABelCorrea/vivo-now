@@ -143,8 +143,9 @@
   .plataformas-equipe,
   .plataformas-disponiveis
  {
-  width: 90%;
+  width: 80%;
   gap: 30px;
+  grid-template-columns: 1fr;
   }
 }
 
