@@ -1,28 +1,30 @@
 .card-managerPlataforma-button {
- display: flex;
+  display: flex;
   flex-direction: column;
-  justify-content: space-between; /* distribui bem os elementos */
+  justify-content: space-between;
   background-color: #660099;
   border-radius: 12px;
-  width: 480px;
+  width: 100%;         /* use 100% para responsividade */
+  max-width: 480px;    /* limite máximo de 480px */
+  box-sizing: border-box;
+  padding: 16px;       /* espaço interno */
 }
 
 /* Main content */
 .manager-platform {
   flex: 1;
-  padding: 40px;
+  padding: 20px;
   overflow-y: auto;
   width: 100%;
   height: 100%;
-  
+  box-sizing: border-box;
 }
 
 .manager-titulo {
   font-size: 20px;
   margin-bottom: 20px;
-  color: #000000; /* cor preta */
+  color: #000000;
 }
-
 
 /* Busca e criação */
 .busca-criar {
@@ -34,6 +36,7 @@
 
 .busca-criar input {
   flex: 1;
+  min-width: 200px; /* para não ficar muito estreito */
   padding: 10px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -55,14 +58,12 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.btn-criar:hover {
+.btn-criar-Plataformas:hover {
   background-color: #000000;
   color: #ffffff;
 }
 
-
-
-/* Modo de acesso com tom rosado #F06497 */
+/* Modo de acesso */
 .modo-acesso {
   display: inline-block;
   padding: 6px 12px;
@@ -72,18 +73,6 @@
   margin-top: 4px;
   background-color: #F06497;
   color: white;
-}
-
-.modo-acesso.buddy {
-  background-color: #F06497;
-}
-
-.modo-acesso.link {
-  background-color: #F06497;
-}
-
-.modo-acesso.liberado {
-  background-color: #F06497;
 }
 
 /* Botão adicionar */
@@ -97,83 +86,57 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-  margin-bottom: 5px;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin: 5px 5px 5px 5px;
 }
 
-.btn-adicionar:hover {
+.btn-adicionar-plataforma:hover {
   background-color: #ffffff;
   color: #4a148c;
 }
 
 .btn-remover-managerPlataforma {
-  background-color: #ffff;
+  background-color: #fff;
   font-size: 14px;
   border-radius: 6px;
   cursor: pointer;
   width: 50px;
   align-self: flex-end;
   justify-content: start;
- 
-}
-
-.plataformas-equipe{
-   margin-bottom: 40px;
 }
 
 /* Grid de plataformas */
 .plataformas-equipe,
 .plataformas-disponiveis {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* sempre 2 colunas */
-  gap: 50px; /* mais espaço entre os cards */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px;
   width: 100%;
+  box-sizing: border-box;
 }
 
-@media (max-width: 1900px) {
-  .plataformas-equipe,
-  .plataformas-disponiveis
- {
-  width: 80%;
-  }
-}
-
+/* Ajustes responsivos */
 @media (max-width: 1300px) {
   .plataformas-equipe,
-  .plataformas-disponiveis
- {
-  width: 80%;
-  gap: 30px;
-  grid-template-columns: 1fr;
+  .plataformas-disponiveis {
+    gap: 30px;
+    grid-template-columns: 1fr;
   }
 }
-
 
 @media (max-width: 924px) {
   .plataformas-equipe,
-  .plataformas-disponiveis,
-  section {
-   grid-template-columns: 1fr; 
-    width: 100%; 
-    gap: 30px; 
-   display: flex; 
-   flex-direction: column;
-   align-items: center;
+  .plataformas-disponiveis {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
 }
 
 @media (max-width: 500px) {
   .plataformas-equipe,
-  .plataformas-disponiveis,
-  section {
-   grid-template-columns: 1fr; 
-    width: 50%; 
-    gap: 30px; 
-   display: flex; 
-   flex-direction: column;
-   align-items: center;
+  .plataformas-disponiveis {
+    width: 100%; 
+    gap: 20px;
   }
 }
-
-
