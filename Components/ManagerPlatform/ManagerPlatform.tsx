@@ -13,7 +13,7 @@ type Plataforma = {
   url: string;
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+const API_BASE = import.meta.env.VITE_API_BASE;
 const TOKEN = localStorage.getItem("token") || "";
 const teamId = localStorage.getItem("teamId");
 
@@ -23,7 +23,6 @@ export default function ManagerPlatform() {
   const [busca, setBusca] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
 
-  // ✅ estados para os modais
   const [confirmData, setConfirmData] = useState<{
     title?: string;
     message: string;

@@ -15,7 +15,6 @@ interface User {
 interface Report {
   id: number;
   createdAt: string;
-  // outros campos do relatório podem ser adicionados aqui
 }
 
 interface Step {
@@ -37,9 +36,9 @@ interface Onboarding {
 
 // ================== CONSTANTES ==================
 const API_BASE =
-  (import.meta as any).env?.VITE_API_BASE || "http://localhost:8080";
+  (import.meta as any).env?.VITE_API_BASE;
 const TOKEN = localStorage.getItem("token") || "";
-const GESTOR_ID = 2;
+const GESTOR_ID = localStorage.getItem("userId");
 
 // ================== COMPONENTE ==================
 const HomeGestor: React.FC = () => {
@@ -51,8 +50,8 @@ const HomeGestor: React.FC = () => {
     Record<number, string>
   >({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // 👈 controle de carregamento
 
-  // Buscar gestor
   const loadGestor = async () => {
     try {
       const res = await fetch(`${API_BASE}/users/${GESTOR_ID}`, {
@@ -72,7 +71,6 @@ const HomeGestor: React.FC = () => {
     }
   };
 
-  // Buscar onboardings
   const loadOnboardings = async () => {
     try {
       const res = await fetch(`${API_BASE}/onboardings/manager/${GESTOR_ID}`, {
@@ -107,16 +105,30 @@ const HomeGestor: React.FC = () => {
       setOnboardings(onboardingsWithReports);
     } catch (err) {
       console.error("Erro fetch onboardings:", err);
+    } finally {
+      setIsLoading(false); // 👈 finaliza carregamento
     }
   };
 
   useEffect(() => {
-    loadGestor();
-    loadOnboardings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchAll = async () => {
+      setIsLoading(true);
+      await loadGestor();
+      await loadOnboardings();
+    };
+
+    fetchAll();
+  }, []);
+  
+  useEffect(() => {
+    const hasReloaded = sessionStorage.getItem("hasReloaded");
+
+    if (!hasReloaded) {
+      sessionStorage.setItem("hasReloaded", "true");
+      window.location.reload();
+    }
   }, []);
 
-  // Filtro por mês
   const filterReportsByMonth = (
     reports: Report[],
     onboardingId?: number
@@ -126,6 +138,14 @@ const HomeGestor: React.FC = () => {
     if (!selectedMonth) return reports;
     return reports.filter((r) => r.createdAt?.startsWith(selectedMonth));
   };
+
+  if (isLoading) {
+    return (
+      <div className="homegestor-loading">
+        <h2>Carregando...</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="homegestor-container">
@@ -141,7 +161,6 @@ const HomeGestor: React.FC = () => {
         </button>
       </div>
 
-      {/* Modal: fecha e recarrega onboardings ao fechar */}
       {isModalOpen && (
         <ModalCriarOnboarding
           gestor={gestor}
@@ -153,8 +172,6 @@ const HomeGestor: React.FC = () => {
           }}
         />
       )}
-
-    
 
       {onboardings.map((onboarding) => (
         <div key={onboarding.id} className="homegestor-card">
@@ -168,7 +185,6 @@ const HomeGestor: React.FC = () => {
           <p>
             <strong>Status:</strong> {onboarding.active ? "Ativo" : "Inativo"}
           </p>
-
           <p>
             <strong>Buddy:</strong> {onboarding.buddy?.name} (
             {onboarding.buddy?.position})
@@ -177,7 +193,6 @@ const HomeGestor: React.FC = () => {
             <strong>Colaborador:</strong> {onboarding.collaborator?.name} (
             {onboarding.collaborator?.position})
           </p>
-
           <p>
             <strong>Etapa atual:</strong> {onboarding.currentStep?.name} (#
             {onboarding.currentStep?.orderStep})
@@ -214,16 +229,16 @@ const HomeGestor: React.FC = () => {
           <div className="homegestor-actions">
             <button
               className="homegestor-editar"
-              onClick={() =>
-                (window.location.href = `/edicaoOnboarding/${onboarding.id}`)
-              }
+              onClick={() => navigate(`/edicaoOnboarding/${onboarding.id}`)}
             >
               Visualizar/Editar onboarding
             </button>
             <button
               className="homegestor-chat"
               onClick={() =>
-                (window.location.href = `/chat?senderId=${GESTOR_ID}&receiverId=${onboarding.collaborator.id}`)
+                navigate(
+                  `/chat?senderId=${GESTOR_ID}&receiverId=${onboarding.collaborator.id}`
+                )
               }
             >
               Chat com o colaborador

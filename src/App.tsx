@@ -10,25 +10,24 @@ import Plataformas from "../Components/Plataformas/Plataformas";
 import Cursos from "../Components/Cursos/Cursos";
 import MainLayout from "../src/layouts/MainLayout";
 import Chat from "../Components/Chat/Chat";
-import Test from "../Components/Test/Test"
+import Test from "../Components/Test/Test";
 import ManagerPlatform from "../Components/ManagerPlatform/ManagerPlatform";
 import RelatorioSemanal from "../Components/RelatorioSemanal/RelatorioSemanal";
 import TelaTarefas from "../Components/TelaTarefas/TelaTarefas";
 import HomeGestor from "../Components/HomeGestor/HomeGestor";
 import HomeBuddy from "../Components/HomeBuddy/HomeBuddy";
-
-
+import TelaVisualizacaoOnboarding from "../Components/TelaTarefas/TelaVisualizacaoOnboarding";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          {/* Login sem layout */}
-          <Route path="/login" element={<Login />} />
+          {/* Telas sem layout */}
           <Route path="/" element={<TelaInicial />} />
+          <Route path="/login" element={<Login />} />
 
-          {/* Rotas com layout compartilhado */}
+          {/* Telas com layout compartilhado */}
           <Route element={<MainLayout />}>
             <Route path="/home" element={<Dashboard />} />
             <Route path="/feedback" element={<Feedback />} />
@@ -40,9 +39,12 @@ function App() {
             <Route path="/plataformasgestor" element={<ManagerPlatform />} />
             <Route path="/relatorio" element={<RelatorioSemanal />} />
             <Route path="/edicaoOnboarding/:id" element={<TelaTarefas />} />
-            <Route path="/homegestor" element={<HomeGestor />} /> 
+            <Route path="/homegestor" element={<HomeGestor />} />
             <Route path="/homebuddy" element={<HomeBuddy />} />
-           
+            <Route
+              path="/visualizacaoOnboarding/:id"
+              element={<TelaVisualizacaoOnboarding />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

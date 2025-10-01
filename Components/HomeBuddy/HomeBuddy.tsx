@@ -14,7 +14,6 @@ interface User {
 interface Report {
   id: number;
   createdAt: string;
-  // outros campos do relatório podem ser adicionados aqui
 }
 
 interface Step {
@@ -36,7 +35,7 @@ interface Onboarding {
 
 // ================== CONSTANTES ==================
 const API_BASE =
-  (import.meta as any).env?.VITE_API_BASE || "http://localhost:8080";
+  (import.meta as any).env?.VITE_API_BASE;
 const TOKEN = localStorage.getItem("token") || "";
 const Buddy_ID = localStorage.getItem("userId") || "";
 
@@ -49,8 +48,8 @@ const HomeBuddy: React.FC = () => {
   const [selectedMonthMap, setSelectedMonthMap] = useState<
     Record<number, string>
   >({});
+  const [isLoading, setIsLoading] = useState(true); // 👈 controle de carregamento
 
-  // Buscar buddy
   const loadBuddy = async () => {
     try {
       const res = await fetch(`${API_BASE}/users/${Buddy_ID}`, {
@@ -70,7 +69,6 @@ const HomeBuddy: React.FC = () => {
     }
   };
 
-  // Buscar onboardings
   const loadOnboardings = async () => {
     try {
       const res = await fetch(`${API_BASE}/onboardings/buddy/${Buddy_ID}`, {
@@ -105,16 +103,41 @@ const HomeBuddy: React.FC = () => {
       setOnboardings(onboardingsWithReports);
     } catch (err) {
       console.error("Erro fetch onboardings:", err);
+    } finally {
+      setIsLoading(false); // 👈 finaliza carregamento
     }
   };
 
   useEffect(() => {
-    loadBuddy();
-    loadOnboardings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchAll = async () => {
+      setIsLoading(true);
+      await loadBuddy();
+      await loadOnboardings();
+    };
+
+    fetchAll();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        fetchAll();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
-  // Filtro por mês
+  useEffect(() => {
+    const hasReloaded = sessionStorage.getItem("hasReloaded");
+
+    if (!hasReloaded) {
+      sessionStorage.setItem("hasReloaded", "true");
+      window.location.reload();
+    }
+  }, []);
+
   const filterReportsByMonth = (
     reports: Report[],
     onboardingId?: number
@@ -125,16 +148,22 @@ const HomeBuddy: React.FC = () => {
     return reports.filter((r) => r.createdAt?.startsWith(selectedMonth));
   };
 
+  if (isLoading) {
+    return (
+      <div className="homebuddy-loading">
+        <h2>Carregando...</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="homebuddy-container">
       <div className="homebuddy-header">
         <h2>
           Olá, {buddy?.name} {buddy?.lastName}
         </h2>
-       
       </div>
 
-      
       {onboardings.map((onboarding) => (
         <div key={onboarding.id} className="homebuddy-card">
           <h3>Onboarding do(a) {onboarding.collaborator?.name}</h3>
@@ -147,7 +176,6 @@ const HomeBuddy: React.FC = () => {
           <p>
             <strong>Status:</strong> {onboarding.active ? "Ativo" : "Inativo"}
           </p>
-
           <p>
             <strong>Gestor:</strong> {onboarding.manager?.name} (
             {onboarding.manager?.position})
@@ -156,7 +184,6 @@ const HomeBuddy: React.FC = () => {
             <strong>Colaborador:</strong> {onboarding.collaborator?.name} (
             {onboarding.collaborator?.position})
           </p>
-
           <p>
             <strong>Etapa atual:</strong> {onboarding.currentStep?.name} (#
             {onboarding.currentStep?.orderStep})
@@ -194,15 +221,17 @@ const HomeBuddy: React.FC = () => {
             <button
               className="homebuddy-editar"
               onClick={() =>
-                (window.location.href = `/onboarding/${onboarding.id}`)
+                navigate(`/visualizacaoOnboarding/${onboarding.id}`)
               }
             >
-              Visualizar/Editar onboarding
+              Visualizar onboarding
             </button>
             <button
               className="homebuddy-chat"
               onClick={() =>
-                (window.location.href = `/chat?senderId=${Buddy_ID}&receiverId=${onboarding.collaborator.id}`)
+                navigate(
+                  `/chat?senderId=${Buddy_ID}&receiverId=${onboarding.collaborator.id}`
+                )
               }
             >
               Chat com o colaborador

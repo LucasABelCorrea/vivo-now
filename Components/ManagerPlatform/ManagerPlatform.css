@@ -1,11 +1,10 @@
-
 .card-managerPlataforma-button {
  display: flex;
   flex-direction: column;
   justify-content: space-between; /* distribui bem os elementos */
   background-color: #660099;
   border-radius: 12px;
-  min-width: 280px;
+  min-width: 480px;
 }
 
 /* Main content */
@@ -144,8 +143,9 @@
   .plataformas-equipe,
   .plataformas-disponiveis
  {
-  width: 90%;
+  width: 80%;
   gap: 30px;
+  grid-template-columns: 1fr;
   }
 }
 
@@ -160,8 +160,6 @@
    display: flex; 
    flex-direction: column;
    align-items: center;
-
-   
   }
 }
 

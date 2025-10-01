@@ -64,6 +64,20 @@
 .modal-actions button:last-child {
  background-color: #ccc;
 }
+.lock-icon {
+margin-left: 6px;
+display: inline-flex;
+cursor: default;
+display: flex;
+gap: 5px
+}
+.etapa-andamento{
+    font-size: 0.75rem;
+    color: #660099;
+    margin: 0;
+    margin-top: 2px;
+    font-weight: 500;
+}
 /* Responsivo para telas menores */
 @media (max-width: 480px) {
  .modal-content {

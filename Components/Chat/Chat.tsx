@@ -37,11 +37,14 @@ interface Contact {
   hasNotification?: boolean;
 }
 
+const API_BASE =
+  (import.meta as any).env?.VITE_API_BASE;
+
 const fetchUserChats = async (
   userId: number,
   token: string
 ): Promise<ChatDTO[]> => {
-  const res = await fetch(`http://localhost:8080/users/${userId}/chats`, {
+  const res = await fetch(`${API_BASE}/users/${userId}/chats`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Erro ao buscar chats do usuário");
@@ -60,7 +63,7 @@ const fetchCollaboratorChats = async (
   const chats: ChatDTO[] = [];
   for (const type of endpoints) {
     const res = await fetch(
-      `http://localhost:8080/users/${userId}/chat/${type}`,
+      `${API_BASE}/users/${userId}/chat/${type}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -80,7 +83,7 @@ const fetchChatMessages = async (
   token: string
 ): Promise<MessageDTO[]> => {
   const res = await fetch(
-    `http://localhost:8080/users/${senderId}/chat/${receiverId}`,
+    `${API_BASE}/users/${senderId}/chat/${receiverId}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -97,7 +100,7 @@ const sendMessageAPI = async (
   content: string
 ): Promise<MessageDTO> => {
   const res = await fetch(
-    `http://localhost:8080/users/${senderId}/chat/${receiverId}/message`,
+    `${API_BASE}/users/${senderId}/chat/${receiverId}/message`,
     {
       method: "POST",
       headers: {

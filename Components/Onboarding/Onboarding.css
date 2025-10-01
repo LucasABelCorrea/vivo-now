@@ -91,6 +91,7 @@
   justify-content: flex-start;
   height: auto;
   min-height: 280px;
+   min-width: 320px;
 }
 
 .stage-card.active {
@@ -312,7 +313,8 @@
 }
 
 .humor-options label {
-  background: var(--second-purple);
+  background: var(--purple-vivo);
+ 
   color: #fff;
   padding: 0.6rem 1rem;
   border-radius: 20px;
@@ -324,6 +326,7 @@
 
 .humor-options label:hover {
   background: var(--purple-vivo);
+   opacity: 0.6;
 }
 
 .humor-options label.selected {

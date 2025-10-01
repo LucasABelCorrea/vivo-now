@@ -22,9 +22,11 @@ interface TeamDTO {
   platformIds: number[];
   users: UserDTO[];
 }
+const API_BASE =
+  (import.meta as any).env?.VITE_API_BASE;
 
 const getTeamById = async (teamId: string, token: string): Promise<TeamDTO> => {
-  const response = await fetch(`http://localhost:8080/teams/${teamId}`, {
+  const response = await fetch(`${API_BASE}/teams/${teamId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -82,7 +84,7 @@ const Time: React.FC = () => {
         <div key={membro.id} className="card-time">
           <div className="titulo">
             <span className="name">
-              {membro.name} {membro.lastName}
+              {membro.name} {membro.lastName} {`- ${membro.position}`}
             </span>
           </div>
 

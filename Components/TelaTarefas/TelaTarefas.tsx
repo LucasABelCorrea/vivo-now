@@ -9,9 +9,12 @@ import {
 import ModalCriarEtapa from "../ModalCriarEtapa/ModalCriarEtapa";
 import ModalCriarTarefa from "../ModalCriarTarefa/ModalCriarTarefa";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
-import InfoModal from "../InfoModal/InfoModal"; 
+import InfoModal from "../InfoModal/InfoModal";
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+
+const API_BASE = import.meta.env.VITE_API_BASE;
 const TOKEN = localStorage.getItem("token") || "";
 
 const TelaTarefas: React.FC = () => {
@@ -23,7 +26,7 @@ const TelaTarefas: React.FC = () => {
     const [dtEnd, setDtEnd] = useState("");
     const [active, setActive] = useState(true);
 
-    const [showModalEtapa, setShowModalEtapa] = useState(false);
+    const [showModalEtapa, setShowModalEtapa] = useState<false | { step: any }>(false);
     const [showModalTarefa, setShowModalTarefa] = useState<number | null>(null);
 
     // ✅ estados separados
@@ -35,25 +38,28 @@ const TelaTarefas: React.FC = () => {
 
     const [infoMessage, setInfoMessage] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!id) return;
-        const fetchData = async () => {
-            const resOnboarding = await fetch(`${API_BASE}/onboardings/${id}`, {
-                headers: { Authorization: `Bearer ${TOKEN}` },
-            });
-            const data = await resOnboarding.json();
-            setOnboarding(data);
-            setDtBegin(data.dt_begin);
-            setDtEnd(data.dt_end);
-            setActive(data.active);
+    const fetchOnboarding = async () => {
+        const resOnboarding = await fetch(`${API_BASE}/onboardings/${id}`, {
+            headers: { Authorization: `Bearer ${TOKEN}` },
+        });
+        const data = await resOnboarding.json();
+        setOnboarding(data);
+        setDtBegin(data.dt_begin);
+        setDtEnd(data.dt_end);
+        setActive(data.active);
+    };
 
-            const resTasks = await fetch(`${API_BASE}/tasks`, {
+    useEffect(() => {
+        if (id) {
+            fetchOnboarding();
+            fetch(`${API_BASE}/tasks`, {
                 headers: { Authorization: `Bearer ${TOKEN}` },
-            });
-            const allTasks = await resTasks.json();
-            setTarefasPadrao(allTasks.filter((t: any) => t.standard));
-        };
-        fetchData();
+            })
+                .then((res) => res.json())
+                .then((allTasks) =>
+                    setTarefasPadrao(allTasks.filter((t: any) => t.standard))
+                );
+        }
     }, [id]);
 
     const handleSalvar = async () => {
@@ -75,18 +81,30 @@ const TelaTarefas: React.FC = () => {
         });
         navigate("/homeGestor");
     };
-
     const handleCriarEtapa = async (etapa: any) => {
-        await fetch(`${API_BASE}/onboardings/${id}/steps`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${TOKEN}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(etapa),
-        });
-        
-        setInfoMessage("Etapa criada com sucesso!");
+        try {
+            const response = await fetch(`${API_BASE}/onboardings/${id}/steps`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(etapa),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || "Erro ao criar etapa, esse número de etapa já está sendo utilizado.";
+                toast.error(errorMessage);
+                return;
+            }
+
+            toast.success("Etapa criada com sucesso!");
+            fetchOnboarding();
+        } catch (error) {
+            toast.error("Erro inesperado ao criar etapa.");
+            console.error("Erro ao criar etapa:", error);
+        }
     };
 
     const handleCriarTarefa = async (stepId: number, name: string) => {
@@ -98,20 +116,24 @@ const TelaTarefas: React.FC = () => {
             },
             body: JSON.stringify({ name }),
         });
-        setInfoMessage("Tarefa criada com sucesso!");
+        toast.success("Tarefa criada com sucesso!");
+        fetchOnboarding();
     };
 
     const handleDeletarEtapa = async (stepId: number) => {
+        const step = onboarding.steps.find((s: any) => s.id === stepId);
+        if (step?.inProgress) {
+            setInfoMessage("Não é possível deletar uma etapa em progresso.");
+            return;
+        }
         await fetch(`${API_BASE}/onboardings/${id}/steps/${stepId}`, {
             method: "DELETE",
             headers: { Authorization: `Bearer ${TOKEN}` },
         });
-
         setOnboarding((prev: any) => ({
             ...prev,
             steps: prev.steps.filter((step: any) => step.id !== stepId),
         }));
-
         setInfoMessage("Etapa deletada com sucesso!");
     };
 
@@ -135,6 +157,11 @@ const TelaTarefas: React.FC = () => {
     };
 
     const handleAtualizarEtapa = async (stepId: number, updatedStep: any) => {
+        const step = onboarding.steps.find((s: any) => s.id === stepId);
+        if (step?.inProgress && updatedStep.stepOrder !== step.stepOrder) {
+            setInfoMessage("Não é possível alterar a ordem de uma etapa em progresso.");
+            return;
+        }
         await fetch(`${API_BASE}/steps/${stepId}`, {
             method: "PATCH",
             headers: {
@@ -143,16 +170,15 @@ const TelaTarefas: React.FC = () => {
             },
             body: JSON.stringify(updatedStep),
         });
-
         setOnboarding((prev: any) => ({
             ...prev,
             steps: prev.steps.map((step: any) =>
                 step.id === stepId ? { ...step, ...updatedStep } : step
             ),
         }));
-
         setInfoMessage("Etapa atualizada com sucesso!");
     };
+
 
     if (!onboarding) return <div className="tela-wrapper"><p>Carregando...</p></div>;
 
@@ -221,25 +247,29 @@ const TelaTarefas: React.FC = () => {
                                 <div className="bloco-actions">
                                     <button
                                         className="editar-btn"
-                                        onClick={() => {
-                                            const newName = prompt("Novo nome da etapa:", step.name);
-                                            if (newName) handleAtualizarEtapa(step.id, { name: newName });
-                                        }}
+                                        onClick={() => setShowModalEtapa({ step })}
                                     >
                                         Editar <IconEditRegular />
                                     </button>
                                     <button
                                         className="apagar-btn"
-                                        onClick={() =>
+                                        title={step.inProgress ? "Etapa em progresso não pode ser deletada" : "Apagar etapa"}
+                                        onClick={() => {
+                                            if (step.inProgress) {
+                                                toast.error("Etapa em progresso não pode ser deletada.");
+                                                return;
+                                            }
                                             setConfirmData({
                                                 title: "Deletar etapa",
                                                 message: "Deseja realmente deletar esta etapa?",
                                                 onConfirm: () => handleDeletarEtapa(step.id),
-                                            })
-                                        }
+                                            });
+                                        }}
                                     >
                                         Apagar etapa
                                     </button>
+
+
                                 </div>
                             </div>
                             <p className="descricao-label">{step.description}</p>
@@ -270,15 +300,29 @@ const TelaTarefas: React.FC = () => {
                     ))}
 
                 <div className="tarefa-actions">
-                    <button className="criar-etapa-compacto" onClick={() => setShowModalEtapa(true)}>
+                    <button className="criar-etapa-compacto" onClick={() => setShowModalEtapa({ step: null })}>
                         + Criar etapa
                     </button>
                 </div>
             </div>
 
             {showModalEtapa && (
-                <ModalCriarEtapa onClose={() => setShowModalEtapa(false)} onCreate={handleCriarEtapa} />
+                <ModalCriarEtapa
+                    onClose={() => setShowModalEtapa(false)}
+                    onCreate={(etapa) => {
+                        if (showModalEtapa.step) {
+                            handleAtualizarEtapa(showModalEtapa.step.id, etapa);
+                        } else {
+                            handleCriarEtapa(etapa);
+                        }
+                        setShowModalEtapa(false);
+                    }}
+                    initialData={showModalEtapa.step || undefined}
+                />
             )}
+
+
+
             {showModalTarefa && (
                 <ModalCriarTarefa
                     onClose={() => setShowModalTarefa(null)}
@@ -307,6 +351,7 @@ const TelaTarefas: React.FC = () => {
                     onClose={() => setInfoMessage(null)}
                 />
             )}
+            <ToastContainer position="top-right" autoClose={3000} />
         </div>
     );
 };

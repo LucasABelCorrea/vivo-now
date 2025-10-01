@@ -27,7 +27,7 @@ interface StepDTO {
 }
 
 const API_BASE =
-  (import.meta as any).env?.VITE_API_BASE || "http://localhost:8080";
+  (import.meta as any).env?.VITE_API_BASE;
 
 const normalizeUser = (userApi: any) => ({
   id: userApi?.id ?? userApi?.userId ?? null,
@@ -377,9 +377,7 @@ const Dashboard: React.FC = () => {
             }}
           >
             {/* Se não há etapas ou dados */}
-            {!data?.steps?.length ? (
-              <CardEtapaInfo tipo="sem-etapas" />
-            ) : null}
+            {!data?.steps?.length ? <CardEtapaInfo tipo="sem-etapas" /> : null}
 
             {/* Se todas as etapas foram concluídas */}
             {data?.steps?.length &&
@@ -396,20 +394,20 @@ const Dashboard: React.FC = () => {
                     ...data.steps[data.currentStep.orderStep - 1],
                     name: data.steps[data.currentStep.orderStep - 1].name || "",
                     description:
-                      data.steps[data.currentStep.orderStep - 1].description || "",
-                    orderStep: data.steps[data.currentStep.orderStep - 1].orderStep ?? 1,
+                      data.steps[data.currentStep.orderStep - 1].description ||
+                      "",
+                    orderStep:
+                      data.steps[data.currentStep.orderStep - 1].orderStep ?? 1,
                   }}
                   status="active"
                 />
               )}
 
             {/* Card cinza se não houver currentStep ou etapa correspondente */}
-            {
-              (!data.currentStep ||
-                !data.steps?.some(
-                  (step) => step.orderStep === data.currentStep?.orderStep
-                )) && <CardEtapaInfo tipo="sem-etapas" />
-            }
+            {(!data.currentStep ||
+              !data.steps?.some(
+                (step) => step.orderStep === data.currentStep?.orderStep
+              )) && <CardEtapaInfo tipo="sem-etapas" />}
           </div>
 
           {data.steps
@@ -471,9 +469,17 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="widget-card">
-           
             <h3>Seu nível atual</h3>
-            <div className="starIcon"> <IconStarFilled size={80} color=" #660099" /> <p > {data.currentStep?.orderStep ?? "?"}</p> </div>
+            <div className="starIcon">
+              <IconStarFilled size={80} color=" #660099" />
+              <p>
+                {data.currentStep?.orderStep
+                  ? data.currentStep.orderStep
+                  : data.steps?.length
+                  ? Math.max(...data.steps.map((s) => s.orderStep ?? 0))
+                  : "?"}
+              </p>
+            </div>
           </div>
 
           <div className="widget">

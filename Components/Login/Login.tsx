@@ -4,14 +4,15 @@ import { VivoLogo } from "@telefonica/mistica";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import MyPrimaryButton from "../Button/MyPrimaryButton";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [logoSize, setLogoSize] = useState<number>(500);
-
+  const API_BASE = (import.meta as any).env?.VITE_API_BASE;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,59 +35,76 @@ const Login = (): JSX.Element => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
- const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-   event.preventDefault();
-   setError(null);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-   try {
-     const response = await fetch("http://localhost:8080/auth/login", {
-       method: "POST",
-       headers: {
-         "Content-Type": "application/json",
-       },
-       body: JSON.stringify({ email, password }),
-     });
+    try {
+      const response = await fetch(`${API_BASE}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-     if (!response.ok) {
-       const errorBody = await response.json();
-       throw new Error(errorBody.message || "Credenciais inválidas");
-      
-     }
+      const text = await response.text();
 
-     const resultado = await response.json();
-          
-     const { token, userId, role } = resultado;
+      if (!response.ok) {
+        let errorMessage = "Credenciais inválidas";
+        try {
+          const errorBody = JSON.parse(text);
+          errorMessage = errorBody.message || errorMessage;
+        } catch {
+          // corpo vazio ou não JSON
+        }
+        toast.error(errorMessage);
+        return;
+      }
 
-     if (token && userId && role) {
-       localStorage.setItem("token", token);
-       localStorage.setItem("userId", userId.toString());
-       localStorage.setItem("role", role);
+      let resultado: any = {};
+      try {
+        resultado = JSON.parse(text);
+      } catch {
+        toast.error("Resposta inválida da API.");
+        return;
+      }
 
-       const nomeExtraido = email.split("@")[0].trim();
-       localStorage.setItem("userName", nomeExtraido);
+      const { token, userId, role } = resultado;
 
-       switch (role.toUpperCase()) {
-         case "COLLABORATOR":
-           navigate("/home");
-           break;
-         case "MANAGER":
-           navigate("/homegestor");
-           break;
-         case "BUDDY":
-           navigate("/homebuddy");
-           break;
-       }
-     } else {
-       throw new Error("Dados de login incompletos.");
-     }
+      if (token && userId && role) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", userId.toString());
+        localStorage.setItem("role", role);
 
-     setEmail("");
-     setPassword("");
-   } catch (erro: any) {
-     console.error("Erro ao fazer login:", erro);
-     setError(erro.message || "Erro inesperado ao fazer login.");
-   }
- };
+        const nomeExtraido = email.split("@")[0].trim();
+        localStorage.setItem("userName", nomeExtraido);
+
+        switch (role.toUpperCase()) {
+          case "COLLABORATOR":
+            navigate("/home");
+            break;
+          case "MANAGER":
+            navigate("/homegestor");
+            break;
+          case "BUDDY":
+            navigate("/homebuddy");
+            break;
+          default:
+            toast.error("Tipo de usuário desconhecido.");
+            return;
+        }
+
+        setEmail("");
+        setPassword("");
+      } else {
+        toast.error("Dados de login incompletos.");
+      }
+    } catch (erro: any) {
+      console.error("Erro ao fazer login:", erro);
+      toast.error(erro.message || "Erro inesperado ao fazer login.");
+    }
+  };
+
   return (
     <div className="container">
       <div className="form">
@@ -127,8 +145,6 @@ const Login = (): JSX.Element => {
             </div>
           </div>
 
-          {error && <p className="error-message">{error}</p>}
-
           <MyPrimaryButton>Entrar</MyPrimaryButton>
         </form>
       </div>
@@ -136,6 +152,8 @@ const Login = (): JSX.Element => {
       <div className="logo-container">
         <VivoLogo size={logoSize} />
       </div>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

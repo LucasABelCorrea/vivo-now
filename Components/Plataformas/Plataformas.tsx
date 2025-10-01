@@ -10,7 +10,8 @@ const Plataformas: React.FC = () => {
   const [filtro, setFiltro] = useState("");
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-
+const API_BASE = (import.meta as any).env?.VITE_API_BASE;
+  
   useEffect(() => {
     const fetchPlataformasPorTime = async () => {
       const token = localStorage.getItem("token");
@@ -24,7 +25,7 @@ const Plataformas: React.FC = () => {
 
       try {
         // 1. Buscar o time
-        const teamRes = await fetch(`http://localhost:8080/teams/${teamId}`, {
+        const teamRes = await fetch(`${API_BASE}/teams/${teamId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -46,7 +47,7 @@ const Plataformas: React.FC = () => {
 
         // 2. Buscar plataformas
         const promises = plataformaIds.map((id) =>
-          fetch(`http://localhost:8080/platforms/${id}`, {
+          fetch(`${API_BASE}/platforms/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
