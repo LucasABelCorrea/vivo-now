@@ -14,7 +14,6 @@ interface User {
 interface Report {
   id: number;
   createdAt: string;
-  // outros campos do relatório podem ser adicionados aqui
 }
 
 interface Step {
@@ -50,7 +49,6 @@ const HomeBuddy: React.FC = () => {
     Record<number, string>
   >({});
 
-  // Buscar buddy
   const loadBuddy = async () => {
     try {
       const res = await fetch(`${API_BASE}/users/${Buddy_ID}`, {
@@ -70,7 +68,6 @@ const HomeBuddy: React.FC = () => {
     }
   };
 
-  // Buscar onboardings
   const loadOnboardings = async () => {
     try {
       const res = await fetch(`${API_BASE}/onboardings/buddy/${Buddy_ID}`, {
@@ -111,10 +108,20 @@ const HomeBuddy: React.FC = () => {
   useEffect(() => {
     loadBuddy();
     loadOnboardings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // Recarrega automaticamente ao voltar para a aba
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        loadOnboardings();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
-  // Filtro por mês
   const filterReportsByMonth = (
     reports: Report[],
     onboardingId?: number
@@ -131,9 +138,7 @@ const HomeBuddy: React.FC = () => {
         <h2>
           Olá, {buddy?.name} {buddy?.lastName}
         </h2>
-
       </div>
-
 
       {onboardings.map((onboarding) => (
         <div key={onboarding.id} className="homebuddy-card">
@@ -147,7 +152,6 @@ const HomeBuddy: React.FC = () => {
           <p>
             <strong>Status:</strong> {onboarding.active ? "Ativo" : "Inativo"}
           </p>
-
           <p>
             <strong>Gestor:</strong> {onboarding.manager?.name} (
             {onboarding.manager?.position})
@@ -156,7 +160,6 @@ const HomeBuddy: React.FC = () => {
             <strong>Colaborador:</strong> {onboarding.collaborator?.name} (
             {onboarding.collaborator?.position})
           </p>
-
           <p>
             <strong>Etapa atual:</strong> {onboarding.currentStep?.name} (#
             {onboarding.currentStep?.orderStep})
@@ -194,7 +197,7 @@ const HomeBuddy: React.FC = () => {
             <button
               className="homebuddy-editar"
               onClick={() =>
-                (window.location.href = `/visualizacaoOnboarding/${onboarding.id}`)
+                navigate(`/visualizacaoOnboarding/${onboarding.id}`)
               }
             >
               Visualizar onboarding
@@ -202,7 +205,9 @@ const HomeBuddy: React.FC = () => {
             <button
               className="homebuddy-chat"
               onClick={() =>
-                (window.location.href = `/chat?senderId=${Buddy_ID}&receiverId=${onboarding.collaborator.id}`)
+                navigate(
+                  `/chat?senderId=${Buddy_ID}&receiverId=${onboarding.collaborator.id}`
+                )
               }
             >
               Chat com o colaborador

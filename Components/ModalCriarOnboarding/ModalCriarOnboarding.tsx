@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./ModalCriarOnboarding.css";
+import ConfirmModal from "./ConfirmModalOnboarding";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Props {
   gestor: any;
@@ -8,13 +11,20 @@ interface Props {
   onClose: () => void;
 }
 
- const ModalCriarOnboarding: React.FC<Props> = ({ gestor, token, apiBase, onClose }) => {
+const ModalCriarOnboarding: React.FC<Props> = ({
+  gestor,
+  token,
+  apiBase,
+  onClose,
+}) => {
   const [dtBegin, setDtBegin] = useState("");
   const [dtEnd, setDtEnd] = useState("");
   const [newOnboardingId, setNewOnboardingId] = useState<number | null>(null);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [loadingTeam, setLoadingTeam] = useState(false);
   const [onboardingCriado, setOnboardingCriado] = useState(false);
+  const [confirmUser, setConfirmUser] = useState<any | null>(null);
+
   const handleCreateOnboarding = async () => {
     try {
       const res = await fetch(`${apiBase}/onboardings`, {
@@ -29,64 +39,95 @@ interface Props {
           active: true,
         }),
       });
+
       if (!res.ok) {
-        alert("Erro ao criar onboarding");
+        toast.error("Erro ao criar onboarding");
         return;
       }
+
       const data = await res.json();
       setNewOnboardingId(data.id);
       setOnboardingCriado(true);
-      // Buscar membros do time
+      setDtBegin("");
+      setDtEnd("");
+      toast.success("Onboarding criado com sucesso!");
+
       setLoadingTeam(true);
       const teamRes = await fetch(`${apiBase}/teams/${gestor.teamId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       if (!teamRes.ok) {
-        alert("Erro ao buscar membros do time");
+        toast.error("Erro ao buscar membros do time");
+        setLoadingTeam(false);
         return;
       }
+
       const team = await teamRes.json();
       setTeamMembers(team.users || []);
       setLoadingTeam(false);
     } catch (err) {
       console.error("Erro ao criar onboarding:", err);
-      alert("Erro inesperado");
+      toast.error("Erro inesperado ao criar onboarding");
+      setLoadingTeam(false);
     }
   };
-  const handleAddUser = async (user: any) => {
-    const confirmAdd = window.confirm(
-      `Tem certeza que deseja incluir o usuário ${user.name}, ${user.role}, ID ${user.id} no 
-onboarding?`
-    );
-    if (!confirmAdd || !newOnboardingId) return;
+
+  const handleAddUser = (user: any) => {
+    setConfirmUser(user);
+  };
+
+  const confirmAddUser = async () => {
+    if (!confirmUser || !newOnboardingId) return;
     try {
-      console.log("Novo Onboarding ID:", newOnboardingId);
-      const res = await fetch(`${apiBase}/onboardings/${newOnboardingId}/users/${user.id}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${apiBase}/onboardings/${newOnboardingId}/users/${confirmUser.id}`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       if (res.ok) {
-        alert("Usuário adicionado com sucesso!");
-      } 
+        toast.success("Usuário adicionado com sucesso!");
+      } else {
+        toast.error("Erro ao adicionar usuário.");
+      }
     } catch (err) {
       console.error("Erro ao adicionar usuário:", err);
+      toast.error("Erro inesperado ao adicionar usuário");
+    } finally {
+      setConfirmUser(null);
     }
   };
+
   return (
     <div className="modal-onboarding">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="modal-content">
         <h3>Criar novo onboarding</h3>
+
         {!onboardingCriado ? (
           <>
             <label>Data de início:</label>
-            <input type="date" value={dtBegin} onChange={(e) => setDtBegin(e.target.value)} />
+            <input
+              type="date"
+              value={dtBegin}
+              onChange={(e) => setDtBegin(e.target.value)}
+            />
             <label>Data de fim:</label>
-            <input type="date" value={dtEnd} onChange={(e) => setDtEnd(e.target.value)} />
+            <input
+              type="date"
+              value={dtEnd}
+              onChange={(e) => setDtEnd(e.target.value)}
+            />
             <button onClick={handleCreateOnboarding}>Criar</button>
           </>
         ) : (
           <>
-            <p><strong>Onboarding criado com ID:</strong> {newOnboardingId}</p>
+            <p>
+              <strong>Onboarding criado com ID:</strong> {newOnboardingId}
+            </p>
             <h4>Membros do time</h4>
             {loadingTeam ? (
               <p>Carregando membros...</p>
@@ -95,7 +136,9 @@ onboarding?`
                 {teamMembers.map((user) => (
                   <li key={user.id}>
                     {user.name} ({user.role}){" "}
-                    <button onClick={() => handleAddUser(user)}>Adicionar</button>
+                    <button onClick={() => handleAddUser(user)}>
+                      Adicionar
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -104,10 +147,23 @@ onboarding?`
             )}
           </>
         )}
+
         <button onClick={onClose}>Fechar</button>
       </div>
+
+      {confirmUser && (
+        <ConfirmModal
+          isOpen={true}
+          title="Adicionar usuário"
+          message={`Tem certeza que deseja incluir o usuário ${confirmUser.name}, ${confirmUser.role}, ID ${confirmUser.id} no onboarding?`}
+          confirmText="Adicionar"
+          cancelText="Cancelar"
+          onConfirm={confirmAddUser}
+          onCancel={() => setConfirmUser(null)}
+        />
+      )}
     </div>
   );
- };
+};
 
 export default ModalCriarOnboarding;

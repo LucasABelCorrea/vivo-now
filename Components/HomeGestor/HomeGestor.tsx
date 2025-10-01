@@ -154,8 +154,6 @@ const HomeGestor: React.FC = () => {
         />
       )}
 
-    
-
       {onboardings.map((onboarding) => (
         <div key={onboarding.id} className="homegestor-card">
           <h3>Onboarding do(a) {onboarding.collaborator?.name}</h3>
@@ -214,16 +212,16 @@ const HomeGestor: React.FC = () => {
           <div className="homegestor-actions">
             <button
               className="homegestor-editar"
-              onClick={() =>
-                (window.location.href = `/edicaoOnboarding/${onboarding.id}`)
-              }
+              onClick={() => navigate(`/edicaoOnboarding/${onboarding.id}`)}
             >
               Visualizar/Editar onboarding
             </button>
             <button
               className="homegestor-chat"
               onClick={() =>
-                (window.location.href = `/chat?senderId=${GESTOR_ID}&receiverId=${onboarding.collaborator.id}`)
+                navigate(
+                  `/chat?senderId=${GESTOR_ID}&receiverId=${onboarding.collaborator.id}`
+                )
               }
             >
               Chat com o colaborador

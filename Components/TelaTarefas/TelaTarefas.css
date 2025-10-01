@@ -35,7 +35,7 @@
   background-color: #6a1b9a;
   color: white;
   border-radius: 12px;
-  padding: 1rem ;
+  padding: 1rem;
   width: 300px;
   height: 80px;
   position: relative;
@@ -165,17 +165,71 @@
   margin-top: rem;
 }
 
-
 .criar-etapa-compacto {
   background-color: white;
   color: #6a1b9a;
   border: 1px dashed rgb(0, 0, 0);
-  width: 160px;               /* mesma largura do botão de tarefa */
-  padding: 1rem 1rem;       /* mesmo padding horizontal */
+  width: 160px; /* mesma largura do botão de tarefa */
+  padding: 1rem 1rem; /* mesmo padding horizontal */
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
   margin-top: 1rem;
 }
 
+@media (max-width: 768px) {
+  .tela-wrapper {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: center;
+  }
 
+  .tarefas-grid {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .tarefa-box {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .bloco-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .bloco-actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .criar-etapa-compacto,
+  .criar-tarefa-pontilhado {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .tarefa-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tarefa-item {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .titulo {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  .subtitulo {
+    font-size: 1rem;
+    text-align: center;
+  }
+}
