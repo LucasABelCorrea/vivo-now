@@ -131,10 +131,10 @@ const HomeBuddy: React.FC = () => {
         <h2>
           Olá, {buddy?.name} {buddy?.lastName}
         </h2>
-       
+
       </div>
 
-      
+
       {onboardings.map((onboarding) => (
         <div key={onboarding.id} className="homebuddy-card">
           <h3>Onboarding do(a) {onboarding.collaborator?.name}</h3>
@@ -194,10 +194,10 @@ const HomeBuddy: React.FC = () => {
             <button
               className="homebuddy-editar"
               onClick={() =>
-                (window.location.href = `/onboarding/${onboarding.id}`)
+                (window.location.href = `/visualizacaoOnboarding/${onboarding.id}`)
               }
             >
-              Visualizar/Editar onboarding
+              Visualizar onboarding
             </button>
             <button
               className="homebuddy-chat"

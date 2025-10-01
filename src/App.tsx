@@ -16,8 +16,7 @@ import RelatorioSemanal from "../Components/RelatorioSemanal/RelatorioSemanal";
 import TelaTarefas from "../Components/TelaTarefas/TelaTarefas";
 import HomeGestor from "../Components/HomeGestor/HomeGestor";
 import HomeBuddy from "../Components/HomeBuddy/HomeBuddy";
-
-
+import TelaVisualizacaoOnboarding from "../Components/TelaTarefas/TelaVisualizacaoOnboarding";
 
 function App() {
   return (
@@ -40,9 +39,9 @@ function App() {
             <Route path="/plataformasgestor" element={<ManagerPlatform />} />
             <Route path="/relatorio" element={<RelatorioSemanal />} />
             <Route path="/edicaoOnboarding/:id" element={<TelaTarefas />} />
-            <Route path="/homegestor" element={<HomeGestor />} /> 
+            <Route path="/homegestor" element={<HomeGestor />} />
             <Route path="/homebuddy" element={<HomeBuddy />} />
-           
+            <Route path="/visualizacaoOnboarding/:id" element={<TelaVisualizacaoOnboarding />} />
           </Route>
         </Routes>
       </BrowserRouter>

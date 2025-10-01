@@ -82,7 +82,7 @@ const Time: React.FC = () => {
         <div key={membro.id} className="card-time">
           <div className="titulo">
             <span className="name">
-              {membro.name} {membro.lastName}
+              {membro.name} {membro.lastName} {`- ${membro.position}`}
             </span>
           </div>
 

@@ -9,7 +9,7 @@ import {
 import ModalCriarEtapa from "../ModalCriarEtapa/ModalCriarEtapa";
 import ModalCriarTarefa from "../ModalCriarTarefa/ModalCriarTarefa";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
-import InfoModal from "../InfoModal/InfoModal"; 
+import InfoModal from "../InfoModal/InfoModal";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8080";
 const TOKEN = localStorage.getItem("token") || "";
@@ -23,7 +23,7 @@ const TelaTarefas: React.FC = () => {
     const [dtEnd, setDtEnd] = useState("");
     const [active, setActive] = useState(true);
 
-    const [showModalEtapa, setShowModalEtapa] = useState(false);
+    const [showModalEtapa, setShowModalEtapa] = useState<false | { step: any }>(false);
     const [showModalTarefa, setShowModalTarefa] = useState<number | null>(null);
 
     // ✅ estados separados
@@ -85,7 +85,7 @@ const TelaTarefas: React.FC = () => {
             },
             body: JSON.stringify(etapa),
         });
-        
+
         setInfoMessage("Etapa criada com sucesso!");
     };
 
@@ -102,16 +102,19 @@ const TelaTarefas: React.FC = () => {
     };
 
     const handleDeletarEtapa = async (stepId: number) => {
+        const step = onboarding.steps.find((s: any) => s.id === stepId);
+        if (step?.inProgress) {
+            setInfoMessage("Não é possível deletar uma etapa em progresso.");
+            return;
+        }
         await fetch(`${API_BASE}/onboardings/${id}/steps/${stepId}`, {
             method: "DELETE",
             headers: { Authorization: `Bearer ${TOKEN}` },
         });
-
         setOnboarding((prev: any) => ({
             ...prev,
             steps: prev.steps.filter((step: any) => step.id !== stepId),
         }));
-
         setInfoMessage("Etapa deletada com sucesso!");
     };
 
@@ -135,6 +138,11 @@ const TelaTarefas: React.FC = () => {
     };
 
     const handleAtualizarEtapa = async (stepId: number, updatedStep: any) => {
+        const step = onboarding.steps.find((s: any) => s.id === stepId);
+        if (step?.inProgress && updatedStep.stepOrder !== step.stepOrder) {
+            setInfoMessage("Não é possível alterar a ordem de uma etapa em progresso.");
+            return;
+        }
         await fetch(`${API_BASE}/steps/${stepId}`, {
             method: "PATCH",
             headers: {
@@ -143,16 +151,15 @@ const TelaTarefas: React.FC = () => {
             },
             body: JSON.stringify(updatedStep),
         });
-
         setOnboarding((prev: any) => ({
             ...prev,
             steps: prev.steps.map((step: any) =>
                 step.id === stepId ? { ...step, ...updatedStep } : step
             ),
         }));
-
         setInfoMessage("Etapa atualizada com sucesso!");
     };
+
 
     if (!onboarding) return <div className="tela-wrapper"><p>Carregando...</p></div>;
 
@@ -221,15 +228,14 @@ const TelaTarefas: React.FC = () => {
                                 <div className="bloco-actions">
                                     <button
                                         className="editar-btn"
-                                        onClick={() => {
-                                            const newName = prompt("Novo nome da etapa:", step.name);
-                                            if (newName) handleAtualizarEtapa(step.id, { name: newName });
-                                        }}
+                                        onClick={() => setShowModalEtapa({ step })}
                                     >
                                         Editar <IconEditRegular />
                                     </button>
                                     <button
                                         className="apagar-btn"
+                                        disabled={step.inProgress}
+                                        title={step.inProgress ? "Etapa em progresso não pode ser deletada" : "Apagar etapa"}
                                         onClick={() =>
                                             setConfirmData({
                                                 title: "Deletar etapa",
@@ -276,9 +282,26 @@ const TelaTarefas: React.FC = () => {
                 </div>
             </div>
 
-            {showModalEtapa && (
-                <ModalCriarEtapa onClose={() => setShowModalEtapa(false)} onCreate={handleCriarEtapa} />
+            {showModalEtapa && showModalEtapa === true && (
+                <ModalCriarEtapa
+                    onClose={() => setShowModalEtapa(false)}
+                    onCreate={handleCriarEtapa}
+                />
             )}
+
+            {showModalEtapa && typeof showModalEtapa === "object" && (
+                <ModalCriarEtapa
+                    onClose={() => setShowModalEtapa(false)}
+                    onCreate={(updatedStep) => handleAtualizarEtapa(showModalEtapa.step.id, updatedStep)}
+                    initialData={{
+                        name: showModalEtapa.step.name,
+                        description: showModalEtapa.step.description,
+                        orderStep: showModalEtapa.step.orderStep,
+                        inProgress: showModalEtapa.step.inProgress,
+                    }}
+                />
+            )}
+
             {showModalTarefa && (
                 <ModalCriarTarefa
                     onClose={() => setShowModalTarefa(null)}
