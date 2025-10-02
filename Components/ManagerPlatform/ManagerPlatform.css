@@ -111,6 +111,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 50px;
   width: 100%;
+  margin-bottom: 20px;
   box-sizing: border-box;
 }
 
@@ -136,7 +137,7 @@
 @media (max-width: 500px) {
   .plataformas-equipe,
   .plataformas-disponiveis {
-    width: 100%; 
+    width: 100%; /* ocupar toda largura */
     gap: 20px;
   }
 }
