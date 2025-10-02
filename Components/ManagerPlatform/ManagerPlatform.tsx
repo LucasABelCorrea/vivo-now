@@ -129,7 +129,7 @@ export default function ManagerPlatform() {
   return (
     <main className="manager-platform">
       <section>
-        <h2 className="manager-titulo">Plataformas da equipe</h2>
+        <h2>Plataformas da equipe</h2>
         <div className="plataformas-equipe">
           {equipe.length === 0 ? (
             <p>Nenhuma plataforma associada à equipe.</p>
