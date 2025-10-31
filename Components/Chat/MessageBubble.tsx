@@ -8,23 +8,21 @@ interface Props {
 
 const formatTime = (isoString: string) => {
   const date = new Date(isoString);
-  
-  date.setHours(date.getHours() - 3);
 
-  return date.toLocaleTimeString("pt-BR", {
+  // Ajusta para UTC-3 manualmente (mantendo seu estilo original)
+  date.setUTCHours(date.getUTCHours() - 3);
+
+  // Retorna data completa: dia/mês/ano e hora:minuto
+  return date.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   });
 };
 
-
-const MessageBubble = ({
-  message,
-  isOwn,
-}: {
-  message: MessageDTO;
-  isOwn: boolean;
-}) => {
+const MessageBubble = ({ message, isOwn }: Props) => {
   return (
     <div className={`message-bubble-wrapper ${isOwn ? "own" : "other"}`}>
       <div className="message-bubble">

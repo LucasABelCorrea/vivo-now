@@ -111,7 +111,7 @@ const Login = (): JSX.Element => {
         <form onSubmit={handleSubmit}>
           <div className="titulo">
             <h1>BEM VINDO(A)</h1>
-            <h4>Preencha seus dados</h4>
+            <h4 id="sub-titulo">Preencha seus dados</h4>
           </div>
 
           <div className="input-field">

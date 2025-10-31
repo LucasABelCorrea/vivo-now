@@ -10,7 +10,6 @@ import Plataformas from "../Components/Plataformas/Plataformas";
 import Cursos from "../Components/Cursos/Cursos";
 import MainLayout from "../src/layouts/MainLayout";
 import Chat from "../Components/Chat/Chat";
-import Test from "../Components/Test/Test";
 import ManagerPlatform from "../Components/ManagerPlatform/ManagerPlatform";
 import RelatorioSemanal from "../Components/RelatorioSemanal/RelatorioSemanal";
 import TelaTarefas from "../Components/TelaTarefas/TelaTarefas";
@@ -35,7 +34,6 @@ function App() {
             <Route path="/plataformas" element={<Plataformas />} />
             <Route path="/cursos" element={<Cursos />} />
             <Route path="/chat" element={<Chat />} />
-            <Route path="/test" element={<Test />} />
             <Route path="/plataformasgestor" element={<ManagerPlatform />} />
             <Route path="/relatorio" element={<RelatorioSemanal />} />
             <Route path="/edicaoOnboarding/:id" element={<TelaTarefas />} />

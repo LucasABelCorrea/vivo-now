@@ -14,7 +14,6 @@ import { Onboarding, TaskDTO } from "../../src/types/onboardingTypes";
 import MyPrimaryButton from "../Button/MyPrimaryButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaLock } from "react-icons/fa";
 import CardEtapaInfo from "./CardEtapaInfo";
 
 interface StepDTO {

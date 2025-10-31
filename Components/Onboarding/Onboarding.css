@@ -43,7 +43,7 @@
   display: inline-block;
 }
 
-.starIcon p{
+.starIcon p {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -91,7 +91,7 @@
   justify-content: flex-start;
   height: auto;
   min-height: 280px;
-   min-width: 320px;
+  min-width: 320px;
 }
 
 .stage-card.active {
@@ -103,7 +103,7 @@
 .card-sem-etapas {
   background: #35363a;
   color: #fff;
- width: 50%;
+  width: 50%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -239,7 +239,7 @@
   gap: 2rem;
   margin-bottom: 2rem;
   width: 100%;
-  align-items: stretch; 
+  align-items: stretch;
 }
 
 /* Categoria Cards */
@@ -258,7 +258,7 @@
   justify-content: space-between;
 }
 
-.jornada > .widget {
+.jornada>.widget {
   flex: 1 1 calc(50% - 10px);
   min-width: 280px;
 }
@@ -314,7 +314,6 @@
 
 .humor-options label {
   background: var(--purple-vivo);
- 
   color: #fff;
   padding: 0.6rem 1rem;
   border-radius: 20px;
@@ -326,7 +325,7 @@
 
 .humor-options label:hover {
   background: var(--purple-vivo);
-   opacity: 0.6;
+  opacity: 0.6;
 }
 
 .humor-options label.selected {
@@ -389,7 +388,7 @@ textarea {
     flex-direction: column;
   }
 
-  .jornada > .widget {
+  .jornada>.widget {
     flex: 1 1 100%;
   }
 }
@@ -399,6 +398,7 @@ textarea {
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
   }
+
   .stage-card {
     min-height: 220px;
     padding: 1rem;
@@ -409,5 +409,14 @@ textarea {
   .cards-duplos {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .humor-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
   }
 }

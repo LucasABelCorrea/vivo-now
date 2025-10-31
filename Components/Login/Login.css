@@ -150,4 +150,8 @@ h4 {
   .input-field input {
     width: 100%;
   }
+
+  #sub-titulo {
+    align-self: center;
+  }
 }
